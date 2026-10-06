@@ -1,0 +1,47 @@
+{
+  "asset": {
+    "samples": 32,
+    "dofs": 29,
+    "articulated_bodies": 30,
+    "meshes": 41,
+    "geoms": 82,
+    "collision_geoms": 44,
+    "source_mass_kg": 33.689167549737824,
+    "compiled_mass_kg": 33.68916754973783,
+    "maximum_fk_position_error_m": 8.881784197001252e-16,
+    "maximum_fk_rotation_matrix_error": 8.625045122556685e-15,
+    "maximum_com_error_m": 3.0808688933348094e-15,
+    "maximum_inertia_error_kg_m2": 1.0685896612017132e-15,
+    "limits_exact": true,
+    "self_collision_disabled": true
+  },
+  "entity": {
+    "entity_compiles": true,
+    "nq": 36,
+    "nv": 35,
+    "nu": 29,
+    "native_servo_gains_armatures_effort_limits_exact": true,
+    "action_dimension": 29,
+    "neutral_import_and_nominal_keyframe_ground_checks": {
+      "import_neutral": {
+        "root_xyz": [
+          0.0,
+          0.0,
+          0.82
+        ],
+        "ground_contacts": 0
+      },
+      "nominal_keyframe": {
+        "root_xyz": [
+          0.0,
+          0.0,
+          0.76
+        ],
+        "ground_contacts": 0
+      }
+    }
+  },
+  "source_urdf_sha256": "127f42c7fbb4a6df60e1ac3b76b64af0c05e3575f3bdda2a5210c9252342fe1e",
+  "mjcf_sha256": "baa48906fa32a0bc02c6d820e92d2ee6274a6bee02e9a365f4f7f41aaa593ab0",
+  "robot_module_sha256": "897ff8a47ca898b7a2a5f2bd04c4a58710c94f51e16446914481a933c6638de6"
+}

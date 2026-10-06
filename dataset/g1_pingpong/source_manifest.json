@@ -1,0 +1,2952 @@
+{
+  "format_version": 2,
+  "robot": "G1",
+  "num_motions": 43,
+  "retarget_method": "bvh_mink_ik",
+  "retarget_index": {
+    "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_g1_bvh_retarget_20261002_manifest.json",
+    "sha256": "8a9c6377c88145a01a75111e7e07beee28d9f520e5849a2b0a0e669d3794f3a2"
+  },
+  "independent_acceptance": {
+    "path": "/home/lxz/HOPE/hope_training/mjlab_pingpong/evaluations/g1_fresh_bvh_independent_audit_20261002.json",
+    "sha256": "fbdf13674938d395ce42dea28e34ba94c6a9b9a588288100f950f49ebdc2ead9",
+    "all_passed": true,
+    "passed_clips": 43
+  },
+  "motion_files": [
+    "motions/0623_kjp-001.npz",
+    "motions/0623_kjp-002.npz",
+    "motions/0623_kjp-003.npz",
+    "motions/0623_kjp-004.npz",
+    "motions/0623_kjp-005.npz",
+    "motions/0623_kjp-006.npz",
+    "motions/0623_kjp-007.npz",
+    "motions/0623_kjp-008.npz",
+    "motions/0623_kjp-009.npz",
+    "motions/0623_kjp-010.npz",
+    "motions/0623_kjp-011.npz",
+    "motions/0623_kjp-012.npz",
+    "motions/0623_kjp-013.npz",
+    "motions/0623_kjp-014.npz",
+    "motions/0623_kjp-015.npz",
+    "motions/0804_2_kjp-001.npz",
+    "motions/0804_2_kjp-002.npz",
+    "motions/0804_2_kjp-003.npz",
+    "motions/0804_2_kjp-004.npz",
+    "motions/0804_2_kjp-005.npz",
+    "motions/0804_2_kjp-006.npz",
+    "motions/0804_2_kjp-007.npz",
+    "motions/0804_2_kjp-008.npz",
+    "motions/0804_2_kjp-009.npz",
+    "motions/0804_2_kjp-010.npz",
+    "motions/0804_2_kjp-011.npz",
+    "motions/0804_2_kjp-012.npz",
+    "motions/0804_2_kjp-013.npz",
+    "motions/0804_2_kjp-014.npz",
+    "motions/0804_2_kjp-015.npz",
+    "motions/0804_2_kjp-016.npz",
+    "motions/0804_2_kjp-017.npz",
+    "motions/0804_2_kjp-018.npz",
+    "motions/0804_2_kjp-019.npz",
+    "motions/0804_2_kjp-020.npz",
+    "motions/0804_2_kjp-021.npz",
+    "motions/0804_2_kjp-022.npz",
+    "motions/0804_2_kjp-023.npz",
+    "motions/0804_2_kjp-024.npz",
+    "motions/0804_2_kjp-025.npz",
+    "motions/0804_2_kjp-026.npz",
+    "motions/0804_2_kjp-027.npz",
+    "motions/0804_2_kjp-028.npz"
+  ],
+  "joint_names": [
+    "left_hip_pitch_joint",
+    "left_hip_roll_joint",
+    "left_hip_yaw_joint",
+    "left_knee_joint",
+    "left_ankle_pitch_joint",
+    "left_ankle_roll_joint",
+    "right_hip_pitch_joint",
+    "right_hip_roll_joint",
+    "right_hip_yaw_joint",
+    "right_knee_joint",
+    "right_ankle_pitch_joint",
+    "right_ankle_roll_joint",
+    "waist_yaw_joint",
+    "waist_roll_joint",
+    "waist_pitch_joint",
+    "left_shoulder_pitch_joint",
+    "left_shoulder_roll_joint",
+    "left_shoulder_yaw_joint",
+    "left_elbow_joint",
+    "left_wrist_roll_joint",
+    "left_wrist_pitch_joint",
+    "left_wrist_yaw_joint",
+    "right_shoulder_pitch_joint",
+    "right_shoulder_roll_joint",
+    "right_shoulder_yaw_joint",
+    "right_elbow_joint",
+    "right_wrist_roll_joint",
+    "right_wrist_pitch_joint",
+    "right_wrist_yaw_joint"
+  ],
+  "body_names": [
+    "pelvis",
+    "left_hip_pitch_link",
+    "left_hip_roll_link",
+    "left_hip_yaw_link",
+    "left_knee_link",
+    "left_ankle_pitch_link",
+    "left_ankle_roll_link",
+    "right_hip_pitch_link",
+    "right_hip_roll_link",
+    "right_hip_yaw_link",
+    "right_knee_link",
+    "right_ankle_pitch_link",
+    "right_ankle_roll_link",
+    "waist_yaw_link",
+    "waist_roll_link",
+    "torso_link",
+    "left_shoulder_pitch_link",
+    "left_shoulder_roll_link",
+    "left_shoulder_yaw_link",
+    "left_elbow_link",
+    "left_wrist_roll_link",
+    "left_wrist_pitch_link",
+    "left_wrist_yaw_link",
+    "right_shoulder_pitch_link",
+    "right_shoulder_roll_link",
+    "right_shoulder_yaw_link",
+    "right_elbow_link",
+    "right_wrist_roll_link",
+    "right_wrist_pitch_link",
+    "right_wrist_yaw_link"
+  ],
+  "root_body_name": "pelvis",
+  "anchor_body_name": "torso_link",
+  "hit_type_file": "motions/hit_type.json",
+  "hit_type_sha256": "85283503511fa4e1401d7fb65df3f557b503348e96e572f735348e6edb3cc5f7",
+  "hit_type_source": {
+    "path": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+    "sha256": "a1b588baddc4b9c22a4225d1a00363f2403894ae5d2a6be909e76102cb9dee29"
+  },
+  "model": {
+    "path": "g1.xml",
+    "sha256": "baa48906fa32a0bc02c6d820e92d2ee6274a6bee02e9a365f4f7f41aaa593ab0"
+  },
+  "asset_manifest_sha256": "694163f5f6c425a0c1f1e6a09df5f1db644688ce6d3d3da3dd90d4c699e0ac2a",
+  "builder": {
+    "path": "/home/lxz/HOPE/hope_training/mjlab_pingpong/analysis/build_g1_motions.py",
+    "sha256": "39cb1f09a41616d91fede7355916482ec7addc25312b99a9a7fbc497db525ccc"
+  },
+  "mujoco_version": "3.11.0",
+  "numpy_version": "2.5.1",
+  "fps": 50,
+  "frames_per_motion": 94,
+  "strike_frame": 43,
+  "strike_phase": 0.46,
+  "body_pose_convention": "link frame world position and WXYZ quaternion",
+  "body_velocity_convention": "body COM world linear and angular velocity from G1 mj_jacBodyCom @ generalized velocity",
+  "joint_velocity_convention": "central generalized derivative of final clipped 50-Hz qpos; one-sided endpoints",
+  "interpolation": "linear root translation/joint angles, quaternion SLERP; terminal source sample hold",
+  "reference_origin": "fresh direct retarget of original 0623/0804_2 BVHs on exact G1 model; no legacy robot PKL/NPZ inputs",
+  "dataset_differences": "same source captures and hit labels; G1-specific IK and hitting-point peak selection",
+  "root_height": "preserve constrained G1 IK root trajectory; no clip-builder height adjustment",
+  "clips": [
+    {
+      "name": "0623_kjp-001",
+      "path": "motions/0623_kjp-001.npz",
+      "sha256": "3cbae95d22dc561d28a89fef7a76c613d3ef8122bb123833c2acdf748482762e",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-001.npz",
+      "source_sha256": "acad4d595620f58f20ba52709f97952573e9f24c43e854dc93a852c9bbb4eb8b",
+      "source_robot": "G1",
+      "source_frames": 133,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-001.bvh",
+        "sha256": "adc7b9a52e3257b08ebbb85cf1fe93ee7baf33368eceeb652a63001a127c78cd"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-001.json",
+      "retarget_manifest_sha256": "ccaf61987a3f56f0734cedd23f55abef02876540361351ff84f60ad2f56d87b4",
+      "resampled_frames": 133,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        8,
+        101
+      ],
+      "used_source_frame_range_50hz": [
+        8,
+        101
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.000999999999999732,
+        "foot_collision_clearance_max_m": 0.0010000000010107098,
+        "foot_collision_clearance_at_reset_m": 0.001000000000047593,
+        "joint_max_abs_velocity_rad_s": 9.563324928283691,
+        "pelvis_height_range_m": [
+          0.7301703630549192,
+          0.7476463025369615
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.361031051367206e-08,
+        "max_body_quat_l2_error": 6.193762785691758e-08,
+        "max_body_com_lin_vel_error_m_s": 1.0437832553833459e-07,
+        "max_body_ang_vel_error_rad_s": 4.753296849457911e-07
+      },
+      "source_strike_frame_50hz": 51,
+      "source_strike_time_s": 1.02,
+      "strike_speed_m_s": 3.259299309197291,
+      "strike_surface_normal_velocity_m_s": -3.1752001916747687,
+      "unrestricted_peak_frame_50hz": 51,
+      "unrestricted_peak_speed_m_s": 3.259299309197291,
+      "unrestricted_peak_normal_velocity_m_s": -3.1752001916747687,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-002",
+      "path": "motions/0623_kjp-002.npz",
+      "sha256": "5eea120c0e4c4a1883292eb9241a8f6e07fea0cb478c2b59186e0f22ec2797c8",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-002.npz",
+      "source_sha256": "4753faf30a407a8712817e364d13b9cb1d306d370f1f7eb15762bf65bf1aa406",
+      "source_robot": "G1",
+      "source_frames": 194,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-002.bvh",
+        "sha256": "97f8a3c620cc9f1a7b05821e67b365a2fa484baa490cb362cd93bcb282b663a4"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-002.json",
+      "retarget_manifest_sha256": "cd76f932da492f53940b64dbd7508eebff97828f95e757e52ba706e7cb3cd741",
+      "resampled_frames": 194,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        43,
+        136
+      ],
+      "used_source_frame_range_50hz": [
+        43,
+        136
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999998187,
+        "foot_collision_clearance_max_m": 0.0010004899603053789,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000057341,
+        "joint_max_abs_velocity_rad_s": 8.16254997253418,
+        "pelvis_height_range_m": [
+          0.7348911565194071,
+          0.7509362378754875
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.816185793567797e-08,
+        "max_body_quat_l2_error": 7.247639282615967e-08,
+        "max_body_com_lin_vel_error_m_s": 5.159102489660228e-08,
+        "max_body_ang_vel_error_rad_s": 4.045690182863382e-07
+      },
+      "source_strike_frame_50hz": 86,
+      "source_strike_time_s": 1.72,
+      "strike_speed_m_s": 3.06304826718776,
+      "strike_surface_normal_velocity_m_s": -2.9738618186115127,
+      "unrestricted_peak_frame_50hz": 86,
+      "unrestricted_peak_speed_m_s": 3.06304826718776,
+      "unrestricted_peak_normal_velocity_m_s": -2.9738618186115127,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-003",
+      "path": "motions/0623_kjp-003.npz",
+      "sha256": "3556ed86d593a8de1777113938d187519e4d4f9098942a0fae24610d2f3bed11",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-003.npz",
+      "source_sha256": "be89316fa9f3061c47f2d8a2e0044c74e58d8e8c5220725e2a90df7aa7e2ad44",
+      "source_robot": "G1",
+      "source_frames": 184,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-003.bvh",
+        "sha256": "cba4f169c1f71fc751de0cc88d36928a3ddd702d6c3a1702c671bab7b039b95f"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-003.json",
+      "retarget_manifest_sha256": "4daba41bcaf6b268bfb71cec393a12ec8aee20434e5780f0517061882f20b5a6",
+      "resampled_frames": 184,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "used_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999996262,
+        "foot_collision_clearance_max_m": 0.0010002597228357564,
+        "foot_collision_clearance_at_reset_m": 0.0010000000001446005,
+        "joint_max_abs_velocity_rad_s": 7.323615550994873,
+        "pelvis_height_range_m": [
+          0.7486194207956814,
+          0.7661804951118303
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.734702884259036e-08,
+        "max_body_quat_l2_error": 5.419262531419694e-08,
+        "max_body_com_lin_vel_error_m_s": 1.0507212722110637e-07,
+        "max_body_ang_vel_error_rad_s": 5.121821207154653e-07
+      },
+      "source_strike_frame_50hz": 70,
+      "source_strike_time_s": 1.4,
+      "strike_speed_m_s": 4.473155724161186,
+      "strike_surface_normal_velocity_m_s": 4.358367550344242,
+      "unrestricted_peak_frame_50hz": 70,
+      "unrestricted_peak_speed_m_s": 4.473155724161186,
+      "unrestricted_peak_normal_velocity_m_s": 4.358367550344242,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-004",
+      "path": "motions/0623_kjp-004.npz",
+      "sha256": "cda6e04612fdcf50640634e332344f676e17a6e622089fdd0d9d3736fe6ec491",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-004.npz",
+      "source_sha256": "bb4f1af59a4a517314031e06ff04460a10695208ec582e76b8f21547d00903cb",
+      "source_robot": "G1",
+      "source_frames": 192,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-004.bvh",
+        "sha256": "c8a8d0faa85343a9592143a2339e96ec369ba2f5038a474865b7fb74406b4e46"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-004.json",
+      "retarget_manifest_sha256": "0d81d6fbbb238449a99c8b08081de558a36b2bce177b7f723bcc19a95ed264a1",
+      "resampled_frames": 192,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        26,
+        119
+      ],
+      "used_source_frame_range_50hz": [
+        26,
+        119
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999996435,
+        "foot_collision_clearance_max_m": 0.0010000000046384953,
+        "foot_collision_clearance_at_reset_m": 0.001000000000000223,
+        "joint_max_abs_velocity_rad_s": 5.5180253982543945,
+        "pelvis_height_range_m": [
+          0.6861872125944257,
+          0.7570674095995495
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.500924104064666e-08,
+        "max_body_quat_l2_error": 6.274945108991625e-08,
+        "max_body_com_lin_vel_error_m_s": 8.56964770257207e-08,
+        "max_body_ang_vel_error_rad_s": 1.63324783697405e-07
+      },
+      "source_strike_frame_50hz": 69,
+      "source_strike_time_s": 1.38,
+      "strike_speed_m_s": 3.1271796907403817,
+      "strike_surface_normal_velocity_m_s": 2.568287642950641,
+      "unrestricted_peak_frame_50hz": 69,
+      "unrestricted_peak_speed_m_s": 3.1271796907403817,
+      "unrestricted_peak_normal_velocity_m_s": 2.568287642950641,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-005",
+      "path": "motions/0623_kjp-005.npz",
+      "sha256": "940fdfb510f8db7a72abd99906dcf61140807b14a38f865a8ff306e8e8ff920c",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-005.npz",
+      "source_sha256": "d12ae290a339826c6d3dcbe9b4f24a3e1944118e15753c601a0cdddf491ed1a5",
+      "source_robot": "G1",
+      "source_frames": 198,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-005.bvh",
+        "sha256": "9bfab5432a11c7c0272b430f064d91036d714b14bdd2e23ab5669d0224e45110"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-005.json",
+      "retarget_manifest_sha256": "8a60da2e7342f23a569ce469470828d218dce9b706c23c522e42adc8f869f5e2",
+      "resampled_frames": 198,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        47,
+        140
+      ],
+      "used_source_frame_range_50hz": [
+        47,
+        140
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999957,
+        "foot_collision_clearance_max_m": 0.001000000000675027,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000020097,
+        "joint_max_abs_velocity_rad_s": 5.874984264373779,
+        "pelvis_height_range_m": [
+          0.7430548854384431,
+          0.7609926491734949
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.17562992860843e-08,
+        "max_body_quat_l2_error": 6.387694760375357e-08,
+        "max_body_com_lin_vel_error_m_s": 5.5129845910606434e-08,
+        "max_body_ang_vel_error_rad_s": 2.600321833412522e-07
+      },
+      "source_strike_frame_50hz": 90,
+      "source_strike_time_s": 1.8,
+      "strike_speed_m_s": 2.4455388046412323,
+      "strike_surface_normal_velocity_m_s": -2.39136203283062,
+      "unrestricted_peak_frame_50hz": 90,
+      "unrestricted_peak_speed_m_s": 2.4455388046412323,
+      "unrestricted_peak_normal_velocity_m_s": -2.39136203283062,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-006",
+      "path": "motions/0623_kjp-006.npz",
+      "sha256": "999592d775bc7eeafb4407d415133e9be32a0b14a6062b8272d154ab226b31f8",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-006.npz",
+      "source_sha256": "6cd893d1968d5f38f5288ce4951bcf65cdcd86d47509c99f08a8f3c9fe99127e",
+      "source_robot": "G1",
+      "source_frames": 234,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-006.bvh",
+        "sha256": "3133bc8ab1893dfff3342a48875ce555f48e2abe9f9b1bcd6a82c2a729bd11b1"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-006.json",
+      "retarget_manifest_sha256": "532320e024ca67e174c5c41fa16da6acb6f862e1e30f8cbbb790364aec3d88af",
+      "resampled_frames": 234,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        45,
+        138
+      ],
+      "used_source_frame_range_50hz": [
+        45,
+        138
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000001154,
+        "foot_collision_clearance_max_m": 0.0010000000002926002,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000043759,
+        "joint_max_abs_velocity_rad_s": 8.160181045532227,
+        "pelvis_height_range_m": [
+          0.7201294131828233,
+          0.7575320721920769
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.458838758798379e-08,
+        "max_body_quat_l2_error": 6.872179258556584e-08,
+        "max_body_com_lin_vel_error_m_s": 1.428433442640653e-07,
+        "max_body_ang_vel_error_rad_s": 5.634565365397748e-07
+      },
+      "source_strike_frame_50hz": 88,
+      "source_strike_time_s": 1.76,
+      "strike_speed_m_s": 3.442845479555024,
+      "strike_surface_normal_velocity_m_s": -3.3856180423544533,
+      "unrestricted_peak_frame_50hz": 88,
+      "unrestricted_peak_speed_m_s": 3.442845479555024,
+      "unrestricted_peak_normal_velocity_m_s": -3.3856180423544533,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-007",
+      "path": "motions/0623_kjp-007.npz",
+      "sha256": "040265a94269f5fe558a185823f34240e76c9e889562aff7d411e8f52891e8e4",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-007.npz",
+      "source_sha256": "1039928b2ea5ca6bb80919be4fced034c1318fe69f5fd72743537d9d55624a27",
+      "source_robot": "G1",
+      "source_frames": 203,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-007.bvh",
+        "sha256": "70fbfbdfda3ee0597f330e5681c00ca50b48dd9bcc2d7e0628e55d3297adb9e7"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-007.json",
+      "retarget_manifest_sha256": "69987291a9a480105c8bf140eac570e5b6a3f05534edee9ea11c4e781f7e37fb",
+      "resampled_frames": 203,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        26,
+        119
+      ],
+      "used_source_frame_range_50hz": [
+        26,
+        119
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999107,
+        "foot_collision_clearance_max_m": 0.0010000000004732664,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000029673,
+        "joint_max_abs_velocity_rad_s": 8.762369155883789,
+        "pelvis_height_range_m": [
+          0.6615072004411475,
+          0.7561711009281964
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.182870365163296e-08,
+        "max_body_quat_l2_error": 4.653879448135711e-08,
+        "max_body_com_lin_vel_error_m_s": 1.1684318446114617e-07,
+        "max_body_ang_vel_error_rad_s": 4.639659572092114e-07
+      },
+      "source_strike_frame_50hz": 69,
+      "source_strike_time_s": 1.38,
+      "strike_speed_m_s": 4.576623012038813,
+      "strike_surface_normal_velocity_m_s": -4.518031945352307,
+      "unrestricted_peak_frame_50hz": 69,
+      "unrestricted_peak_speed_m_s": 4.576623012038813,
+      "unrestricted_peak_normal_velocity_m_s": -4.518031945352307,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-008",
+      "path": "motions/0623_kjp-008.npz",
+      "sha256": "8c57481c1ecc622b2021a3227eed09f8b4379a56c092bbd2999ad2fa46790a68",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-008.npz",
+      "source_sha256": "24cc47c74472cf6e3cc89ae0b82946c2396e2a2ec679fda1a3cc0dec241cd6ea",
+      "source_robot": "G1",
+      "source_frames": 185,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-008.bvh",
+        "sha256": "996efada621d1dd6a80cb4ebaf765f25438823e72e6b2a306bcaa179944e440b"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-008.json",
+      "retarget_manifest_sha256": "92c2d4526a68e695074c1d431a3cd1fd34053bd810599f81e51f126a44bef569",
+      "resampled_frames": 185,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        28,
+        121
+      ],
+      "used_source_frame_range_50hz": [
+        28,
+        121
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000006046,
+        "foot_collision_clearance_max_m": 0.001000000002140372,
+        "foot_collision_clearance_at_reset_m": 0.0010000000001076006,
+        "joint_max_abs_velocity_rad_s": 8.686266899108887,
+        "pelvis_height_range_m": [
+          0.7422771297493401,
+          0.7567714966079778
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.439343591679858e-08,
+        "max_body_quat_l2_error": 6.272086508185305e-08,
+        "max_body_com_lin_vel_error_m_s": 1.8063100848397795e-07,
+        "max_body_ang_vel_error_rad_s": 4.248932841122155e-07
+      },
+      "source_strike_frame_50hz": 71,
+      "source_strike_time_s": 1.42,
+      "strike_speed_m_s": 3.309367653696314,
+      "strike_surface_normal_velocity_m_s": -3.231135718789027,
+      "unrestricted_peak_frame_50hz": 71,
+      "unrestricted_peak_speed_m_s": 3.309367653696314,
+      "unrestricted_peak_normal_velocity_m_s": -3.231135718789027,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-009",
+      "path": "motions/0623_kjp-009.npz",
+      "sha256": "6741ab8c4fb6387e55d02abc0e605be8b48822ffc988bcc494c2a6bc53419dbf",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-009.npz",
+      "source_sha256": "41f0d2bfc864fc89752e2f9894bf9f7c20211e3d013b29e96b3e1c3a8588e96d",
+      "source_robot": "G1",
+      "source_frames": 176,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-009.bvh",
+        "sha256": "4b1aa2734307fac8461476aef3d6f980816f966e588c924a763db6a21a903627"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-009.json",
+      "retarget_manifest_sha256": "f7db288ed03d1328f617622555e4edd6768fe66423f1ffea49cc9dce09a47dfe",
+      "resampled_frames": 176,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        18,
+        111
+      ],
+      "used_source_frame_range_50hz": [
+        18,
+        111
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000008752,
+        "foot_collision_clearance_max_m": 0.0010000000028093266,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000049587,
+        "joint_max_abs_velocity_rad_s": 7.583276748657227,
+        "pelvis_height_range_m": [
+          0.7428359510921313,
+          0.7510292590894795
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.951672548716203e-08,
+        "max_body_quat_l2_error": 4.671462204258005e-08,
+        "max_body_com_lin_vel_error_m_s": 1.0295475494359607e-07,
+        "max_body_ang_vel_error_rad_s": 4.1760271773938484e-07
+      },
+      "source_strike_frame_50hz": 61,
+      "source_strike_time_s": 1.22,
+      "strike_speed_m_s": 3.317810145215963,
+      "strike_surface_normal_velocity_m_s": -3.1242962328544546,
+      "unrestricted_peak_frame_50hz": 61,
+      "unrestricted_peak_speed_m_s": 3.317810145215963,
+      "unrestricted_peak_normal_velocity_m_s": -3.1242962328544546,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-010",
+      "path": "motions/0623_kjp-010.npz",
+      "sha256": "0bf6521f298c2d25000aa7a3f4c8fdb7f7ab984a5b7c7182cbf1ecf40eefe34b",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-010.npz",
+      "source_sha256": "2b70105caaa4024cb9cd04062cccb0490a5dcfa7d5c744b9d5669ab940281343",
+      "source_robot": "G1",
+      "source_frames": 237,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-010.bvh",
+        "sha256": "1b33b59236b6b1e6ded494c50b5ce8255ef2ed65a365fd5eda2c767fea33d225"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-010.json",
+      "retarget_manifest_sha256": "5bdac3fa870621de44f51ab5d1c88b67a9c19ddc40ab22a0bba2ec77d554762b",
+      "resampled_frames": 237,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        51,
+        144
+      ],
+      "used_source_frame_range_50hz": [
+        51,
+        144
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000002437,
+        "foot_collision_clearance_max_m": 0.0010000000040282508,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000085878,
+        "joint_max_abs_velocity_rad_s": 9.678123474121094,
+        "pelvis_height_range_m": [
+          0.7452701075312592,
+          0.7533112459947794
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.467302965911358e-08,
+        "max_body_quat_l2_error": 5.719660497301763e-08,
+        "max_body_com_lin_vel_error_m_s": 7.66631738091661e-08,
+        "max_body_ang_vel_error_rad_s": 4.970172096108172e-07
+      },
+      "source_strike_frame_50hz": 94,
+      "source_strike_time_s": 1.88,
+      "strike_speed_m_s": 3.48978529030805,
+      "strike_surface_normal_velocity_m_s": -3.238289914284479,
+      "unrestricted_peak_frame_50hz": 94,
+      "unrestricted_peak_speed_m_s": 3.48978529030805,
+      "unrestricted_peak_normal_velocity_m_s": -3.238289914284479,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-011",
+      "path": "motions/0623_kjp-011.npz",
+      "sha256": "f4a15df99d3060c3f44984c07a902b677be4eda6d779608691f8df58ee62b17d",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-011.npz",
+      "source_sha256": "d03d2ff051c53247baf36c0aa23a320a440c13c8e428215c6bcb6ec7099afb37",
+      "source_robot": "G1",
+      "source_frames": 184,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-011.bvh",
+        "sha256": "078898a9f5a7518be141076d38935463ca288e381e6f6965ce51fe2bd2e2e341"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-011.json",
+      "retarget_manifest_sha256": "aed58ac7a91681ebe5b0955c700283a32f89a323df8f4311435652da981bbabc",
+      "resampled_frames": 184,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        24,
+        117
+      ],
+      "used_source_frame_range_50hz": [
+        24,
+        117
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999905,
+        "foot_collision_clearance_max_m": 0.0010000000009778472,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000023532,
+        "joint_max_abs_velocity_rad_s": 6.490520000457764,
+        "pelvis_height_range_m": [
+          0.7433925594448134,
+          0.7668526207655744
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.102989846823448e-08,
+        "max_body_quat_l2_error": 5.4704952162585166e-08,
+        "max_body_com_lin_vel_error_m_s": 4.605358833176254e-08,
+        "max_body_ang_vel_error_rad_s": 2.663933535984597e-07
+      },
+      "source_strike_frame_50hz": 67,
+      "source_strike_time_s": 1.34,
+      "strike_speed_m_s": 2.8324540973047405,
+      "strike_surface_normal_velocity_m_s": 2.5957945832817324,
+      "unrestricted_peak_frame_50hz": 67,
+      "unrestricted_peak_speed_m_s": 2.8324540973047405,
+      "unrestricted_peak_normal_velocity_m_s": 2.5957945832817324,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-012",
+      "path": "motions/0623_kjp-012.npz",
+      "sha256": "f6996ae4a1a17b538ab2516182ca885d1b09b48aee5706a1c738662dea623c1e",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-012.npz",
+      "source_sha256": "a499cfc2069ddbb5d86771b3f05a97b05d6f34c38d0ef6a62e22750e1efeafab",
+      "source_robot": "G1",
+      "source_frames": 233,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-012.bvh",
+        "sha256": "008451fb25c975eb5499ee5e72f7d9cd4a4f9b7ccd7d0c6c3c8808c13a43a753"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-012.json",
+      "retarget_manifest_sha256": "d79c3305f69f25c7e5a0dbd12881fff1a0e90a89834d87658513bdec7c87db5b",
+      "resampled_frames": 233,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        51,
+        144
+      ],
+      "used_source_frame_range_50hz": [
+        51,
+        144
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999995152,
+        "foot_collision_clearance_max_m": 0.0010000000023321874,
+        "foot_collision_clearance_at_reset_m": 0.0010000000003255356,
+        "joint_max_abs_velocity_rad_s": 5.932682514190674,
+        "pelvis_height_range_m": [
+          0.7042480360409502,
+          0.7655405067439073
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.744160779310505e-08,
+        "max_body_quat_l2_error": 5.296520741778847e-08,
+        "max_body_com_lin_vel_error_m_s": 2.0716402504561415e-07,
+        "max_body_ang_vel_error_rad_s": 6.979765263537274e-07
+      },
+      "source_strike_frame_50hz": 94,
+      "source_strike_time_s": 1.88,
+      "strike_speed_m_s": 3.92041142762263,
+      "strike_surface_normal_velocity_m_s": 3.7068051769684542,
+      "unrestricted_peak_frame_50hz": 94,
+      "unrestricted_peak_speed_m_s": 3.92041142762263,
+      "unrestricted_peak_normal_velocity_m_s": 3.7068051769684542,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-013",
+      "path": "motions/0623_kjp-013.npz",
+      "sha256": "386e66619a00adff136454d6660cd8cc44d11a970f9b875c6e48f2cd2cbcdee9",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-013.npz",
+      "source_sha256": "0abee4161b83b723816612cfaa7a8815f147dc8ee95cc5320a6f8cec130bff15",
+      "source_robot": "G1",
+      "source_frames": 187,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-013.bvh",
+        "sha256": "c59b25aa7a7078e03e63a96e4ff4b45c91d19277a551bc50dd116720f8046d7b"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-013.json",
+      "retarget_manifest_sha256": "8ed811571371117c7bd884b6f5989a48b4e59c5dd99399d9329e9a157a230b80",
+      "resampled_frames": 187,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        33,
+        126
+      ],
+      "used_source_frame_range_50hz": [
+        33,
+        126
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.001000000000000098,
+        "foot_collision_clearance_max_m": 0.0010000000039151608,
+        "foot_collision_clearance_at_reset_m": 0.0010000000008838252,
+        "joint_max_abs_velocity_rad_s": 8.585077285766602,
+        "pelvis_height_range_m": [
+          0.7377683190227027,
+          0.7662966821284596
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.166735255774825e-08,
+        "max_body_quat_l2_error": 4.629825698872193e-08,
+        "max_body_com_lin_vel_error_m_s": 1.3677649240984024e-07,
+        "max_body_ang_vel_error_rad_s": 5.066103301309965e-07
+      },
+      "source_strike_frame_50hz": 76,
+      "source_strike_time_s": 1.52,
+      "strike_speed_m_s": 3.393984773674121,
+      "strike_surface_normal_velocity_m_s": -3.3293624867197957,
+      "unrestricted_peak_frame_50hz": 76,
+      "unrestricted_peak_speed_m_s": 3.393984773674121,
+      "unrestricted_peak_normal_velocity_m_s": -3.3293624867197957,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-014",
+      "path": "motions/0623_kjp-014.npz",
+      "sha256": "3cd8eb25ebcf04dab653adaf64a8d541fb38793e42d4aadfa17e671847e37a04",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-014.npz",
+      "source_sha256": "6d4079baf48dfbd2bcef5bd3686abb80cdae3b9aa398d16edaa620630c479127",
+      "source_robot": "G1",
+      "source_frames": 248,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-014.bvh",
+        "sha256": "3070be0cbef52aa3d185af3ee08564eb41393cdd74545d22dd5fe7be12e46af3"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-014.json",
+      "retarget_manifest_sha256": "d194a902f30f0a6819554ac0495dacef78b3e3e187c961a0d89e14bc79cd03fc",
+      "resampled_frames": 248,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        61,
+        154
+      ],
+      "used_source_frame_range_50hz": [
+        61,
+        154
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000182,
+        "foot_collision_clearance_max_m": 0.0010000000016966264,
+        "foot_collision_clearance_at_reset_m": 0.0010000000012840415,
+        "joint_max_abs_velocity_rad_s": 10.957374572753906,
+        "pelvis_height_range_m": [
+          0.7254181731002146,
+          0.7594653621746047
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.604854596581333e-08,
+        "max_body_quat_l2_error": 5.450234819560713e-08,
+        "max_body_com_lin_vel_error_m_s": 7.556627235061342e-08,
+        "max_body_ang_vel_error_rad_s": 3.728096871213893e-07
+      },
+      "source_strike_frame_50hz": 104,
+      "source_strike_time_s": 2.08,
+      "strike_speed_m_s": 3.753568319392415,
+      "strike_surface_normal_velocity_m_s": -3.6388806439945736,
+      "unrestricted_peak_frame_50hz": 104,
+      "unrestricted_peak_speed_m_s": 3.753568319392415,
+      "unrestricted_peak_normal_velocity_m_s": -3.6388806439945736,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-015",
+      "path": "motions/0623_kjp-015.npz",
+      "sha256": "6b4198b3db5be669228d89a96e23fa5ea4adc97b3853cba3e701adace979712f",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-015.npz",
+      "source_sha256": "5594e7e0a339685d1c9676d539da8d74cb9fe4278e21f24a9b406bad3f9f5e2c",
+      "source_robot": "G1",
+      "source_frames": 227,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-015.bvh",
+        "sha256": "4a83f08eb82464c07b9bb8ab89c23f19c1263b85f8a75695f7f6a52aecdb2faf"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623_from_bvh_20261002/kjp-015.json",
+      "retarget_manifest_sha256": "b4039bb5656ea84218c39c89239768cc6f6563489c81279b32df333c5b0b68e6",
+      "resampled_frames": 227,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        58,
+        151
+      ],
+      "used_source_frame_range_50hz": [
+        58,
+        151
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999998031,
+        "foot_collision_clearance_max_m": 0.0010000000007873502,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000135734,
+        "joint_max_abs_velocity_rad_s": 11.151365280151367,
+        "pelvis_height_range_m": [
+          0.666969978931957,
+          0.7673755241043378
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.7774068862315175e-08,
+        "max_body_quat_l2_error": 5.3359255284102706e-08,
+        "max_body_com_lin_vel_error_m_s": 5.654205526006706e-08,
+        "max_body_ang_vel_error_rad_s": 3.692023931023414e-07
+      },
+      "source_strike_frame_50hz": 101,
+      "source_strike_time_s": 2.02,
+      "strike_speed_m_s": 4.241074311912365,
+      "strike_surface_normal_velocity_m_s": -3.9413267415128317,
+      "unrestricted_peak_frame_50hz": 101,
+      "unrestricted_peak_speed_m_s": 4.241074311912365,
+      "unrestricted_peak_normal_velocity_m_s": -3.9413267415128317,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-001",
+      "path": "motions/0804_2_kjp-001.npz",
+      "sha256": "e961a23ff9aed1841091c49ec2bc765e293cbeb6ff5aa76c0c6326fb4d698306",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-001.npz",
+      "source_sha256": "c7dcd55460545362924ba68a27f55e1078829a6b49a703905855386c2165e657",
+      "source_robot": "G1",
+      "source_frames": 187,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-001.bvh",
+        "sha256": "7c63c3689698aca11f2337020ecc754d448dbd666260ec45ead4ff4773ff958a"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-001.json",
+      "retarget_manifest_sha256": "380863f2ddbb42b16790d466929d4306e35687ac457706b5062a5443b55f0aad",
+      "resampled_frames": 187,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        41,
+        134
+      ],
+      "used_source_frame_range_50hz": [
+        41,
+        134
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000002247,
+        "foot_collision_clearance_max_m": 0.0010000000001231298,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000153046,
+        "joint_max_abs_velocity_rad_s": 2.9781558513641357,
+        "pelvis_height_range_m": [
+          0.7656968723285466,
+          0.7766158457846492
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.33902303373668e-08,
+        "max_body_quat_l2_error": 6.110492246686408e-08,
+        "max_body_com_lin_vel_error_m_s": 7.963117476528225e-08,
+        "max_body_ang_vel_error_rad_s": 2.443674063101753e-07
+      },
+      "source_strike_frame_50hz": 84,
+      "source_strike_time_s": 1.68,
+      "strike_speed_m_s": 1.813448908872833,
+      "strike_surface_normal_velocity_m_s": -1.6937908088930318,
+      "unrestricted_peak_frame_50hz": 84,
+      "unrestricted_peak_speed_m_s": 1.813448908872833,
+      "unrestricted_peak_normal_velocity_m_s": -1.6937908088930318,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-002",
+      "path": "motions/0804_2_kjp-002.npz",
+      "sha256": "87e627c3817d5c3dea493d69237fee7cb24c6b23b175f81f6d478b481bb491a8",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-002.npz",
+      "source_sha256": "797970509945d2ec16f905de4b2b022ae1351062128a0046dd5a48ca69095746",
+      "source_robot": "G1",
+      "source_frames": 186,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-002.bvh",
+        "sha256": "8809377374e00a21b42ae061f00608c1bdd6e7a3bf6283a12a9ee69e4ac3e683"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-002.json",
+      "retarget_manifest_sha256": "276097dedb225131518bc9032d9d93b7703f0dc4b2a3117e55bea43ec783ef5b",
+      "resampled_frames": 186,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        35,
+        128
+      ],
+      "used_source_frame_range_50hz": [
+        35,
+        128
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000019958,
+        "foot_collision_clearance_max_m": 0.001000000000158971,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000068149,
+        "joint_max_abs_velocity_rad_s": 3.503596067428589,
+        "pelvis_height_range_m": [
+          0.7582612430055091,
+          0.7707724782145606
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.165157784288056e-08,
+        "max_body_quat_l2_error": 5.646086615451677e-08,
+        "max_body_com_lin_vel_error_m_s": 8.10078987223406e-08,
+        "max_body_ang_vel_error_rad_s": 2.451704892991735e-07
+      },
+      "source_strike_frame_50hz": 78,
+      "source_strike_time_s": 1.56,
+      "strike_speed_m_s": 2.055841295732906,
+      "strike_surface_normal_velocity_m_s": -1.7725989349665867,
+      "unrestricted_peak_frame_50hz": 78,
+      "unrestricted_peak_speed_m_s": 2.055841295732906,
+      "unrestricted_peak_normal_velocity_m_s": -1.7725989349665867,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-003",
+      "path": "motions/0804_2_kjp-003.npz",
+      "sha256": "ecb6f12f284c09ea8f317a5e8e9f131a6f9234c6b1095b3fc427de70329d4be2",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-003.npz",
+      "source_sha256": "a8795a5b3fec1a45afa293909d7d78c92807430b78e176c1291e7aabef26ce60",
+      "source_robot": "G1",
+      "source_frames": 187,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-003.bvh",
+        "sha256": "a9426575bfc17de3e9d334da5411b779d3d2e2ecd050e3cd633f4b6578b5e7bf"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-003.json",
+      "retarget_manifest_sha256": "04a8370c90e2fc108cf11a3b427cb1f79bd813824fa919c2f3ca26f3a3b5fa5e",
+      "resampled_frames": 187,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        39,
+        132
+      ],
+      "used_source_frame_range_50hz": [
+        39,
+        132
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000001345,
+        "foot_collision_clearance_max_m": 0.0010000000000921182,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000092886,
+        "joint_max_abs_velocity_rad_s": 4.294947624206543,
+        "pelvis_height_range_m": [
+          0.762734702910818,
+          0.7715762893766756
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.29185290534906e-08,
+        "max_body_quat_l2_error": 6.053443868257862e-08,
+        "max_body_com_lin_vel_error_m_s": 8.567086817734548e-08,
+        "max_body_ang_vel_error_rad_s": 3.631105425228043e-07
+      },
+      "source_strike_frame_50hz": 82,
+      "source_strike_time_s": 1.64,
+      "strike_speed_m_s": 1.8606526004642632,
+      "strike_surface_normal_velocity_m_s": 1.5713341698694672,
+      "unrestricted_peak_frame_50hz": 82,
+      "unrestricted_peak_speed_m_s": 1.8606526004642632,
+      "unrestricted_peak_normal_velocity_m_s": 1.5713341698694672,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-004",
+      "path": "motions/0804_2_kjp-004.npz",
+      "sha256": "420959b8fc044a8ed35e93de6d481f8bc167ff84e33d5cfb9b8dc50a5f96b713",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-004.npz",
+      "source_sha256": "cdec1e38ed852c7e3b4e91e3b29dfcccf51cdaa67f01e19b31ca838065a40fbe",
+      "source_robot": "G1",
+      "source_frames": 200,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-004.bvh",
+        "sha256": "0c7da3e6fcc12cdeb46bb58f18de2b110f7c070c93ed98405724806299e1fc80"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-004.json",
+      "retarget_manifest_sha256": "fd70d2a16fa56931dabc6fde472cf8c7330eb4cf459e852b5ab0a5d3a72f388f",
+      "resampled_frames": 200,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        31,
+        124
+      ],
+      "used_source_frame_range_50hz": [
+        31,
+        124
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999998205,
+        "foot_collision_clearance_max_m": 0.0010000000001766998,
+        "foot_collision_clearance_at_reset_m": 0.001000000000015459,
+        "joint_max_abs_velocity_rad_s": 5.607540607452393,
+        "pelvis_height_range_m": [
+          0.7017673896109643,
+          0.7757001589578942
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.50348461750383e-08,
+        "max_body_quat_l2_error": 5.32190451090927e-08,
+        "max_body_com_lin_vel_error_m_s": 1.0329878483150701e-07,
+        "max_body_ang_vel_error_rad_s": 4.400918911517948e-07
+      },
+      "source_strike_frame_50hz": 74,
+      "source_strike_time_s": 1.48,
+      "strike_speed_m_s": 3.4032887349069494,
+      "strike_surface_normal_velocity_m_s": 3.314503218011098,
+      "unrestricted_peak_frame_50hz": 74,
+      "unrestricted_peak_speed_m_s": 3.4032887349069494,
+      "unrestricted_peak_normal_velocity_m_s": 3.314503218011098,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-005",
+      "path": "motions/0804_2_kjp-005.npz",
+      "sha256": "8a2413d59b6c6876496c8c35fe97d5596b57d8133f7a4ddd7c0345dfdf976eb2",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-005.npz",
+      "source_sha256": "1bef23646e37dd7b1a812544173bc4d220f70b3e61244df64b69c0e8ea10bbee",
+      "source_robot": "G1",
+      "source_frames": 256,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-005.bvh",
+        "sha256": "b36d2b53eeb3e753ed89a7e34236d4aff2575133c1ce58bd3c3487b8551f6b24"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-005.json",
+      "retarget_manifest_sha256": "98d8bfb2ec2f7a0d5624e3caed9dd44becc297c7ff6492f75085df93aba660b9",
+      "resampled_frames": 256,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        58,
+        151
+      ],
+      "used_source_frame_range_50hz": [
+        58,
+        151
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000009827,
+        "foot_collision_clearance_max_m": 0.0010000000001019593,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000164478,
+        "joint_max_abs_velocity_rad_s": 5.051936149597168,
+        "pelvis_height_range_m": [
+          0.7571547841923466,
+          0.7731143081617142
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.462808066487469e-08,
+        "max_body_quat_l2_error": 7.091091549066344e-08,
+        "max_body_com_lin_vel_error_m_s": 9.470784467779936e-08,
+        "max_body_ang_vel_error_rad_s": 5.940250815683612e-07
+      },
+      "source_strike_frame_50hz": 101,
+      "source_strike_time_s": 2.02,
+      "strike_speed_m_s": 2.7627215962559974,
+      "strike_surface_normal_velocity_m_s": -2.3090080433756413,
+      "unrestricted_peak_frame_50hz": 101,
+      "unrestricted_peak_speed_m_s": 2.7627215962559974,
+      "unrestricted_peak_normal_velocity_m_s": -2.3090080433756413,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-006",
+      "path": "motions/0804_2_kjp-006.npz",
+      "sha256": "73487718b95c807020af64b9d42afbf89e899ec9baeae781172610836bd8fa6e",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-006.npz",
+      "source_sha256": "5516764b5a09af197b709cdbb7856b83b875bd20fffdb1d0dc67934a066460d3",
+      "source_robot": "G1",
+      "source_frames": 198,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-006.bvh",
+        "sha256": "9de151eed25b880b2d8c91ee9b2187fd49d4c4da9a43d43f412a05156b34439a"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-006.json",
+      "retarget_manifest_sha256": "0c4034709968c958158b0a0811581a5723f32ea7170c9d5e7de5a034f0052b6c",
+      "resampled_frames": 198,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        46,
+        139
+      ],
+      "used_source_frame_range_50hz": [
+        46,
+        139
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000113,
+        "foot_collision_clearance_max_m": 0.0010000000001063186,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000206458,
+        "joint_max_abs_velocity_rad_s": 5.1092658042907715,
+        "pelvis_height_range_m": [
+          0.7431881769226861,
+          0.7714039786508184
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.373977989859725e-08,
+        "max_body_quat_l2_error": 5.1464567636631137e-08,
+        "max_body_com_lin_vel_error_m_s": 7.407249347224365e-08,
+        "max_body_ang_vel_error_rad_s": 2.4139578513882043e-07
+      },
+      "source_strike_frame_50hz": 89,
+      "source_strike_time_s": 1.78,
+      "strike_speed_m_s": 2.7619856719229463,
+      "strike_surface_normal_velocity_m_s": -2.3354611685352644,
+      "unrestricted_peak_frame_50hz": 89,
+      "unrestricted_peak_speed_m_s": 2.7619856719229463,
+      "unrestricted_peak_normal_velocity_m_s": -2.3354611685352644,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-007",
+      "path": "motions/0804_2_kjp-007.npz",
+      "sha256": "2364f68096b4cabaff28f3a0e253cb13120eb2be4d1673760eb2f9b1f1884fdd",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-007.npz",
+      "source_sha256": "27ec833cf6ba06ded0e032af595f4ad791c904c44d46f3fc044f16259a5a4f46",
+      "source_robot": "G1",
+      "source_frames": 222,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-007.bvh",
+        "sha256": "d853d94d90e63ce2468534ab90a6400d6ee948880708a2ddebb5d38e458edc3f"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-007.json",
+      "retarget_manifest_sha256": "623781ef263546db26c04e6bb06b1be2df31610083bdb4e7df1cf8c5090331a2",
+      "resampled_frames": 222,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        40,
+        133
+      ],
+      "used_source_frame_range_50hz": [
+        40,
+        133
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999998344,
+        "foot_collision_clearance_max_m": 0.0010000000004331024,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000243182,
+        "joint_max_abs_velocity_rad_s": 6.393486022949219,
+        "pelvis_height_range_m": [
+          0.6924902182559852,
+          0.7714683778465651
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.299485555416595e-08,
+        "max_body_quat_l2_error": 4.390027421120596e-08,
+        "max_body_com_lin_vel_error_m_s": 8.673934170921882e-08,
+        "max_body_ang_vel_error_rad_s": 6.572855504316522e-07
+      },
+      "source_strike_frame_50hz": 83,
+      "source_strike_time_s": 1.66,
+      "strike_speed_m_s": 2.9647246268264316,
+      "strike_surface_normal_velocity_m_s": -2.464984414442857,
+      "unrestricted_peak_frame_50hz": 83,
+      "unrestricted_peak_speed_m_s": 2.9647246268264316,
+      "unrestricted_peak_normal_velocity_m_s": -2.464984414442857,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-008",
+      "path": "motions/0804_2_kjp-008.npz",
+      "sha256": "ee806b1f8ac08235db4ffdbbb18057abf4d0841c95a6ac8bd24bf56970bf477f",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-008.npz",
+      "source_sha256": "dddee5e042737e581ac9a505431bd6f63b630ade9671b943a6a5862a91cc1ff7",
+      "source_robot": "G1",
+      "source_frames": 173,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-008.bvh",
+        "sha256": "e1f1d3cfbcde4902cc0e1a9e7043bfcfc35a406ff7fc7d3c5dcd1b7c408b1331"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-008.json",
+      "retarget_manifest_sha256": "88f375c923f194e1afeddeb9abafeed80eaaffb4a4baeb542d0495f44908135a",
+      "resampled_frames": 173,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        33,
+        126
+      ],
+      "used_source_frame_range_50hz": [
+        33,
+        126
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999246,
+        "foot_collision_clearance_max_m": 0.0010000000000806395,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000030956,
+        "joint_max_abs_velocity_rad_s": 3.911799669265747,
+        "pelvis_height_range_m": [
+          0.7733067813057453,
+          0.7778787162150407
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.467875590665528e-08,
+        "max_body_quat_l2_error": 5.158871516625768e-08,
+        "max_body_com_lin_vel_error_m_s": 8.256371497594728e-08,
+        "max_body_ang_vel_error_rad_s": 1.301694472211068e-07
+      },
+      "source_strike_frame_50hz": 76,
+      "source_strike_time_s": 1.52,
+      "strike_speed_m_s": 1.6995098477169375,
+      "strike_surface_normal_velocity_m_s": -1.57204185237523,
+      "unrestricted_peak_frame_50hz": 76,
+      "unrestricted_peak_speed_m_s": 1.6995098477169375,
+      "unrestricted_peak_normal_velocity_m_s": -1.57204185237523,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-009",
+      "path": "motions/0804_2_kjp-009.npz",
+      "sha256": "1940709f041f2254d693b311d9017d38f6770c95eea6ab32b1d36f9b243b0162",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-009.npz",
+      "source_sha256": "f39ab0102c59dc77b583950c16c8505aeb6f729b175ddeb4d89e910d21963533",
+      "source_robot": "G1",
+      "source_frames": 192,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-009.bvh",
+        "sha256": "545ef64956d6f815e72efed7176c59c685d1e730ab64bb2d13478a7e0a08b5b6"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-009.json",
+      "retarget_manifest_sha256": "17d764eed6cbf01e5355d9b922f9a96d86ffc968dfb895b3efcfd74d666b518f",
+      "resampled_frames": 192,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        56,
+        149
+      ],
+      "used_source_frame_range_50hz": [
+        56,
+        149
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000020583,
+        "foot_collision_clearance_max_m": 0.0010000000000510503,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000062008,
+        "joint_max_abs_velocity_rad_s": 4.089337348937988,
+        "pelvis_height_range_m": [
+          0.772135667463704,
+          0.7771189618013982
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.314729722982747e-08,
+        "max_body_quat_l2_error": 6.898574360334333e-08,
+        "max_body_com_lin_vel_error_m_s": 1.152495920919705e-07,
+        "max_body_ang_vel_error_rad_s": 3.0582563437242527e-07
+      },
+      "source_strike_frame_50hz": 99,
+      "source_strike_time_s": 1.98,
+      "strike_speed_m_s": 1.660353667705724,
+      "strike_surface_normal_velocity_m_s": -1.5549023248981815,
+      "unrestricted_peak_frame_50hz": 99,
+      "unrestricted_peak_speed_m_s": 1.660353667705724,
+      "unrestricted_peak_normal_velocity_m_s": -1.5549023248981815,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-010",
+      "path": "motions/0804_2_kjp-010.npz",
+      "sha256": "ba68f9d2cb54fd243c506a4669ced3d3e4a7397c4278b05b7387fbd347c99290",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-010.npz",
+      "source_sha256": "03d105a84b63ac79cbd88752ff54468a917dca2a5397c998947c24bcdf17cb15",
+      "source_robot": "G1",
+      "source_frames": 189,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-010.bvh",
+        "sha256": "bd07ebd21ecddb4092a9276073341d576864a19b2b8d143ac139ebc0bed09bab"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-010.json",
+      "retarget_manifest_sha256": "acfc749d86513f5b11c467f97228da0f915b7818f1c29e1f5a823c6c2d131471",
+      "resampled_frames": 189,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        43,
+        136
+      ],
+      "used_source_frame_range_50hz": [
+        43,
+        136
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000003027,
+        "foot_collision_clearance_max_m": 0.001000000001578863,
+        "foot_collision_clearance_at_reset_m": 0.001000000000177588,
+        "joint_max_abs_velocity_rad_s": 3.166053533554077,
+        "pelvis_height_range_m": [
+          0.7737830577835908,
+          0.7778251788146965
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.5287497024991694e-08,
+        "max_body_quat_l2_error": 7.018563219620255e-08,
+        "max_body_com_lin_vel_error_m_s": 1.2051888131914268e-07,
+        "max_body_ang_vel_error_rad_s": 2.3726999698325812e-07
+      },
+      "source_strike_frame_50hz": 86,
+      "source_strike_time_s": 1.72,
+      "strike_speed_m_s": 1.6150050293956073,
+      "strike_surface_normal_velocity_m_s": 1.5909017564955585,
+      "unrestricted_peak_frame_50hz": 86,
+      "unrestricted_peak_speed_m_s": 1.6150050293956073,
+      "unrestricted_peak_normal_velocity_m_s": 1.5909017564955585,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-011",
+      "path": "motions/0804_2_kjp-011.npz",
+      "sha256": "26244aa70e7585a513d6725cb677eb5c126bf2c154d3f8bf75368a22c249462e",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-011.npz",
+      "source_sha256": "3a7634d331a7e745386d9e6649328ea775132adfe3f7f55dc65d3a5c429131cb",
+      "source_robot": "G1",
+      "source_frames": 169,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-011.bvh",
+        "sha256": "a056b9c3a3ddbae19bbdf5173d5e0639a36f9c91b49102b097a27ff4c3398efa"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-011.json",
+      "retarget_manifest_sha256": "8e7c854c8cb4cee81f99432a22553415c9eb172fb2c09f14845001a20c48e683",
+      "resampled_frames": 169,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        29,
+        122
+      ],
+      "used_source_frame_range_50hz": [
+        29,
+        122
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999997441,
+        "foot_collision_clearance_max_m": 0.00100000000019884,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000037878,
+        "joint_max_abs_velocity_rad_s": 5.910529613494873,
+        "pelvis_height_range_m": [
+          0.6918900773734774,
+          0.7844397241314693
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.578330163404701e-08,
+        "max_body_quat_l2_error": 6.053149468630595e-08,
+        "max_body_com_lin_vel_error_m_s": 1.8831131232133203e-07,
+        "max_body_ang_vel_error_rad_s": 3.0459078992350896e-07
+      },
+      "source_strike_frame_50hz": 72,
+      "source_strike_time_s": 1.44,
+      "strike_speed_m_s": 3.133907266694048,
+      "strike_surface_normal_velocity_m_s": 3.1172927063388713,
+      "unrestricted_peak_frame_50hz": 72,
+      "unrestricted_peak_speed_m_s": 3.133907266694048,
+      "unrestricted_peak_normal_velocity_m_s": 3.1172927063388713,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-012",
+      "path": "motions/0804_2_kjp-012.npz",
+      "sha256": "93454dee7ed4ee833edf7bcd153f233a43630af990f9c16902dedc1483ec88de",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-012.npz",
+      "source_sha256": "7384096ff198d1a9be56f47bcd3bd6ebe40961e4b397457b8db00d7eefee151a",
+      "source_robot": "G1",
+      "source_frames": 180,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-012.bvh",
+        "sha256": "1430f406be5b3bb8255736c274e65649e3cafac6ab85d565c961c47da8e7eb3a"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-012.json",
+      "retarget_manifest_sha256": "2d623b50cfcc843266a526eebf02463ddc6c72c2dfdef3c0b9e796c39235f52c",
+      "resampled_frames": 180,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        48,
+        141
+      ],
+      "used_source_frame_range_50hz": [
+        48,
+        141
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000004727,
+        "foot_collision_clearance_max_m": 0.0010000000000648449,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000270695,
+        "joint_max_abs_velocity_rad_s": 5.40977144241333,
+        "pelvis_height_range_m": [
+          0.7687274762585448,
+          0.7758438188438911
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.2580662429923e-08,
+        "max_body_quat_l2_error": 5.802313999930799e-08,
+        "max_body_com_lin_vel_error_m_s": 5.245415368726469e-08,
+        "max_body_ang_vel_error_rad_s": 1.955757751304077e-07
+      },
+      "source_strike_frame_50hz": 91,
+      "source_strike_time_s": 1.82,
+      "strike_speed_m_s": 1.6946289022198684,
+      "strike_surface_normal_velocity_m_s": -1.3303041855748259,
+      "unrestricted_peak_frame_50hz": 91,
+      "unrestricted_peak_speed_m_s": 1.6946289022198684,
+      "unrestricted_peak_normal_velocity_m_s": -1.3303041855748259,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-013",
+      "path": "motions/0804_2_kjp-013.npz",
+      "sha256": "a827ad8f11faf6395048c2613d044107a0e62b678e0627f1f068d4f71be75804",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-013.npz",
+      "source_sha256": "f309b435f1c73e3de576fe6a173d08ac4868327ffaa21c520b3000e2521f8a3c",
+      "source_robot": "G1",
+      "source_frames": 170,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-013.bvh",
+        "sha256": "81793fdfce4d094eddbe6baba4d659f33c8a294ba53c0e6e1729a487114d0999"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-013.json",
+      "retarget_manifest_sha256": "97bfd9acafeb5782e7260617664fd5c771f05986f17ad9f02884f07d76ef0975",
+      "resampled_frames": 170,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        29,
+        122
+      ],
+      "used_source_frame_range_50hz": [
+        29,
+        122
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999996782,
+        "foot_collision_clearance_max_m": 0.0010000000002841937,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000384146,
+        "joint_max_abs_velocity_rad_s": 4.871652603149414,
+        "pelvis_height_range_m": [
+          0.7462145391683331,
+          0.7764651557234998
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.512262301112571e-08,
+        "max_body_quat_l2_error": 5.5595693081918126e-08,
+        "max_body_com_lin_vel_error_m_s": 8.074611956843114e-08,
+        "max_body_ang_vel_error_rad_s": 2.2714757275110742e-07
+      },
+      "source_strike_frame_50hz": 72,
+      "source_strike_time_s": 1.44,
+      "strike_speed_m_s": 2.606039542990502,
+      "strike_surface_normal_velocity_m_s": -2.3168066010167756,
+      "unrestricted_peak_frame_50hz": 72,
+      "unrestricted_peak_speed_m_s": 2.606039542990502,
+      "unrestricted_peak_normal_velocity_m_s": -2.3168066010167756,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-014",
+      "path": "motions/0804_2_kjp-014.npz",
+      "sha256": "259fdb0f36ae13c6b9461a8d86ced4138c08c2f1cd2cd5a36c05cb225e186381",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-014.npz",
+      "source_sha256": "1e62b7affdd57cb0ad70ae7311f51e12ba79e8484d35d83a1cd3aca6ce86970f",
+      "source_robot": "G1",
+      "source_frames": 195,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-014.bvh",
+        "sha256": "ebe65cf75442777f6d7940affac1ea3f2bdcc7b762c72c6df480a40a7b162f53"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-014.json",
+      "retarget_manifest_sha256": "960ed1c8d8c47a924934391086b48dc4333c8a0264fc3143f5debcd7594905ba",
+      "resampled_frames": 195,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        34,
+        127
+      ],
+      "used_source_frame_range_50hz": [
+        34,
+        127
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999996817,
+        "foot_collision_clearance_max_m": 0.0010000000002391828,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000030401,
+        "joint_max_abs_velocity_rad_s": 6.450906753540039,
+        "pelvis_height_range_m": [
+          0.708744145517572,
+          0.7803997333759221
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.160439929876361e-08,
+        "max_body_quat_l2_error": 4.204719818670414e-08,
+        "max_body_com_lin_vel_error_m_s": 1.0427028085402412e-07,
+        "max_body_ang_vel_error_rad_s": 2.810381225515357e-07
+      },
+      "source_strike_frame_50hz": 77,
+      "source_strike_time_s": 1.54,
+      "strike_speed_m_s": 2.9826730364650142,
+      "strike_surface_normal_velocity_m_s": -2.6806553371612925,
+      "unrestricted_peak_frame_50hz": 77,
+      "unrestricted_peak_speed_m_s": 2.9826730364650142,
+      "unrestricted_peak_normal_velocity_m_s": -2.6806553371612925,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-015",
+      "path": "motions/0804_2_kjp-015.npz",
+      "sha256": "21aa720c672cfaf8f72356f0a5133a11af776e67ac51c0041a665589444358dc",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-015.npz",
+      "source_sha256": "4deb4ca86aafed1ffb012be1dd77732c7607c35d2b91f73f4a4ea17e8f12c62b",
+      "source_robot": "G1",
+      "source_frames": 162,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-015.bvh",
+        "sha256": "420bbb297755a205f57fc80ff6dcebd22dc3dc64f9b512a461271e85912e15eb"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-015.json",
+      "retarget_manifest_sha256": "c3ebda98ec5d86180cb18cb45ca3b14207dedf2ed518077c4b63c53b6a1ae71e",
+      "resampled_frames": 162,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        26,
+        119
+      ],
+      "used_source_frame_range_50hz": [
+        26,
+        119
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.001000000000000046,
+        "foot_collision_clearance_max_m": 0.0010000000001654033,
+        "foot_collision_clearance_at_reset_m": 0.001000000000006357,
+        "joint_max_abs_velocity_rad_s": 4.6984076499938965,
+        "pelvis_height_range_m": [
+          0.7720086639181435,
+          0.7784502964015217
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.134383156997103e-08,
+        "max_body_quat_l2_error": 4.7268449124515906e-08,
+        "max_body_com_lin_vel_error_m_s": 6.304129840373207e-08,
+        "max_body_ang_vel_error_rad_s": 3.5649980034691e-07
+      },
+      "source_strike_frame_50hz": 69,
+      "source_strike_time_s": 1.38,
+      "strike_speed_m_s": 2.024208308180831,
+      "strike_surface_normal_velocity_m_s": -1.8787745021114177,
+      "unrestricted_peak_frame_50hz": 69,
+      "unrestricted_peak_speed_m_s": 2.024208308180831,
+      "unrestricted_peak_normal_velocity_m_s": -1.8787745021114177,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-016",
+      "path": "motions/0804_2_kjp-016.npz",
+      "sha256": "f92eeb5a0dc21a2da02053add2d462930c820587665fd1184598629c66604da8",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-016.npz",
+      "source_sha256": "49db7eecb896eecef7c21e549bb76a4b84fb167f2859b0aecf95bca015e8d503",
+      "source_robot": "G1",
+      "source_frames": 184,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-016.bvh",
+        "sha256": "5faad8c6f806a521b4bd70f85618bd8d2058b5ed1126fe9d902b73ae5fb6429d"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-016.json",
+      "retarget_manifest_sha256": "ef57c3c2e656be4daffea1d737736653613837be37f79b982701acd998037450",
+      "resampled_frames": 184,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        25,
+        118
+      ],
+      "used_source_frame_range_50hz": [
+        25,
+        118
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000001986,
+        "foot_collision_clearance_max_m": 0.0010000000005583442,
+        "foot_collision_clearance_at_reset_m": 0.001000000000010999,
+        "joint_max_abs_velocity_rad_s": 5.138115882873535,
+        "pelvis_height_range_m": [
+          0.7653266807273671,
+          0.7770453364108143
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.345329183256922e-08,
+        "max_body_quat_l2_error": 3.933248504119242e-08,
+        "max_body_com_lin_vel_error_m_s": 5.038838890580877e-08,
+        "max_body_ang_vel_error_rad_s": 1.8495324471956565e-07
+      },
+      "source_strike_frame_50hz": 68,
+      "source_strike_time_s": 1.36,
+      "strike_speed_m_s": 1.611212018833993,
+      "strike_surface_normal_velocity_m_s": -1.541899927660009,
+      "unrestricted_peak_frame_50hz": 68,
+      "unrestricted_peak_speed_m_s": 1.611212018833993,
+      "unrestricted_peak_normal_velocity_m_s": -1.541899927660009,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-017",
+      "path": "motions/0804_2_kjp-017.npz",
+      "sha256": "69109b0cc0250ce54106f193e490b2e5b4d2e79ae3608b17c8c3e4142704a4d3",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-017.npz",
+      "source_sha256": "0ac32df2acac71f3928838246d6c1f91a86397f93da159cad3f8b6a39d6b065f",
+      "source_robot": "G1",
+      "source_frames": 166,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-017.bvh",
+        "sha256": "bfd2c864e670cd11c903d492e1c2e1db5668c736da394aeda996d2c5b9da5103"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-017.json",
+      "retarget_manifest_sha256": "bb8f965aea7a73ac857e9b100e267d3284a5b2bb642ac02720f781b0bc6e31fa",
+      "resampled_frames": 166,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        17,
+        110
+      ],
+      "used_source_frame_range_50hz": [
+        17,
+        110
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.001000000000000726,
+        "foot_collision_clearance_max_m": 0.0010000000001510086,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000306881,
+        "joint_max_abs_velocity_rad_s": 5.763987064361572,
+        "pelvis_height_range_m": [
+          0.771063587576059,
+          0.777947576664326
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.704323528618829e-08,
+        "max_body_quat_l2_error": 4.551104006645603e-08,
+        "max_body_com_lin_vel_error_m_s": 4.5128134118499474e-08,
+        "max_body_ang_vel_error_rad_s": 1.897289561014759e-07
+      },
+      "source_strike_frame_50hz": 60,
+      "source_strike_time_s": 1.2,
+      "strike_speed_m_s": 2.1280882994834895,
+      "strike_surface_normal_velocity_m_s": 2.0816992179293976,
+      "unrestricted_peak_frame_50hz": 60,
+      "unrestricted_peak_speed_m_s": 2.1280882994834895,
+      "unrestricted_peak_normal_velocity_m_s": 2.0816992179293976,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-018",
+      "path": "motions/0804_2_kjp-018.npz",
+      "sha256": "abcee2ac0fcdfbf7b8b0e4f438ac1ce6299fc5300eabfe3bcb0fc456c7d15348",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-018.npz",
+      "source_sha256": "2611dadbd7bd42137123ef30486497a4e498f3cfe77becd8dbafd626c8e60a45",
+      "source_robot": "G1",
+      "source_frames": 216,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-018.bvh",
+        "sha256": "dea4daf4ec9fd3924632cfe2339ac744fab18ccfa177d72cc8ab3a11365f9415"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-018.json",
+      "retarget_manifest_sha256": "238ed1faad754234330001195e7fe3248cdc028180fca46cf93d512d6238ddfe",
+      "resampled_frames": 216,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        39,
+        132
+      ],
+      "used_source_frame_range_50hz": [
+        39,
+        132
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999997476,
+        "foot_collision_clearance_max_m": 0.00100000000010941,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000003756,
+        "joint_max_abs_velocity_rad_s": 7.431331634521484,
+        "pelvis_height_range_m": [
+          0.6924400865442502,
+          0.7795966753589358
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.772302652002793e-08,
+        "max_body_quat_l2_error": 5.055599503908721e-08,
+        "max_body_com_lin_vel_error_m_s": 1.0113258674948611e-07,
+        "max_body_ang_vel_error_rad_s": 3.7746665970672666e-07
+      },
+      "source_strike_frame_50hz": 82,
+      "source_strike_time_s": 1.64,
+      "strike_speed_m_s": 3.7043989266251978,
+      "strike_surface_normal_velocity_m_s": 3.701437481319864,
+      "unrestricted_peak_frame_50hz": 82,
+      "unrestricted_peak_speed_m_s": 3.7043989266251978,
+      "unrestricted_peak_normal_velocity_m_s": 3.701437481319864,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-019",
+      "path": "motions/0804_2_kjp-019.npz",
+      "sha256": "6be05629467014f3cdaff21795ab5fcfc77aae59265b6d8536b311caac341ac1",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-019.npz",
+      "source_sha256": "8abc7bfa809d6b52cbef04257e30a7e53b373eca39f73d312598bd282c9b6f10",
+      "source_robot": "G1",
+      "source_frames": 174,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-019.bvh",
+        "sha256": "e4c960dd7590523b88f4f4f0c65cdbac47029c90701d0667da7f9bc50d0b3acf"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-019.json",
+      "retarget_manifest_sha256": "1c47a50c232a95d8557bc92e6194597cb36c288226ba555a488df9d954bb2092",
+      "resampled_frames": 174,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        26,
+        119
+      ],
+      "used_source_frame_range_50hz": [
+        26,
+        119
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999994735,
+        "foot_collision_clearance_max_m": 0.0010000000000899671,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000096598,
+        "joint_max_abs_velocity_rad_s": 5.746448993682861,
+        "pelvis_height_range_m": [
+          0.7737390069691976,
+          0.7785120892865184
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.0573654637206e-08,
+        "max_body_quat_l2_error": 5.496822586812211e-08,
+        "max_body_com_lin_vel_error_m_s": 7.469232077284005e-08,
+        "max_body_ang_vel_error_rad_s": 2.9528477263340847e-07
+      },
+      "source_strike_frame_50hz": 69,
+      "source_strike_time_s": 1.38,
+      "strike_speed_m_s": 2.0290381601746033,
+      "strike_surface_normal_velocity_m_s": -1.744720039055674,
+      "unrestricted_peak_frame_50hz": 50,
+      "unrestricted_peak_speed_m_s": 2.090245164775527,
+      "unrestricted_peak_normal_velocity_m_s": 1.2522432869114035,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-020",
+      "path": "motions/0804_2_kjp-020.npz",
+      "sha256": "967417b3ec3d5bf1106632da125dfb25076ae54be3962c443aebc1ba37588c88",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-020.npz",
+      "source_sha256": "daa70cfa041c7b045c536b0dde136c592894558d1b69d2693e574fece6410da0",
+      "source_robot": "G1",
+      "source_frames": 193,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-020.bvh",
+        "sha256": "ac5c971b1fc7bf2c8fa2fcf772e7d393b9a89e059938ed4c7593529be66c6c8a"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-020.json",
+      "retarget_manifest_sha256": "f82e35a333bd4ac288c16ed31e65dcffeeb9909670ca13edae0f6a65c18bed4a",
+      "resampled_frames": 193,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        36,
+        129
+      ],
+      "used_source_frame_range_50hz": [
+        36,
+        129
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999997372,
+        "foot_collision_clearance_max_m": 0.0010000000000610215,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000008474,
+        "joint_max_abs_velocity_rad_s": 5.55774450302124,
+        "pelvis_height_range_m": [
+          0.7637117380142286,
+          0.7776349568171056
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.991033552061765e-08,
+        "max_body_quat_l2_error": 4.567180261212326e-08,
+        "max_body_com_lin_vel_error_m_s": 3.741407261781404e-08,
+        "max_body_ang_vel_error_rad_s": 2.233071629831329e-07
+      },
+      "source_strike_frame_50hz": 79,
+      "source_strike_time_s": 1.58,
+      "strike_speed_m_s": 2.477266449755352,
+      "strike_surface_normal_velocity_m_s": -1.8930840442622863,
+      "unrestricted_peak_frame_50hz": 79,
+      "unrestricted_peak_speed_m_s": 2.477266449755352,
+      "unrestricted_peak_normal_velocity_m_s": -1.8930840442622863,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-021",
+      "path": "motions/0804_2_kjp-021.npz",
+      "sha256": "f083c63cc8b8a11122777b62598fd2a932744865d642a2c3b1d55766928bc70a",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-021.npz",
+      "source_sha256": "117a7666a586715f55fd5bf7bfa59e56468eb0eed025063a2965ef64ea96232e",
+      "source_robot": "G1",
+      "source_frames": 231,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-021.bvh",
+        "sha256": "5921cf50c40ef89a1a5ceac1168d96048806bb7276b4410dda15058b872e887b"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-021.json",
+      "retarget_manifest_sha256": "9d50b52a5eb7c1c2cfbc3661b7b3466e50edc273800cc451ed1da2b0dcc089cf",
+      "resampled_frames": 231,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        63,
+        156
+      ],
+      "used_source_frame_range_50hz": [
+        63,
+        156
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999996817,
+        "foot_collision_clearance_max_m": 0.0010000000001045457,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000038728,
+        "joint_max_abs_velocity_rad_s": 5.53555965423584,
+        "pelvis_height_range_m": [
+          0.7405108896479549,
+          0.7771562192758161
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.7431924327389083e-08,
+        "max_body_quat_l2_error": 6.03224961531414e-08,
+        "max_body_com_lin_vel_error_m_s": 8.769570492006551e-08,
+        "max_body_ang_vel_error_rad_s": 3.960250909429419e-07
+      },
+      "source_strike_frame_50hz": 106,
+      "source_strike_time_s": 2.12,
+      "strike_speed_m_s": 2.9427177338892054,
+      "strike_surface_normal_velocity_m_s": -2.5713817785845645,
+      "unrestricted_peak_frame_50hz": 106,
+      "unrestricted_peak_speed_m_s": 2.9427177338892054,
+      "unrestricted_peak_normal_velocity_m_s": -2.5713817785845645,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-022",
+      "path": "motions/0804_2_kjp-022.npz",
+      "sha256": "e5e24266577d9f899be2f9f7a93262d4e9a9abb1f86b3b174e47f8dc10d333b7",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-022.npz",
+      "source_sha256": "58b99e4baa02aec719a83c609f8d354464fcba15109616505e64b9e027627ac0",
+      "source_robot": "G1",
+      "source_frames": 211,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-022.bvh",
+        "sha256": "3cbc2eb852c29235fbb7989487000c9c8dcb41744bf4974203b5eb33e45518f6"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-022.json",
+      "retarget_manifest_sha256": "a8f0919985dbe9772fc44e1f7618bad986b57e5216d785a03ff4a740a8395dae",
+      "resampled_frames": 211,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        65,
+        158
+      ],
+      "used_source_frame_range_50hz": [
+        65,
+        158
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000842,
+        "foot_collision_clearance_max_m": 0.0010000000001395455,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000000842,
+        "joint_max_abs_velocity_rad_s": 8.416950225830078,
+        "pelvis_height_range_m": [
+          0.7771115319224808,
+          0.7788505878252628
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.237550669891846e-08,
+        "max_body_quat_l2_error": 6.041234248429227e-08,
+        "max_body_com_lin_vel_error_m_s": 8.264722495265886e-08,
+        "max_body_ang_vel_error_rad_s": 4.164658724548076e-07
+      },
+      "source_strike_frame_50hz": 108,
+      "source_strike_time_s": 2.16,
+      "strike_speed_m_s": 2.378970281629127,
+      "strike_surface_normal_velocity_m_s": -2.3529877741247858,
+      "unrestricted_peak_frame_50hz": 108,
+      "unrestricted_peak_speed_m_s": 2.378970281629127,
+      "unrestricted_peak_normal_velocity_m_s": -2.3529877741247858,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-023",
+      "path": "motions/0804_2_kjp-023.npz",
+      "sha256": "aaf5772a1c7f0292d9cc4dd8fd75b09504a52ddff53893f5f8d45ccf60372cbf",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-023.npz",
+      "source_sha256": "d8b2b424a4d01e5a00d77f4f84b6ab65cf7fdbe640e57c0f251ff813a28fccae",
+      "source_robot": "G1",
+      "source_frames": 189,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-023.bvh",
+        "sha256": "4fdf7b5bed9b053365b990d15f142f222ba05dc39d958b6c783e2c3ec64e49b9"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-023.json",
+      "retarget_manifest_sha256": "7cfdce9b416423d05937ff766b259ce69eb4ac3f05c14fbc4366f5c0a4c5956a",
+      "resampled_frames": 189,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        41,
+        134
+      ],
+      "used_source_frame_range_50hz": [
+        41,
+        134
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000003739,
+        "foot_collision_clearance_max_m": 0.0010000000001178615,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000058747,
+        "joint_max_abs_velocity_rad_s": 10.187139511108398,
+        "pelvis_height_range_m": [
+          0.7660754869571982,
+          0.7774711707394483
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.719780564270252e-08,
+        "max_body_quat_l2_error": 5.901617026684903e-08,
+        "max_body_com_lin_vel_error_m_s": 6.095534077488196e-08,
+        "max_body_ang_vel_error_rad_s": 6.648795149999387e-07
+      },
+      "source_strike_frame_50hz": 84,
+      "source_strike_time_s": 1.68,
+      "strike_speed_m_s": 3.2001115339283204,
+      "strike_surface_normal_velocity_m_s": -2.6647756927411823,
+      "unrestricted_peak_frame_50hz": 84,
+      "unrestricted_peak_speed_m_s": 3.2001115339283204,
+      "unrestricted_peak_normal_velocity_m_s": -2.6647756927411823,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-024",
+      "path": "motions/0804_2_kjp-024.npz",
+      "sha256": "c150ce619ce53c93bce446d7aeef0c81434dc17525ed8565de386944c48af390",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-024.npz",
+      "source_sha256": "29821554bc24047576a9eab7e32d71aba111e8a9dee78dd7d98c07def8602fb3",
+      "source_robot": "G1",
+      "source_frames": 198,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-024.bvh",
+        "sha256": "beb2d97a07f374a244b0cf220b1251946d17a16a2d17230b94d1263b02d0a768"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-024.json",
+      "retarget_manifest_sha256": "452ea66ddb0e124955fe7e178788d76b0c7f25c08415dcca0ebb054215ff89f0",
+      "resampled_frames": 198,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        41,
+        134
+      ],
+      "used_source_frame_range_50hz": [
+        41,
+        134
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000011458,
+        "foot_collision_clearance_max_m": 0.0010000000001166576,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000105619,
+        "joint_max_abs_velocity_rad_s": 9.053133010864258,
+        "pelvis_height_range_m": [
+          0.7727055019127106,
+          0.7776913785225993
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.234899774248959e-08,
+        "max_body_quat_l2_error": 6.50303535115244e-08,
+        "max_body_com_lin_vel_error_m_s": 1.2931836890217596e-07,
+        "max_body_ang_vel_error_rad_s": 3.499608212109706e-07
+      },
+      "source_strike_frame_50hz": 84,
+      "source_strike_time_s": 1.68,
+      "strike_speed_m_s": 3.7244451646586505,
+      "strike_surface_normal_velocity_m_s": 3.677801335865505,
+      "unrestricted_peak_frame_50hz": 84,
+      "unrestricted_peak_speed_m_s": 3.7244451646586505,
+      "unrestricted_peak_normal_velocity_m_s": 3.677801335865505,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-025",
+      "path": "motions/0804_2_kjp-025.npz",
+      "sha256": "d7f80c118ada426a5bf99a87bf29652a2bad66de6eaf0f35b2e8541af6f5784c",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-025.npz",
+      "source_sha256": "a1190c324f5ec663f8ad8a5f95b99aee8facff455843e28c89d72ef8fe128be2",
+      "source_robot": "G1",
+      "source_frames": 198,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-025.bvh",
+        "sha256": "ddb8fd13a16c504ba64b0f15b31cd6da4fa3f4de3e57d74bd75c319f262f34b2"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-025.json",
+      "retarget_manifest_sha256": "0f61545088580d61943646098baca870e4624d4c494a592ce38b9690b6a5037e",
+      "resampled_frames": 198,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        37,
+        130
+      ],
+      "used_source_frame_range_50hz": [
+        37,
+        130
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.000999999999999798,
+        "foot_collision_clearance_max_m": 0.0010004968454419352,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000011527,
+        "joint_max_abs_velocity_rad_s": 11.004185676574707,
+        "pelvis_height_range_m": [
+          0.6931822347678406,
+          0.7839081185417226
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.447063216619142e-08,
+        "max_body_quat_l2_error": 5.981403672594173e-08,
+        "max_body_com_lin_vel_error_m_s": 2.419402506670387e-07,
+        "max_body_ang_vel_error_rad_s": 1.3144109174412222e-06
+      },
+      "source_strike_frame_50hz": 80,
+      "source_strike_time_s": 1.6,
+      "strike_speed_m_s": 3.717237262941857,
+      "strike_surface_normal_velocity_m_s": 3.6681077823331076,
+      "unrestricted_peak_frame_50hz": 80,
+      "unrestricted_peak_speed_m_s": 3.717237262941857,
+      "unrestricted_peak_normal_velocity_m_s": 3.6681077823331076,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-026",
+      "path": "motions/0804_2_kjp-026.npz",
+      "sha256": "a18080d96034bb31d1772e51707906e7d504ddb1cd3e29e44c3a82957a2e5ada",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-026.npz",
+      "source_sha256": "fe5ea1a0d3b66107538da48de06e849df47c209a549b2b58a656e00ca2da9982",
+      "source_robot": "G1",
+      "source_frames": 167,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-026.bvh",
+        "sha256": "07ee4da26ccb441aa4f0bfd940f3c08323304b8869d275e12a54680ed7e8047d"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-026.json",
+      "retarget_manifest_sha256": "25655573ef6506f46ae9e0def20ac69883ffe9aa9ad75531f93343da4d192cda",
+      "resampled_frames": 167,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        33,
+        126
+      ],
+      "used_source_frame_range_50hz": [
+        33,
+        126
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000011146,
+        "foot_collision_clearance_max_m": 0.0010000000000815953,
+        "foot_collision_clearance_at_reset_m": 0.00100000000006642,
+        "joint_max_abs_velocity_rad_s": 8.690850257873535,
+        "pelvis_height_range_m": [
+          0.7742080389742497,
+          0.7806805574715009
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.789905349080527e-08,
+        "max_body_quat_l2_error": 6.96152744391437e-08,
+        "max_body_com_lin_vel_error_m_s": 9.61922401732096e-08,
+        "max_body_ang_vel_error_rad_s": 4.892795466560074e-07
+      },
+      "source_strike_frame_50hz": 76,
+      "source_strike_time_s": 1.52,
+      "strike_speed_m_s": 3.1122854064476346,
+      "strike_surface_normal_velocity_m_s": -2.7470507091149408,
+      "unrestricted_peak_frame_50hz": 76,
+      "unrestricted_peak_speed_m_s": 3.1122854064476346,
+      "unrestricted_peak_normal_velocity_m_s": -2.7470507091149408,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-027",
+      "path": "motions/0804_2_kjp-027.npz",
+      "sha256": "9717a1f194e68e72fcdc68d9018689b3fc5825b8d976f34177fcff25f93d24ca",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-027.npz",
+      "source_sha256": "43973da84ff4a549ed0d88f4d8fd13fc1ad7f1f8e5c840c60967f61d1f56291a",
+      "source_robot": "G1",
+      "source_frames": 189,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-027.bvh",
+        "sha256": "54d4925cf0a87f1048c0dcf4cfcb1dc0ccb76ec1a0baa2b13fc65a06e39232d8"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-027.json",
+      "retarget_manifest_sha256": "8e2720a2fd9784acf04c8c8467cedd613776694680be5180d273907f303b2bf6",
+      "resampled_frames": 189,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        38,
+        131
+      ],
+      "used_source_frame_range_50hz": [
+        38,
+        131
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.00099999999999951,
+        "foot_collision_clearance_max_m": 0.001000000000271034,
+        "foot_collision_clearance_at_reset_m": 0.0010000000000035779,
+        "joint_max_abs_velocity_rad_s": 7.3455657958984375,
+        "pelvis_height_range_m": [
+          0.7599252227611846,
+          0.7836894654488724
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.437445814773014e-08,
+        "max_body_quat_l2_error": 7.078737774720092e-08,
+        "max_body_com_lin_vel_error_m_s": 1.0714014558876883e-07,
+        "max_body_ang_vel_error_rad_s": 3.3393178777707533e-07
+      },
+      "source_strike_frame_50hz": 81,
+      "source_strike_time_s": 1.62,
+      "strike_speed_m_s": 3.6028048885829644,
+      "strike_surface_normal_velocity_m_s": -3.1543057562001167,
+      "unrestricted_peak_frame_50hz": 81,
+      "unrestricted_peak_speed_m_s": 3.6028048885829644,
+      "unrestricted_peak_normal_velocity_m_s": -3.1543057562001167,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-028",
+      "path": "motions/0804_2_kjp-028.npz",
+      "sha256": "0324225666d079177cbfe041d379307f279099b741068271b65f4067f5e72316",
+      "source": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-028.npz",
+      "source_sha256": "6d1b11aaf91cf575df1d780023ce4e7e74740e9bd5ab6e5d91ce92a6ad5a51e0",
+      "source_robot": "G1",
+      "source_frames": 215,
+      "source_fps": 50.0,
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-028.bvh",
+        "sha256": "4abbe86e7cfd7dbe2ef161fb45073375c15ec34eac900523b205db13e8bf3584"
+      },
+      "retarget_manifest": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_from_bvh_20261002/kjp-028.json",
+      "retarget_manifest_sha256": "c1cfcb990d67bb2210eb124147c2f0668db9d972383cd86b88eb895a2fa4a1a1",
+      "resampled_frames": 215,
+      "output_frames": 94,
+      "output_fps": 50,
+      "source_identity_mapping": "same original 0623/0804_2 BVH capture as the archived experiment",
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        45,
+        138
+      ],
+      "used_source_frame_range_50hz": [
+        45,
+        138
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "strike_time_s": 0.86,
+      "root_height_scale": 1.0,
+      "root_height_offset_m": 0.0,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.000999999999999876,
+        "foot_collision_clearance_max_m": 0.0010000000001174868,
+        "foot_collision_clearance_at_reset_m": 0.001000000000003047,
+        "joint_max_abs_velocity_rad_s": 5.758292198181152,
+        "pelvis_height_range_m": [
+          0.7339592326704169,
+          0.7807525770961783
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.133495610351815e-08,
+        "max_body_quat_l2_error": 4.791520001197567e-08,
+        "max_body_com_lin_vel_error_m_s": 7.051869488350349e-08,
+        "max_body_ang_vel_error_rad_s": 5.80590181264995e-07
+      },
+      "source_strike_frame_50hz": 88,
+      "source_strike_time_s": 1.76,
+      "strike_speed_m_s": 3.75026503522845,
+      "strike_surface_normal_velocity_m_s": -3.578887648164785,
+      "unrestricted_peak_frame_50hz": 88,
+      "unrestricted_peak_speed_m_s": 3.75026503522845,
+      "unrestricted_peak_normal_velocity_m_s": -3.578887648164785,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    }
+  ],
+  "canonical_training_dataset": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_0623-from_bvh_20261002-npz--clip-racket-peak"
+}

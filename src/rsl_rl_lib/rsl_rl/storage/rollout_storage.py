@@ -64,6 +64,9 @@ class RolloutStorage:
             self.gae_step_scale: torch.Tensor | None = None
             """Discount interval scale for this transition (RL, variable motion dt)."""
 
+            self.timeout_bootstrap: torch.Tensor | None = None
+            """Already discounted timeout value, separate from the reward rate."""
+
         def clear(self) -> None:
             """Reset all transition fields to None."""
             self.__init__()
@@ -164,6 +167,7 @@ class RolloutStorage:
             self.returns = torch.zeros(num_transitions_per_env, num_envs, 1, device=self.device)
             self.advantages = torch.zeros(num_transitions_per_env, num_envs, 1, device=self.device)
             self.gae_step_scale = torch.ones(num_transitions_per_env, num_envs, 1, device=self.device)
+            self.timeout_bootstrap = torch.zeros(num_transitions_per_env, num_envs, 1, device=self.device)
 
         # For recurrent networks
         self.saved_hidden_state_a = None
@@ -196,6 +200,10 @@ class RolloutStorage:
                 self.gae_step_scale[self.step].copy_(transition.gae_step_scale)  # type: ignore[attr-defined]
             else:
                 self.gae_step_scale[self.step].fill_(1.0)
+            if transition.timeout_bootstrap is not None:
+                self.timeout_bootstrap[self.step].copy_(transition.timeout_bootstrap.view(-1, 1))
+            else:
+                self.timeout_bootstrap[self.step].zero_()
             if self.distribution_params is None:  # Initialize the distribution parameters
                 self.distribution_params = tuple(
                     torch.zeros(self.num_transitions_per_env, *p.shape, device=self.device)
@@ -215,6 +223,7 @@ class RolloutStorage:
         self.step = 0
         if self.training_type == "rl" and getattr(self, "gae_step_scale", None) is not None:
             self.gae_step_scale.fill_(1.0)
+            self.timeout_bootstrap.zero_()
 
     # For distillation
     def generator(self) -> Generator[Batch, None, None]:

@@ -1,0 +1,14 @@
+{
+  "tracker.pt": {
+    "source": "logs/rsl_rl/a3_pingpong_receive_stage2/2026-09-29_01-03-16_scheduled_intercept/tracker.pt",
+    "sha256": "19cab03d4c5afcbfae1ccbb1b0f77aec9abcef6e8f8ae02cf99dcc4aeb7b1ab8"
+  },
+  "model_999.pt": {
+    "source": "logs/rsl_rl/a3_pingpong_receive_stage2/2026-09-29_01-03-16_scheduled_intercept/model_999.pt",
+    "sha256": "28a1ef94ce989f8c5d450ac7d3295198aef63f04a9eb718111daff5ce4b9b6b7"
+  },
+  "tracking_model_999.pt": {
+    "source": "logs/rsl_rl/a3_pingpong_tracking_stage1_random_dt/2026-09-29_00-53-35_physical_time/model_999.pt",
+    "sha256": "71862c456c2553b2a90058b1d7ade7613ce3704d880c17bf5539a4e5e791a2f0"
+  }
+}

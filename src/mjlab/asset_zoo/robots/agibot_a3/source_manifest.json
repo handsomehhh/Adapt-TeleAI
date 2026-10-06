@@ -1,0 +1,333 @@
+{
+  "baseline": "/home/lxz/HOPE/hope_training/whole_body_tracking/logs/rsl_rl/agibot_a3_hope_multi_motion/2026-08-05_22-17-25_repro0720--motion_old_and_0804_new_strike_time--strike0.46---no_self_collision--0.5_velocity_scale--eacy_curr",
+  "sources": {
+    "mesh": {
+      "path": "/home/lxz/HOPE/hope_training/whole_body_tracking/source/whole_body_tracking/whole_body_tracking/assets/agibot_a3/urdf/model_bak.urdf",
+      "sha256": "538945a94d23f220a09ba41e19d2f27099ffc1800336b273b87ef8887b7412c5"
+    },
+    "primitive": {
+      "path": "/home/lxz/HOPE/hope_training/whole_body_tracking/source/whole_body_tracking/whole_body_tracking/assets/agibot_a3/urdf/model.urdf",
+      "sha256": "63bdc5af5dedc9d7dab338e56f381a12c58462aa718483b0891d5e16f3cadc46"
+    }
+  },
+  "mesh": {
+    "body_names": [
+      "pelvis_link",
+      "waist_yaw_Link",
+      "waist_roll_Link",
+      "torso_Link",
+      "head_yaw_Link",
+      "head_pitch_Link",
+      "left_shoulder_pitch_Link",
+      "left_shoulder_roll_Link",
+      "left_shoulder_yaw_Link",
+      "left_elbow_Link",
+      "left_wrist_roll_Link",
+      "left_wrist_pitch_Link",
+      "left_wrist_yaw_Link",
+      "right_shoulder_pitch_Link",
+      "right_shoulder_roll_Link",
+      "right_shoulder_yaw_Link",
+      "right_elbow_Link",
+      "right_wrist_roll_Link",
+      "right_wrist_pitch_Link",
+      "right_wrist_yaw_Link",
+      "left_hip_pitch_Link",
+      "left_hip_roll_Link",
+      "left_hip_yaw_Link",
+      "left_knee_Link",
+      "left_ankle_pitch_Link",
+      "left_ankle_roll_Link",
+      "right_hip_pitch_Link",
+      "right_hip_roll_Link",
+      "right_hip_yaw_Link",
+      "right_knee_Link",
+      "right_ankle_pitch_Link",
+      "right_ankle_roll_Link"
+    ],
+    "joint_names": [
+      "waist_yaw_joint",
+      "waist_roll_joint",
+      "waist_pitch_joint",
+      "head_yaw_joint",
+      "head_pitch_joint",
+      "left_shoulder_pitch_joint",
+      "left_shoulder_roll_joint",
+      "left_shoulder_yaw_joint",
+      "left_elbow_joint",
+      "left_wrist_roll_joint",
+      "left_wrist_pitch_joint",
+      "left_wrist_yaw_joint",
+      "right_shoulder_pitch_joint",
+      "right_shoulder_roll_joint",
+      "right_shoulder_yaw_joint",
+      "right_elbow_joint",
+      "right_wrist_roll_joint",
+      "right_wrist_pitch_joint",
+      "right_wrist_yaw_joint",
+      "left_hip_pitch_joint",
+      "left_hip_roll_joint",
+      "left_hip_yaw_joint",
+      "left_knee_joint",
+      "left_ankle_pitch_joint",
+      "left_ankle_roll_joint",
+      "right_hip_pitch_joint",
+      "right_hip_roll_joint",
+      "right_hip_yaw_joint",
+      "right_knee_joint",
+      "right_ankle_pitch_joint",
+      "right_ankle_roll_joint"
+    ],
+    "collision_geoms": {
+      "pelvis_link": [
+        "pelvis_link_0_collision",
+        "imu_in_pelvis_Link_0_collision"
+      ],
+      "waist_yaw_Link": [
+        "waist_yaw_Link_0_collision"
+      ],
+      "waist_roll_Link": [
+        "waist_roll_Link_0_collision"
+      ],
+      "torso_Link": [
+        "torso_Link_0_collision",
+        "torso_shell_Link_0_collision",
+        "imu_in_torso_Link_0_collision"
+      ],
+      "head_yaw_Link": [
+        "head_yaw_Link_0_collision"
+      ],
+      "head_pitch_Link": [
+        "head_pitch_Link_0_collision",
+        "std_head_stereo_camera_Link_0_collision"
+      ],
+      "left_shoulder_pitch_Link": [
+        "left_shoulder_pitch_Link_0_collision"
+      ],
+      "left_shoulder_roll_Link": [
+        "left_shoulder_roll_Link_0_collision"
+      ],
+      "left_shoulder_yaw_Link": [
+        "left_shoulder_yaw_Link_0_collision"
+      ],
+      "left_elbow_Link": [
+        "left_elbow_Link_0_collision"
+      ],
+      "left_wrist_roll_Link": [
+        "left_wrist_roll_Link_0_collision"
+      ],
+      "left_wrist_pitch_Link": [
+        "left_wrist_pitch_Link_0_collision"
+      ],
+      "left_wrist_yaw_Link": [
+        "left_wrist_yaw_Link_0_collision",
+        "left_hand_Link_0_collision"
+      ],
+      "right_shoulder_pitch_Link": [
+        "right_shoulder_pitch_Link_0_collision"
+      ],
+      "right_shoulder_roll_Link": [
+        "right_shoulder_roll_Link_0_collision"
+      ],
+      "right_shoulder_yaw_Link": [
+        "right_shoulder_yaw_Link_0_collision"
+      ],
+      "right_elbow_Link": [
+        "right_elbow_Link_0_collision"
+      ],
+      "right_wrist_roll_Link": [
+        "right_wrist_roll_Link_0_collision"
+      ],
+      "right_wrist_pitch_Link": [
+        "right_wrist_pitch_Link_0_collision"
+      ],
+      "right_wrist_yaw_Link": [
+        "right_wrist_yaw_Link_0_collision",
+        "right_hand_pingpang_Link_0_collision",
+        "pingpang_red_Link_0_collision",
+        "pingpang_black_Link_0_collision",
+        "pingbang_ball_Link_0_collision"
+      ],
+      "left_hip_pitch_Link": [
+        "left_hip_pitch_Link_0_collision"
+      ],
+      "left_hip_roll_Link": [
+        "left_hip_roll_Link_0_collision"
+      ],
+      "left_hip_yaw_Link": [
+        "left_hip_yaw_Link_0_collision"
+      ],
+      "left_knee_Link": [
+        "left_knee_Link_0_collision",
+        "left_knee_shell_Link_0_collision"
+      ],
+      "left_ankle_pitch_Link": [
+        "left_ankle_pitch_Link_0_collision"
+      ],
+      "left_ankle_roll_Link": [
+        "left_ankle_roll_Link_0_collision"
+      ],
+      "right_hip_pitch_Link": [
+        "right_hip_pitch_Link_0_collision"
+      ],
+      "right_hip_roll_Link": [
+        "right_hip_roll_Link_0_collision"
+      ],
+      "right_hip_yaw_Link": [
+        "right_hip_yaw_Link_0_collision"
+      ],
+      "right_knee_Link": [
+        "right_knee_Link_0_collision",
+        "right_knee_shell_Link_0_collision"
+      ],
+      "right_ankle_pitch_Link": [
+        "right_ankle_pitch_Link_0_collision"
+      ],
+      "right_ankle_roll_Link": [
+        "right_ankle_roll_Link_0_collision"
+      ]
+    },
+    "total_mass": 58.27723163000001
+  },
+  "primitive": {
+    "body_names": [
+      "pelvis_link",
+      "waist_yaw_Link",
+      "waist_roll_Link",
+      "torso_Link",
+      "head_yaw_Link",
+      "head_pitch_Link",
+      "left_shoulder_pitch_Link",
+      "left_shoulder_roll_Link",
+      "left_shoulder_yaw_Link",
+      "left_elbow_Link",
+      "left_wrist_roll_Link",
+      "left_wrist_pitch_Link",
+      "left_wrist_yaw_Link",
+      "right_shoulder_pitch_Link",
+      "right_shoulder_roll_Link",
+      "right_shoulder_yaw_Link",
+      "right_elbow_Link",
+      "right_wrist_roll_Link",
+      "right_wrist_pitch_Link",
+      "right_wrist_yaw_Link",
+      "left_hip_pitch_Link",
+      "left_hip_roll_Link",
+      "left_hip_yaw_Link",
+      "left_knee_Link",
+      "left_ankle_pitch_Link",
+      "left_ankle_roll_Link",
+      "right_hip_pitch_Link",
+      "right_hip_roll_Link",
+      "right_hip_yaw_Link",
+      "right_knee_Link",
+      "right_ankle_pitch_Link",
+      "right_ankle_roll_Link"
+    ],
+    "joint_names": [
+      "waist_yaw_joint",
+      "waist_roll_joint",
+      "waist_pitch_joint",
+      "head_yaw_joint",
+      "head_pitch_joint",
+      "left_shoulder_pitch_joint",
+      "left_shoulder_roll_joint",
+      "left_shoulder_yaw_joint",
+      "left_elbow_joint",
+      "left_wrist_roll_joint",
+      "left_wrist_pitch_joint",
+      "left_wrist_yaw_joint",
+      "right_shoulder_pitch_joint",
+      "right_shoulder_roll_joint",
+      "right_shoulder_yaw_joint",
+      "right_elbow_joint",
+      "right_wrist_roll_joint",
+      "right_wrist_pitch_joint",
+      "right_wrist_yaw_joint",
+      "left_hip_pitch_joint",
+      "left_hip_roll_joint",
+      "left_hip_yaw_joint",
+      "left_knee_joint",
+      "left_ankle_pitch_joint",
+      "left_ankle_roll_joint",
+      "right_hip_pitch_joint",
+      "right_hip_roll_joint",
+      "right_hip_yaw_joint",
+      "right_knee_joint",
+      "right_ankle_pitch_joint",
+      "right_ankle_roll_joint"
+    ],
+    "collision_geoms": {
+      "pelvis_link": [
+        "pelvis_link_0_collision"
+      ],
+      "waist_yaw_Link": [],
+      "waist_roll_Link": [
+        "waist_roll_Link_0_collision"
+      ],
+      "torso_Link": [
+        "torso_Link_0_collision"
+      ],
+      "head_yaw_Link": [],
+      "head_pitch_Link": [
+        "head_pitch_Link_0_collision"
+      ],
+      "left_shoulder_pitch_Link": [],
+      "left_shoulder_roll_Link": [
+        "left_shoulder_roll_Link_0_collision"
+      ],
+      "left_shoulder_yaw_Link": [
+        "left_shoulder_yaw_Link_0_collision"
+      ],
+      "left_elbow_Link": [
+        "left_elbow_Link_0_collision"
+      ],
+      "left_wrist_roll_Link": [],
+      "left_wrist_pitch_Link": [],
+      "left_wrist_yaw_Link": [
+        "left_wrist_yaw_Link_0_collision"
+      ],
+      "right_shoulder_pitch_Link": [],
+      "right_shoulder_roll_Link": [
+        "right_shoulder_roll_Link_0_collision"
+      ],
+      "right_shoulder_yaw_Link": [
+        "right_shoulder_yaw_Link_0_collision"
+      ],
+      "right_elbow_Link": [
+        "right_elbow_Link_0_collision"
+      ],
+      "right_wrist_roll_Link": [],
+      "right_wrist_pitch_Link": [],
+      "right_wrist_yaw_Link": [
+        "right_wrist_yaw_Link_0_collision",
+        "right_wrist_yaw_Link_1_collision"
+      ],
+      "left_hip_pitch_Link": [],
+      "left_hip_roll_Link": [],
+      "left_hip_yaw_Link": [
+        "left_hip_yaw_Link_0_collision"
+      ],
+      "left_knee_Link": [
+        "left_knee_Link_0_collision"
+      ],
+      "left_ankle_pitch_Link": [],
+      "left_ankle_roll_Link": [
+        "left_ankle_roll_Link_0_collision"
+      ],
+      "right_hip_pitch_Link": [],
+      "right_hip_roll_Link": [],
+      "right_hip_yaw_Link": [
+        "right_hip_yaw_Link_0_collision"
+      ],
+      "right_knee_Link": [
+        "right_knee_Link_0_collision"
+      ],
+      "right_ankle_pitch_Link": [],
+      "right_ankle_roll_Link": [
+        "right_ankle_roll_Link_0_collision"
+      ]
+    },
+    "total_mass": 58.27723163000001
+  }
+}

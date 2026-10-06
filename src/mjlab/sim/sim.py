@@ -427,7 +427,9 @@ class Simulation:
     if not self.wp_device.is_cuda:
       return False
 
-    driver_ver = wp.context.runtime.driver_version
+    # ``wp.context`` is an internal module and is no longer exposed by Warp
+    # 1.16.  Use the public API so this remains compatible with current Warp.
+    driver_ver = wp.get_cuda_driver_version()
     has_mempool = wp.is_mempool_enabled(self.wp_device)
 
     if driver_ver is None:

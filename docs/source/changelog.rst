@@ -8,6 +8,12 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added Agibot A3 ping-pong motion tracking and frozen-tracker residual receiving
+  tasks, named motion import, swept ball collisions, and local training validation.
+- Added an isolated 29-DoF Unitree G1 ping-pong asset, a provenance-bound 43-clip
+  motion corpus, two-stage random-speed tracking and adaptive receiving tasks,
+  and reproducible evaluation and ablation tools.
+
 - Added ``ActuatorCfg.viscous_damping`` for passive velocity proportional
   damping (``f = -b·v``), distinct from the PD derivative gain ``damping``
   used by position and velocity actuators. Maps to ``<joint damping>`` for

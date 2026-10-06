@@ -80,6 +80,16 @@ uv run play Mjlab-ServeTracking-Flat-Unitree-G1-Stage1-RandomDt \
 - **`--racket-hand`**: Use `left` for `player1` (left-handed athlete) and `right` for `player2` (right-handed athlete). This selects the racket MJCF and hit-arm reward terms.
 - **Hit-arm keyframes**: Tune `HIT_ARM_KEYFRAME_TIMES_S` in [`stage1_tracking_env_cfg.py`](src/mjlab/tasks/adapt_tennis/stage1_tracking_env_cfg.py) to match your motion clip (e.g., `3.4` s for `player1`, `1.84` s for `player2`).
 
+## Ping-Pong Tasks
+
+A3 multi-motion tracking and adaptive receiving tasks are documented in
+[A3_PINGPONG.md](docs/A3_PINGPONG.md), including training, play, data provenance,
+and validation commands.
+
+The isolated 29-DoF Unitree G1 implementation is documented in
+[G1_PINGPONG.md](docs/G1_PINGPONG.md), with its asset and motion provenance,
+two-stage training commands, adaptive-policy ablations, and validation workflow.
+
 ## ✉️ Contact
 For any questions, please feel free to email liurf23@mail2.sysu.edu.cn or taou.cs13@gmail.com. We will respond to it as soon as possible.
 

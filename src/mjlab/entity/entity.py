@@ -680,8 +680,14 @@ class Entity:
 
       # Joint limits.
       joint_ids_list = [j.id for j in self._non_free_joints]
-      dof_limits = model.jnt_range[:, joint_ids_list]
-      default_joint_pos_limits = dof_limits.clone()
+      # MuJoCo stores joint ranges as ``(njnt, 2)``.  Select the entity's
+      # joints on the first axis, then give every simulated world its own
+      # limits tensor.  Indexing the second axis produced a malformed tensor
+      # whose leading dimension was not ``nworld``.
+      dof_limits = torch.tensor(
+        mj_model.jnt_range[joint_ids_list], dtype=torch.float, device=device
+      )
+      default_joint_pos_limits = dof_limits.unsqueeze(0).repeat(nworld, 1, 1)
       joint_pos_limits = default_joint_pos_limits.clone()
 
       joint_pos_mean = (joint_pos_limits[..., 0] + joint_pos_limits[..., 1]) / 2

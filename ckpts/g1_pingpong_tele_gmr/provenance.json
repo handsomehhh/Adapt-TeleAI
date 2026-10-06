@@ -1,0 +1,8 @@
+{
+  "source_stage1_jit": "/home/lenovo/lxz/AdaPT/logs/rsl_rl/g1_pingpong_tracking_stage1_random_dt/2026-10-04_04-32-34_g1_tele_gmr_29dof_30k_save2000_seed42/jit/modeljit_29999.pt",
+  "source_stage1_jit_sha256": "20fb332c50bec9c73a6be0278bb0f50f7e04e2a03c1bfdcbfb2f004db78f0d38",
+  "bundled_tracker": "/home/lenovo/lxz/AdaPT/ckpts/g1_pingpong_tele_gmr/tracker.pt",
+  "bundled_tracker_sha256": "20fb332c50bec9c73a6be0278bb0f50f7e04e2a03c1bfdcbfb2f004db78f0d38",
+  "source_motion_manifest_sha256": "87f402472ec33317c93a5a921b386f27f487d1bd6259bdaf7065e53be1b8f690",
+  "created_at": "2026-10-04T22:14:21.537716+08:00"
+}

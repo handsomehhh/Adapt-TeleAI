@@ -630,14 +630,15 @@ class MotionCommand(CommandTerm):
     # corresponding robot joint index. Extra robot joints that are not in the motion
     # clip are left unmapped; a naive ``torch.arange`` would misalign columns.
     robot_joint_names = list(self.robot.joint_names)
-    missing = [n for n in G1_REPLAY_JOINT_NAMES_27 if n not in robot_joint_names]
+    motion_joint_names = self.cfg.joint_names
+    missing = [n for n in motion_joint_names if n not in robot_joint_names]
     if missing:
       raise ValueError(
         "Motion joint names missing from robot.joint_names: "
         f"{missing}. Robot has joints {robot_joint_names}."
       )
     self._motion_to_robot_joint_ids = torch.tensor(
-      [robot_joint_names.index(n) for n in G1_REPLAY_JOINT_NAMES_27],
+      [robot_joint_names.index(n) for n in motion_joint_names],
       dtype=torch.long,
       device=self.device,
     )
@@ -653,7 +654,7 @@ class MotionCommand(CommandTerm):
       self.body_indexes,
       device=self.device,
       target_body_names=tuple(self.cfg.body_names),
-      target_joint_names=G1_REPLAY_JOINT_NAMES_27,
+      target_joint_names=motion_joint_names,
       align_heading_to_frame=self.cfg.align_heading_to_frame,
     )
     self.time_steps = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
@@ -870,7 +871,7 @@ class MotionCommand(CommandTerm):
       self.body_indexes,
       device=self.device,
       target_body_names=tuple(self.cfg.body_names),
-      target_joint_names=G1_REPLAY_JOINT_NAMES_27,
+      target_joint_names=self.cfg.joint_names,
       align_heading_to_frame=self.cfg.align_heading_to_frame,
     )
     self.motion_ids = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
@@ -1540,6 +1541,9 @@ class MotionCommand(CommandTerm):
 
 @dataclass(kw_only=True)
 class MotionCommandCfg(CommandTermCfg):
+  joint_names: tuple[str, ...] = G1_REPLAY_JOINT_NAMES_27
+  """Motion joint column order; names are mapped to the runtime robot explicitly."""
+
   motion_files: tuple[str, ...] = ()
   """Explicit list of ``.npz`` clips (highest priority)."""
 
@@ -1624,4 +1628,3 @@ class MotionCommandCfg(CommandTermCfg):
 
   def build(self, env: ManagerBasedRlEnv) -> MotionCommand:
     return MotionCommand(self, env)
-

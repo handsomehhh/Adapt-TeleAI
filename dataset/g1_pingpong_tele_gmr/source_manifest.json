@@ -1,0 +1,4710 @@
+{
+  "format_version": 2,
+  "robot": "G1",
+  "num_motions": 43,
+  "retarget_method": "tele_gmr_football",
+  "retarget_index": {
+    "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_g1_tele_gmr_football_20261003_manifest.json",
+    "sha256": "a921a1b37c217cd0e89dfdfc89339049f6749f9c26f1107cd01acf051df1c852"
+  },
+  "independent_acceptance": {
+    "path": "/home/lxz/HOPE/hope_training/mjlab_pingpong/evaluations/g1_tele_gmr_football_acceptance_20261003.json",
+    "sha256": "570b5eb7504c8a832b696d852b6ae17b70b2d2819bcde21bb3c917b7f33082ee",
+    "all_passed": true,
+    "passed_clips": 43
+  },
+  "motion_files": [
+    "0623_kjp-001.npz",
+    "0623_kjp-002.npz",
+    "0623_kjp-003.npz",
+    "0623_kjp-004.npz",
+    "0623_kjp-005.npz",
+    "0623_kjp-006.npz",
+    "0623_kjp-007.npz",
+    "0623_kjp-008.npz",
+    "0623_kjp-009.npz",
+    "0623_kjp-010.npz",
+    "0623_kjp-011.npz",
+    "0623_kjp-012.npz",
+    "0623_kjp-013.npz",
+    "0623_kjp-014.npz",
+    "0623_kjp-015.npz",
+    "0804_2_kjp-001.npz",
+    "0804_2_kjp-002.npz",
+    "0804_2_kjp-003.npz",
+    "0804_2_kjp-004.npz",
+    "0804_2_kjp-005.npz",
+    "0804_2_kjp-006.npz",
+    "0804_2_kjp-007.npz",
+    "0804_2_kjp-008.npz",
+    "0804_2_kjp-009.npz",
+    "0804_2_kjp-010.npz",
+    "0804_2_kjp-011.npz",
+    "0804_2_kjp-012.npz",
+    "0804_2_kjp-013.npz",
+    "0804_2_kjp-014.npz",
+    "0804_2_kjp-015.npz",
+    "0804_2_kjp-016.npz",
+    "0804_2_kjp-017.npz",
+    "0804_2_kjp-018.npz",
+    "0804_2_kjp-019.npz",
+    "0804_2_kjp-020.npz",
+    "0804_2_kjp-021.npz",
+    "0804_2_kjp-022.npz",
+    "0804_2_kjp-023.npz",
+    "0804_2_kjp-024.npz",
+    "0804_2_kjp-025.npz",
+    "0804_2_kjp-026.npz",
+    "0804_2_kjp-027.npz",
+    "0804_2_kjp-028.npz"
+  ],
+  "joint_names": [
+    "left_hip_pitch_joint",
+    "left_hip_roll_joint",
+    "left_hip_yaw_joint",
+    "left_knee_joint",
+    "left_ankle_pitch_joint",
+    "left_ankle_roll_joint",
+    "right_hip_pitch_joint",
+    "right_hip_roll_joint",
+    "right_hip_yaw_joint",
+    "right_knee_joint",
+    "right_ankle_pitch_joint",
+    "right_ankle_roll_joint",
+    "waist_yaw_joint",
+    "waist_roll_joint",
+    "waist_pitch_joint",
+    "left_shoulder_pitch_joint",
+    "left_shoulder_roll_joint",
+    "left_shoulder_yaw_joint",
+    "left_elbow_joint",
+    "left_wrist_roll_joint",
+    "left_wrist_pitch_joint",
+    "left_wrist_yaw_joint",
+    "right_shoulder_pitch_joint",
+    "right_shoulder_roll_joint",
+    "right_shoulder_yaw_joint",
+    "right_elbow_joint",
+    "right_wrist_roll_joint",
+    "right_wrist_pitch_joint",
+    "right_wrist_yaw_joint"
+  ],
+  "body_names": [
+    "pelvis",
+    "left_hip_pitch_link",
+    "left_hip_roll_link",
+    "left_hip_yaw_link",
+    "left_knee_link",
+    "left_ankle_pitch_link",
+    "left_ankle_roll_link",
+    "right_hip_pitch_link",
+    "right_hip_roll_link",
+    "right_hip_yaw_link",
+    "right_knee_link",
+    "right_ankle_pitch_link",
+    "right_ankle_roll_link",
+    "waist_yaw_link",
+    "waist_roll_link",
+    "torso_link",
+    "left_shoulder_pitch_link",
+    "left_shoulder_roll_link",
+    "left_shoulder_yaw_link",
+    "left_elbow_link",
+    "left_wrist_roll_link",
+    "left_wrist_pitch_link",
+    "left_wrist_yaw_link",
+    "right_shoulder_pitch_link",
+    "right_shoulder_roll_link",
+    "right_shoulder_yaw_link",
+    "right_elbow_link",
+    "right_wrist_roll_link",
+    "right_wrist_pitch_link",
+    "right_wrist_yaw_link"
+  ],
+  "root_body_name": "pelvis",
+  "anchor_body_name": "torso_link",
+  "hit_type_file": "hit_type.json",
+  "hit_type_sha256": "85283503511fa4e1401d7fb65df3f557b503348e96e572f735348e6edb3cc5f7",
+  "hit_type_source": {
+    "path": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+    "sha256": "a1b588baddc4b9c22a4225d1a00363f2403894ae5d2a6be909e76102cb9dee29"
+  },
+  "model": {
+    "path": "/home/lxz/HOPE/hope_training/mjlab_pingpong/hope_mjlab/assets/g1/g1.xml",
+    "sha256": "baa48906fa32a0bc02c6d820e92d2ee6274a6bee02e9a365f4f7f41aaa593ab0"
+  },
+  "asset_manifest_sha256": "694163f5f6c425a0c1f1e6a09df5f1db644688ce6d3d3da3dd90d4c699e0ac2a",
+  "builder": {
+    "path": "/home/lxz/HOPE/hope_training/mjlab_pingpong/analysis/build_g1_tele_gmr_football_motions.py",
+    "sha256": "3612d5a8a80daa68f3d5730af16c79ecdb8f3b7bdd63b92eb74e3ed72696131f"
+  },
+  "fps": 50,
+  "frames_per_motion": 94,
+  "strike_frame": 43,
+  "strike_phase": 0.46,
+  "reference_origin": "original Xsens BVHs retargeted to G1 by Tele-GMR, then converted by Football at 50 Hz",
+  "pipeline": "Xsens BVH 240Hz -> Tele-GMR G1 PKL 30Hz -> Football IsaacLab G1 NPZ 50Hz",
+  "runtime_fk": "exact supplied G1 ping-pong MuJoCo model",
+  "root_height": "constant per-motion translation to 1 mm exact foot collision clearance",
+  "canonical_training_dataset": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2_0623-tele_gmr-football-20261003-npz--clip-racket-peak",
+  "clips": [
+    {
+      "name": "0623_kjp-001",
+      "path": "0623_kjp-001.npz",
+      "sha256": "b08e01e3e4f6068975c466636b3337d9d8f8f641d166ca437bbb55948dddae81",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-001.bvh",
+        "sha256": "adc7b9a52e3257b08ebbb85cf1fe93ee7baf33368eceeb652a63001a127c78cd"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-001.pkl",
+        "sha256": "2bcde799776a0dc29de1d71a90a3757df469d1876bd6f0095530461865385726"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-001.npz",
+        "sha256": "2813d87becf58ea04c2419f900b4918bcb8ac71bb1c0e901de83a656fca45654"
+      },
+      "source_robot": "G1",
+      "source_frames": 134,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        7,
+        100
+      ],
+      "used_source_frame_range_50hz": [
+        7,
+        100
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.010820864561761245,
+      "foot_clearance_before_offset_min_m": 0.011820864561761246,
+      "foot_clearance_before_offset_max_m": 0.01626113726511621,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 134,
+        "pkl_frames": 80,
+        "pkl_record_name": "kjp-001.bvh",
+        "football_root_quaternion_max_norm_error": 1.540579541714493e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010057606033191373,
+        "foot_collision_clearance_max_m": 0.005440272703354973,
+        "foot_collision_clearance_at_reset_m": 0.005214768470765099,
+        "joint_max_abs_velocity_rad_s": 10.017784118652344,
+        "pelvis_height_range_m": [
+          0.7670816193783633,
+          0.7813551436627261
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.615753462251405e-08,
+        "max_body_quat_l2_error": 4.099188726381018e-08,
+        "max_body_com_lin_vel_error_m_s": 6.760898685342909e-08,
+        "max_body_ang_vel_error_rad_s": 2.6300838396053905e-07
+      },
+      "source_strike_frame_50hz": 50,
+      "source_strike_time_s": 1.0,
+      "strike_speed_m_s": 2.1477046124273476,
+      "strike_surface_normal_velocity_m_s": -1.9715583778639296,
+      "unrestricted_peak_frame_50hz": 50,
+      "unrestricted_peak_speed_m_s": 2.1477046124273476,
+      "unrestricted_peak_normal_velocity_m_s": -1.9715583778639296,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-002",
+      "path": "0623_kjp-002.npz",
+      "sha256": "4a3f6426991e4c649acd2fe5fd9ba3358c9cf9c888e54c88b6cc604170e4103c",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-002.bvh",
+        "sha256": "97f8a3c620cc9f1a7b05821e67b365a2fa484baa490cb362cd93bcb282b663a4"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-002.pkl",
+        "sha256": "61e10a3e5dd7f9f331e240c6ac8825e6cb7d56460cb19d74b80ab2c59b8502ad"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-002.npz",
+        "sha256": "ee6cbc1d3d1a20f8d20866378c207d516b783834743585bfa5ad313bff316c45"
+      },
+      "source_robot": "G1",
+      "source_frames": 195,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        44,
+        137
+      ],
+      "used_source_frame_range_50hz": [
+        44,
+        137
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.012033805445263938,
+      "foot_clearance_before_offset_min_m": 0.01303380544526394,
+      "foot_clearance_before_offset_max_m": 0.017820655402239104,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 195,
+        "pkl_frames": 117,
+        "pkl_record_name": "kjp-002.bvh",
+        "football_root_quaternion_max_norm_error": 1.4056162656039817e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000001605,
+        "foot_collision_clearance_max_m": 0.0051500071298271055,
+        "foot_collision_clearance_at_reset_m": 0.005042581170909704,
+        "joint_max_abs_velocity_rad_s": 10.395038604736328,
+        "pelvis_height_range_m": [
+          0.7684126643385191,
+          0.7823183683599729
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.81190286400124e-08,
+        "max_body_quat_l2_error": 6.546382617793359e-08,
+        "max_body_com_lin_vel_error_m_s": 9.171409179331569e-08,
+        "max_body_ang_vel_error_rad_s": 8.620347342613854e-07
+      },
+      "source_strike_frame_50hz": 87,
+      "source_strike_time_s": 1.74,
+      "strike_speed_m_s": 1.881191354727192,
+      "strike_surface_normal_velocity_m_s": -1.6865677508533148,
+      "unrestricted_peak_frame_50hz": 87,
+      "unrestricted_peak_speed_m_s": 1.881191354727192,
+      "unrestricted_peak_normal_velocity_m_s": -1.6865677508533148,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-003",
+      "path": "0623_kjp-003.npz",
+      "sha256": "237719e1f52c822f1db0e6f2d1fc8cc720dbd3f9b5ed0ba41b9880e6bcbe4d9f",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-003.bvh",
+        "sha256": "cba4f169c1f71fc751de0cc88d36928a3ddd702d6c3a1702c671bab7b039b95f"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-003.pkl",
+        "sha256": "9123ef96c9020566a4e75624ad413f1e9267a01fac38738f56916fb149b01004"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-003.npz",
+        "sha256": "5f76b6cf7922996442b0a4417515e24efd4bdfa90e66ed34fd1aae175c1dc050"
+      },
+      "source_robot": "G1",
+      "source_frames": 184,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "used_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.013015719632467733,
+      "foot_clearance_before_offset_min_m": 0.014015719632467732,
+      "foot_clearance_before_offset_max_m": 0.02096811801848439,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 184,
+        "pkl_frames": 110,
+        "pkl_record_name": "kjp-003.bvh",
+        "football_root_quaternion_max_norm_error": 1.3615558391855132e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.001000000000000006,
+        "foot_collision_clearance_max_m": 0.007068502975610534,
+        "foot_collision_clearance_at_reset_m": 0.007042739130288692,
+        "joint_max_abs_velocity_rad_s": 7.648245811462402,
+        "pelvis_height_range_m": [
+          0.7776572382647186,
+          0.7907360470492034
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.039978149909643e-08,
+        "max_body_quat_l2_error": 4.00624917128981e-08,
+        "max_body_com_lin_vel_error_m_s": 1.1686749612493941e-07,
+        "max_body_ang_vel_error_rad_s": 4.777524882371154e-07
+      },
+      "source_strike_frame_50hz": 70,
+      "source_strike_time_s": 1.4,
+      "strike_speed_m_s": 4.463803094853017,
+      "strike_surface_normal_velocity_m_s": 4.23159268056673,
+      "unrestricted_peak_frame_50hz": 70,
+      "unrestricted_peak_speed_m_s": 4.463803094853017,
+      "unrestricted_peak_normal_velocity_m_s": 4.23159268056673,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-004",
+      "path": "0623_kjp-004.npz",
+      "sha256": "5712486977b90948ade80ddebe821888cbf4453fe8a21e7f2681f9bd1e28d61e",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-004.bvh",
+        "sha256": "c8a8d0faa85343a9592143a2339e96ec369ba2f5038a474865b7fb74406b4e46"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-004.pkl",
+        "sha256": "3ac13022f3502dc2f26da8ff9f52b0c7defdb9cdeba3c7ea9d1d58ede77fa6c3"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-004.npz",
+        "sha256": "38355d5dd020f654ec0a157824edadf54eb6af9c793d7ab60a3d05d1a8da4f9d"
+      },
+      "source_robot": "G1",
+      "source_frames": 192,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "used_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.005410758061860065,
+      "foot_clearance_before_offset_min_m": 0.006410758061860065,
+      "foot_clearance_before_offset_max_m": 0.023438449341283214,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 192,
+        "pkl_frames": 115,
+        "pkl_record_name": "kjp-004.bvh",
+        "football_root_quaternion_max_norm_error": 1.765486444815778e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999766,
+        "foot_collision_clearance_max_m": 0.018027691279423122,
+        "foot_collision_clearance_at_reset_m": 0.012330892079415434,
+        "joint_max_abs_velocity_rad_s": 6.08045768737793,
+        "pelvis_height_range_m": [
+          0.721060427622344,
+          0.7967453922791738
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.110654592385913e-08,
+        "max_body_quat_l2_error": 3.88587964040805e-08,
+        "max_body_com_lin_vel_error_m_s": 8.774074045092561e-08,
+        "max_body_ang_vel_error_rad_s": 3.4158280204366065e-07
+      },
+      "source_strike_frame_50hz": 70,
+      "source_strike_time_s": 1.4,
+      "strike_speed_m_s": 2.7181654065678003,
+      "strike_surface_normal_velocity_m_s": 2.173452170496536,
+      "unrestricted_peak_frame_50hz": 70,
+      "unrestricted_peak_speed_m_s": 2.7181654065678003,
+      "unrestricted_peak_normal_velocity_m_s": 2.173452170496536,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-005",
+      "path": "0623_kjp-005.npz",
+      "sha256": "60a6a84cb94bd1f651967cdb873b9cc009779716cabfb8283e0cca274f07f116",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-005.bvh",
+        "sha256": "9bfab5432a11c7c0272b430f064d91036d714b14bdd2e23ab5669d0224e45110"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-005.pkl",
+        "sha256": "ffb285d63c69cbc21de98e2069fb1029c331eac31987537a719599e59e61b1f3"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-005.npz",
+        "sha256": "6949478dac0293a7c018fc937caa1e69464d004dc04cf0f0cba09fd07b36066a"
+      },
+      "source_robot": "G1",
+      "source_frames": 199,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        47,
+        140
+      ],
+      "used_source_frame_range_50hz": [
+        47,
+        140
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.016056173953907567,
+      "foot_clearance_before_offset_min_m": 0.01705617395390757,
+      "foot_clearance_before_offset_max_m": 0.021551929243785385,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 199,
+        "pkl_frames": 119,
+        "pkl_record_name": "kjp-005.bvh",
+        "football_root_quaternion_max_norm_error": 1.1760824425444127e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999974,
+        "foot_collision_clearance_max_m": 0.005206104321526843,
+        "foot_collision_clearance_at_reset_m": 0.005206104321526843,
+        "joint_max_abs_velocity_rad_s": 8.324729919433594,
+        "pelvis_height_range_m": [
+          0.7723289788628649,
+          0.7835811437035631
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.085104842235012e-08,
+        "max_body_quat_l2_error": 3.866590558984336e-08,
+        "max_body_com_lin_vel_error_m_s": 5.7290970523204976e-08,
+        "max_body_ang_vel_error_rad_s": 2.5310995077632015e-07
+      },
+      "source_strike_frame_50hz": 90,
+      "source_strike_time_s": 1.8,
+      "strike_speed_m_s": 1.4652414935234117,
+      "strike_surface_normal_velocity_m_s": -1.2729022019063672,
+      "unrestricted_peak_frame_50hz": 75,
+      "unrestricted_peak_speed_m_s": 1.8050155325159176,
+      "unrestricted_peak_normal_velocity_m_s": 1.1694974081057365,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-006",
+      "path": "0623_kjp-006.npz",
+      "sha256": "946c451a92f735ceba1dab34eafc9e6fb1e7569fddd65cbc72bad65b87a7a73f",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-006.bvh",
+        "sha256": "3133bc8ab1893dfff3342a48875ce555f48e2abe9f9b1bcd6a82c2a729bd11b1"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-006.pkl",
+        "sha256": "5cd4950f5780cfcb9e83354df72621ad9699eadb9d0fb261248530926e20ad7b"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-006.npz",
+        "sha256": "5799547ddb314ced1d713dbb198aede23605547686162f20181fd49ba2e40447"
+      },
+      "source_robot": "G1",
+      "source_frames": 235,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        45,
+        138
+      ],
+      "used_source_frame_range_50hz": [
+        45,
+        138
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.00889887131677793,
+      "foot_clearance_before_offset_min_m": 0.00989887131677793,
+      "foot_clearance_before_offset_max_m": 0.01975726888511125,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 235,
+        "pkl_frames": 141,
+        "pkl_record_name": "kjp-006.bvh",
+        "football_root_quaternion_max_norm_error": 2.0485823237770262e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000182,
+        "foot_collision_clearance_max_m": 0.01062744837860087,
+        "foot_collision_clearance_at_reset_m": 0.010603977286829443,
+        "joint_max_abs_velocity_rad_s": 10.26039981842041,
+        "pelvis_height_range_m": [
+          0.7619906493283637,
+          0.7893791028119452
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.649719480085082e-08,
+        "max_body_quat_l2_error": 3.921508533733681e-08,
+        "max_body_com_lin_vel_error_m_s": 2.86901176149712e-08,
+        "max_body_ang_vel_error_rad_s": 2.5468618680690724e-07
+      },
+      "source_strike_frame_50hz": 88,
+      "source_strike_time_s": 1.76,
+      "strike_speed_m_s": 2.0196099754075276,
+      "strike_surface_normal_velocity_m_s": -1.7897639560942908,
+      "unrestricted_peak_frame_50hz": 88,
+      "unrestricted_peak_speed_m_s": 2.0196099754075276,
+      "unrestricted_peak_normal_velocity_m_s": -1.7897639560942908,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-007",
+      "path": "0623_kjp-007.npz",
+      "sha256": "1dafe67434b75b1f2e90237cf4129c816dcd5338e4e4d995f0a1557e01c41f9a",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-007.bvh",
+        "sha256": "70fbfbdfda3ee0597f330e5681c00ca50b48dd9bcc2d7e0628e55d3297adb9e7"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-007.pkl",
+        "sha256": "052bdd6fd9c0af6586fd10f508815a45d42816e1fe86725c018b4fc7742f454a"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-007.npz",
+        "sha256": "b00b1d7062fefd3713e5ab6fdd1e93db7b23c5eb020b6e7672f52ccf4ab8eb2e"
+      },
+      "source_robot": "G1",
+      "source_frames": 204,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "used_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": 0.0001783079062758824,
+      "foot_clearance_before_offset_min_m": 0.0008216920937241176,
+      "foot_clearance_before_offset_max_m": 0.01956725497523231,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 204,
+        "pkl_frames": 122,
+        "pkl_record_name": "kjp-007.bvh",
+        "football_root_quaternion_max_norm_error": 1.3680663024651096e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999384,
+        "foot_collision_clearance_max_m": 0.019745562881508243,
+        "foot_collision_clearance_at_reset_m": 0.018929366628755218,
+        "joint_max_abs_velocity_rad_s": 11.813284873962402,
+        "pelvis_height_range_m": [
+          0.7023623889838516,
+          0.7981670802985489
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.460680134270149e-08,
+        "max_body_quat_l2_error": 3.9694072593421e-08,
+        "max_body_com_lin_vel_error_m_s": 7.753513031616421e-08,
+        "max_body_ang_vel_error_rad_s": 4.236721320438619e-07
+      },
+      "source_strike_frame_50hz": 70,
+      "source_strike_time_s": 1.4,
+      "strike_speed_m_s": 2.929051179873608,
+      "strike_surface_normal_velocity_m_s": -2.8140346062240265,
+      "unrestricted_peak_frame_50hz": 70,
+      "unrestricted_peak_speed_m_s": 2.929051179873608,
+      "unrestricted_peak_normal_velocity_m_s": -2.8140346062240265,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-008",
+      "path": "0623_kjp-008.npz",
+      "sha256": "ac40e13b169c5ba8cb08104e0583ae141cae1fda1a2ffcb4133097345c76ce70",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-008.bvh",
+        "sha256": "996efada621d1dd6a80cb4ebaf765f25438823e72e6b2a306bcaa179944e440b"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-008.pkl",
+        "sha256": "a5907cbf7ed3cc6a6b583cd51b18b8e2d2131ee5f1dd3a2a319c8fd83c2cc837"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-008.npz",
+        "sha256": "b27509f60d04d4c5104ab48cdf62c310de5d83d1aaeb387da115ce5767c1e238"
+      },
+      "source_robot": "G1",
+      "source_frames": 185,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "used_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.016211374774184086,
+      "foot_clearance_before_offset_min_m": 0.017211374774184086,
+      "foot_clearance_before_offset_max_m": 0.020062720487505806,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 185,
+        "pkl_frames": 111,
+        "pkl_record_name": "kjp-008.bvh",
+        "football_root_quaternion_max_norm_error": 1.1962342916227442e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010040012627932568,
+        "foot_collision_clearance_max_m": 0.0035132288812250306,
+        "foot_collision_clearance_at_reset_m": 0.003488056417595132,
+        "joint_max_abs_velocity_rad_s": 8.510053634643555,
+        "pelvis_height_range_m": [
+          0.7683833398673869,
+          0.7781061687324382
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.092753717685696e-08,
+        "max_body_quat_l2_error": 4.531801600267609e-08,
+        "max_body_com_lin_vel_error_m_s": 5.534107261340182e-08,
+        "max_body_ang_vel_error_rad_s": 1.6494424492918824e-07
+      },
+      "source_strike_frame_50hz": 70,
+      "source_strike_time_s": 1.4,
+      "strike_speed_m_s": 2.127084947441737,
+      "strike_surface_normal_velocity_m_s": -2.0382902267664442,
+      "unrestricted_peak_frame_50hz": 70,
+      "unrestricted_peak_speed_m_s": 2.127084947441737,
+      "unrestricted_peak_normal_velocity_m_s": -2.0382902267664442,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-009",
+      "path": "0623_kjp-009.npz",
+      "sha256": "e54acc62a23f0b6684e925911d3c9479d3849793489bf066b6354860809de4b0",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-009.bvh",
+        "sha256": "4b1aa2734307fac8461476aef3d6f980816f966e588c924a763db6a21a903627"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-009.pkl",
+        "sha256": "dd71adb3f887ca2dac399e5a0e2cb4e52dc247ce282968dd69170c36e236c38e"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-009.npz",
+        "sha256": "cb4a27dbd01a1e14416ebd76fab9e96ec8826c8ab69705078f10e91b3cd1278c"
+      },
+      "source_robot": "G1",
+      "source_frames": 177,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        19,
+        112
+      ],
+      "used_source_frame_range_50hz": [
+        19,
+        112
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.014476425422285864,
+      "foot_clearance_before_offset_min_m": 0.015476425422285863,
+      "foot_clearance_before_offset_max_m": 0.017347198224776546,
+      "joint_hard_limit_corrections": 3,
+      "max_joint_hard_limit_correction_rad": 3.9271411123031896e-07,
+      "source_validation": {
+        "football_frames": 177,
+        "pkl_frames": 106,
+        "pkl_record_name": "kjp-009.bvh",
+        "football_root_quaternion_max_norm_error": 1.448009530058414e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010699312981329659,
+        "foot_collision_clearance_max_m": 0.0028707728024907724,
+        "foot_collision_clearance_at_reset_m": 0.002461511461055249,
+        "joint_max_abs_velocity_rad_s": 9.333470344543457,
+        "pelvis_height_range_m": [
+          0.7719892790187847,
+          0.7783923675884258
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.299818333665996e-08,
+        "max_body_quat_l2_error": 3.855601831988873e-08,
+        "max_body_com_lin_vel_error_m_s": 4.1702804765009205e-08,
+        "max_body_ang_vel_error_rad_s": 2.0361466113172355e-07
+      },
+      "source_strike_frame_50hz": 62,
+      "source_strike_time_s": 1.24,
+      "strike_speed_m_s": 2.271657796273226,
+      "strike_surface_normal_velocity_m_s": -2.0501603176073755,
+      "unrestricted_peak_frame_50hz": 62,
+      "unrestricted_peak_speed_m_s": 2.271657796273226,
+      "unrestricted_peak_normal_velocity_m_s": -2.0501603176073755,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-010",
+      "path": "0623_kjp-010.npz",
+      "sha256": "e6613ff33702c885d65f00bc6183359d9dbcbcf093e9657a5237b02366168590",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-010.bvh",
+        "sha256": "1b33b59236b6b1e6ded494c50b5ce8255ef2ed65a365fd5eda2c767fea33d225"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-010.pkl",
+        "sha256": "3dc1ff7e4f9855b35c7ff534f6079ec0862c8493dfac6faf3fdff1db8e5fad0a"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-010.npz",
+        "sha256": "a9cce5c92ba16ffc973f147522bb33e23c2ba38ba26ee5ec474c5eb5aa9ff9d4"
+      },
+      "source_robot": "G1",
+      "source_frames": 237,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        53,
+        146
+      ],
+      "used_source_frame_range_50hz": [
+        53,
+        146
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.014936445633084286,
+      "foot_clearance_before_offset_min_m": 0.015936445633084287,
+      "foot_clearance_before_offset_max_m": 0.017672059843038816,
+      "joint_hard_limit_corrections": 6,
+      "max_joint_hard_limit_correction_rad": 3.9271411123031896e-07,
+      "source_validation": {
+        "football_frames": 237,
+        "pkl_frames": 142,
+        "pkl_record_name": "kjp-010.bvh",
+        "football_root_quaternion_max_norm_error": 1.5525713981112688e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.001002507913136063,
+        "foot_collision_clearance_max_m": 0.0027356142099545476,
+        "foot_collision_clearance_at_reset_m": 0.0020268397214745007,
+        "joint_max_abs_velocity_rad_s": 8.763347625732422,
+        "pelvis_height_range_m": [
+          0.7747845664823942,
+          0.778944851478427
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.009500785886246e-08,
+        "max_body_quat_l2_error": 4.1626786745013133e-08,
+        "max_body_com_lin_vel_error_m_s": 6.967862115070389e-08,
+        "max_body_ang_vel_error_rad_s": 3.975368603192919e-07
+      },
+      "source_strike_frame_50hz": 96,
+      "source_strike_time_s": 1.92,
+      "strike_speed_m_s": 1.972187475248392,
+      "strike_surface_normal_velocity_m_s": -1.8886133134745455,
+      "unrestricted_peak_frame_50hz": 96,
+      "unrestricted_peak_speed_m_s": 1.972187475248392,
+      "unrestricted_peak_normal_velocity_m_s": -1.8886133134745455,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-011",
+      "path": "0623_kjp-011.npz",
+      "sha256": "0e76cefe7365ded5259b813b21153f41f30bbbe7fc2509b91c953ff056ae6102",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-011.bvh",
+        "sha256": "078898a9f5a7518be141076d38935463ca288e381e6f6965ce51fe2bd2e2e341"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-011.pkl",
+        "sha256": "bc7932d81878aa66c2157a76d3388cb9ffcc2d3f984e1a41be89e575aeae61b4"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-011.npz",
+        "sha256": "0a5ea58dbe374548898e58f429130ae6003612edef32d7775853d256939988b1"
+      },
+      "source_robot": "G1",
+      "source_frames": 185,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        25,
+        118
+      ],
+      "used_source_frame_range_50hz": [
+        25,
+        118
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.014722099060509655,
+      "foot_clearance_before_offset_min_m": 0.015722099060509656,
+      "foot_clearance_before_offset_max_m": 0.0226541211389509,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 185,
+        "pkl_frames": 111,
+        "pkl_record_name": "kjp-011.bvh",
+        "football_root_quaternion_max_norm_error": 1.9328577460786533e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999575,
+        "foot_collision_clearance_max_m": 0.006739952218894521,
+        "foot_collision_clearance_at_reset_m": 0.006739952218894521,
+        "joint_max_abs_velocity_rad_s": 5.855579853057861,
+        "pelvis_height_range_m": [
+          0.7710332968287725,
+          0.788994500880744
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.382141104488426e-08,
+        "max_body_quat_l2_error": 4.313597887951866e-08,
+        "max_body_com_lin_vel_error_m_s": 4.202480111126228e-08,
+        "max_body_ang_vel_error_rad_s": 2.9747431185001005e-07
+      },
+      "source_strike_frame_50hz": 68,
+      "source_strike_time_s": 1.36,
+      "strike_speed_m_s": 2.375456916450741,
+      "strike_surface_normal_velocity_m_s": 2.1673148403424807,
+      "unrestricted_peak_frame_50hz": 68,
+      "unrestricted_peak_speed_m_s": 2.375456916450741,
+      "unrestricted_peak_normal_velocity_m_s": 2.1673148403424807,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-012",
+      "path": "0623_kjp-012.npz",
+      "sha256": "24253ae3b357a4e5d34d16cf06104339b4b4c3159f307553751fc6c8896bb7ea",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-012.bvh",
+        "sha256": "008451fb25c975eb5499ee5e72f7d9cd4a4f9b7ccd7d0c6c3c8808c13a43a753"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-012.pkl",
+        "sha256": "ba1ecae8c45f1251d8711ec42f5231b584eaca864221ee4949d3873e9c9fff44"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-012.npz",
+        "sha256": "f35635b2d635b25e33620af8b8825256f5ec58d9fbfa33d8e6fcc17f2231b417"
+      },
+      "source_robot": "G1",
+      "source_frames": 234,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        52,
+        145
+      ],
+      "used_source_frame_range_50hz": [
+        52,
+        145
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.010672922593509014,
+      "foot_clearance_before_offset_min_m": 0.011672922593509013,
+      "foot_clearance_before_offset_max_m": 0.022996720812289005,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 234,
+        "pkl_frames": 140,
+        "pkl_record_name": "kjp-012.bvh",
+        "football_root_quaternion_max_norm_error": 1.9971081677283564e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999645,
+        "foot_collision_clearance_max_m": 0.01082374188747,
+        "foot_collision_clearance_at_reset_m": 0.010524046993323174,
+        "joint_max_abs_velocity_rad_s": 6.205533027648926,
+        "pelvis_height_range_m": [
+          0.7326759739099394,
+          0.7926719231782805
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.478667564062789e-08,
+        "max_body_quat_l2_error": 3.904921002388461e-08,
+        "max_body_com_lin_vel_error_m_s": 1.6551434489642247e-07,
+        "max_body_ang_vel_error_rad_s": 3.9011613850448157e-07
+      },
+      "source_strike_frame_50hz": 95,
+      "source_strike_time_s": 1.9,
+      "strike_speed_m_s": 3.258478933731674,
+      "strike_surface_normal_velocity_m_s": 3.0900187683120017,
+      "unrestricted_peak_frame_50hz": 95,
+      "unrestricted_peak_speed_m_s": 3.258478933731674,
+      "unrestricted_peak_normal_velocity_m_s": 3.0900187683120017,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-013",
+      "path": "0623_kjp-013.npz",
+      "sha256": "c692247980d2e7d799b6bd8f2e44adf8a6856d627c3279a74b734f6fc2421f42",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-013.bvh",
+        "sha256": "c59b25aa7a7078e03e63a96e4ff4b45c91d19277a551bc50dd116720f8046d7b"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-013.pkl",
+        "sha256": "47011dd02c51505c300bb1580fd3b4f8862ffda821b7bd48b8501b8bc73df0ae"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-013.npz",
+        "sha256": "a616ac67859821578917c5ebc675e7652ffa11dfb33cb26f8b209b0f9d3833e2"
+      },
+      "source_robot": "G1",
+      "source_frames": 187,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        34,
+        127
+      ],
+      "used_source_frame_range_50hz": [
+        34,
+        127
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.010698994929346721,
+      "foot_clearance_before_offset_min_m": 0.011698994929346722,
+      "foot_clearance_before_offset_max_m": 0.02229085259053628,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 187,
+        "pkl_frames": 112,
+        "pkl_record_name": "kjp-013.bvh",
+        "football_root_quaternion_max_norm_error": 1.7733321944213287e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.001000000000000053,
+        "foot_collision_clearance_max_m": 0.011397365364925412,
+        "foot_collision_clearance_at_reset_m": 0.011313387310159673,
+        "joint_max_abs_velocity_rad_s": 7.1345953941345215,
+        "pelvis_height_range_m": [
+          0.7731427342347769,
+          0.7924048096589712
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.720377137587775e-08,
+        "max_body_quat_l2_error": 7.005064005541607e-08,
+        "max_body_com_lin_vel_error_m_s": 5.018312296267702e-08,
+        "max_body_ang_vel_error_rad_s": 3.1035219016928295e-07
+      },
+      "source_strike_frame_50hz": 77,
+      "source_strike_time_s": 1.54,
+      "strike_speed_m_s": 2.134832220226087,
+      "strike_surface_normal_velocity_m_s": -2.0549668084826433,
+      "unrestricted_peak_frame_50hz": 77,
+      "unrestricted_peak_speed_m_s": 2.134832220226087,
+      "unrestricted_peak_normal_velocity_m_s": -2.0549668084826433,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-014",
+      "path": "0623_kjp-014.npz",
+      "sha256": "011c9dd373021f807bc26165508249ee92a48f088d63ef074e91b81b6ec04763",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-014.bvh",
+        "sha256": "3070be0cbef52aa3d185af3ee08564eb41393cdd74545d22dd5fe7be12e46af3"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-014.pkl",
+        "sha256": "f754d40f48804b6cd7e77102d4e3081a4f558379bbd7a5244f55e75c06946409"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-014.npz",
+        "sha256": "901b6fb94ebf16747be38b6b2d213cf64bc75fa34181f93fb1c7b47e67ad60a0"
+      },
+      "source_robot": "G1",
+      "source_frames": 249,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        61,
+        154
+      ],
+      "used_source_frame_range_50hz": [
+        61,
+        154
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.007971063175481206,
+      "foot_clearance_before_offset_min_m": 0.008971063175481207,
+      "foot_clearance_before_offset_max_m": 0.020533643511669124,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 249,
+        "pkl_frames": 149,
+        "pkl_record_name": "kjp-014.bvh",
+        "football_root_quaternion_max_norm_error": 1.6014747705739296e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999627,
+        "foot_collision_clearance_max_m": 0.01207148872175582,
+        "foot_collision_clearance_at_reset_m": 0.01207148872175582,
+        "joint_max_abs_velocity_rad_s": 9.707348823547363,
+        "pelvis_height_range_m": [
+          0.7664812655064646,
+          0.7923301906201425
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.326942763619115e-08,
+        "max_body_quat_l2_error": 4.128837056546666e-08,
+        "max_body_com_lin_vel_error_m_s": 6.2831947866826e-08,
+        "max_body_ang_vel_error_rad_s": 2.1189415733147143e-07
+      },
+      "source_strike_frame_50hz": 104,
+      "source_strike_time_s": 2.08,
+      "strike_speed_m_s": 2.02882637357386,
+      "strike_surface_normal_velocity_m_s": -1.8294569185291762,
+      "unrestricted_peak_frame_50hz": 104,
+      "unrestricted_peak_speed_m_s": 2.02882637357386,
+      "unrestricted_peak_normal_velocity_m_s": -1.8294569185291762,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0623_kjp-015",
+      "path": "0623_kjp-015.npz",
+      "sha256": "02d680b409cd294a366e5bccb3917699a3e4142659b372bf00958236b8789746",
+      "capture": "0623",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0623/kjp-015.bvh",
+        "sha256": "4a83f08eb82464c07b9bb8ab89c23f19c1263b85f8a75695f7f6a52aecdb2faf"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-pkl-30hz-20261003/kjp-015.pkl",
+        "sha256": "eb7481158f7fae7f82f9c5339fbc08ee6819186d7a163183a11fac4bdbe24d3f"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0623-tele_gmr-football-npz-50hz-20261003/kjp-015.npz",
+        "sha256": "303158f4086d6651daeb043a0117db9ec94c0d3e9befeb9abd0bd786cb652642"
+      },
+      "source_robot": "G1",
+      "source_frames": 227,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        58,
+        151
+      ],
+      "used_source_frame_range_50hz": [
+        58,
+        151
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.002021333155556305,
+      "foot_clearance_before_offset_min_m": 0.003021333155556305,
+      "foot_clearance_before_offset_max_m": 0.022149461406138635,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 227,
+        "pkl_frames": 136,
+        "pkl_record_name": "kjp-015.bvh",
+        "football_root_quaternion_max_norm_error": 1.2150098172014623e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000009,
+        "foot_collision_clearance_max_m": 0.019228904241782807,
+        "foot_collision_clearance_at_reset_m": 0.019228904241782807,
+        "joint_max_abs_velocity_rad_s": 10.607738494873047,
+        "pelvis_height_range_m": [
+          0.7044972572947306,
+          0.7994847689295572
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.21174154336046e-08,
+        "max_body_quat_l2_error": 4.216911276608367e-08,
+        "max_body_com_lin_vel_error_m_s": 1.0340071021630592e-07,
+        "max_body_ang_vel_error_rad_s": 6.397312333206173e-07
+      },
+      "source_strike_frame_50hz": 101,
+      "source_strike_time_s": 2.02,
+      "strike_speed_m_s": 2.7210395822827347,
+      "strike_surface_normal_velocity_m_s": -2.103350826290213,
+      "unrestricted_peak_frame_50hz": 101,
+      "unrestricted_peak_speed_m_s": 2.7210395822827347,
+      "unrestricted_peak_normal_velocity_m_s": -2.103350826290213,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-001",
+      "path": "0804_2_kjp-001.npz",
+      "sha256": "f121d4477d4950b2308153c28600ef5608d3f47473dccf9c1c792ab9df5faaac",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-001.bvh",
+        "sha256": "7c63c3689698aca11f2337020ecc754d448dbd666260ec45ead4ff4773ff958a"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-001.pkl",
+        "sha256": "cfa514dd2268d9bf2120517591300fb77a5c7d71f08e4e5730b4ab249f5e12f2"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-001.npz",
+        "sha256": "f47f772296a1d5db38f91bbdee92a5bacf60d0b887e65df64932c9f3856da292"
+      },
+      "source_robot": "G1",
+      "source_frames": 187,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        41,
+        134
+      ],
+      "used_source_frame_range_50hz": [
+        41,
+        134
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.01995253755286842,
+      "foot_clearance_before_offset_min_m": 0.02095253755286842,
+      "foot_clearance_before_offset_max_m": 0.02487163890357569,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 187,
+        "pkl_frames": 112,
+        "pkl_record_name": "kjp-001.bvh",
+        "football_root_quaternion_max_norm_error": 1.3945104315737922e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000113,
+        "foot_collision_clearance_max_m": 0.004553090996533947,
+        "foot_collision_clearance_at_reset_m": 0.004553090996533947,
+        "joint_max_abs_velocity_rad_s": 4.087638854980469,
+        "pelvis_height_range_m": [
+          0.7834588866071353,
+          0.7875328044728884
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.066748132165344e-08,
+        "max_body_quat_l2_error": 4.14085780687244e-08,
+        "max_body_com_lin_vel_error_m_s": 4.101903805509011e-08,
+        "max_body_ang_vel_error_rad_s": 2.368756470971789e-07
+      },
+      "source_strike_frame_50hz": 84,
+      "source_strike_time_s": 1.68,
+      "strike_speed_m_s": 1.0904660122608503,
+      "strike_surface_normal_velocity_m_s": -0.9167395979689232,
+      "unrestricted_peak_frame_50hz": 84,
+      "unrestricted_peak_speed_m_s": 1.0904660122608503,
+      "unrestricted_peak_normal_velocity_m_s": -0.9167395979689232,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-002",
+      "path": "0804_2_kjp-002.npz",
+      "sha256": "1895dabf99ac4978857cff01225209e5ba2170fb07512fb77e94743bc8ece008",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-002.bvh",
+        "sha256": "8809377374e00a21b42ae061f00608c1bdd6e7a3bf6283a12a9ee69e4ac3e683"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-002.pkl",
+        "sha256": "03090768f7f6b82eebae18fc72096d4ba2de65c53e697473bce1ec6b3f414bbe"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-002.npz",
+        "sha256": "5c8b7c50cc726ae88dffdffee1d858a993a1a7cd189679bc194275e2ac3aa398"
+      },
+      "source_robot": "G1",
+      "source_frames": 187,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        36,
+        129
+      ],
+      "used_source_frame_range_50hz": [
+        36,
+        129
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.012884592689961488,
+      "foot_clearance_before_offset_min_m": 0.013884592689961488,
+      "foot_clearance_before_offset_max_m": 0.022859447685243395,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 187,
+        "pkl_frames": 112,
+        "pkl_record_name": "kjp-002.bvh",
+        "football_root_quaternion_max_norm_error": 1.4082761867761917e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000356,
+        "foot_collision_clearance_max_m": 0.008989334097246494,
+        "foot_collision_clearance_at_reset_m": 0.008834507811485223,
+        "joint_max_abs_velocity_rad_s": 5.62114143371582,
+        "pelvis_height_range_m": [
+          0.784332359157115,
+          0.7924244645457563
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.660068430086596e-08,
+        "max_body_quat_l2_error": 3.834143102633096e-08,
+        "max_body_com_lin_vel_error_m_s": 8.566571060852901e-08,
+        "max_body_ang_vel_error_rad_s": 4.678535296953612e-07
+      },
+      "source_strike_frame_50hz": 79,
+      "source_strike_time_s": 1.58,
+      "strike_speed_m_s": 1.2984406042087133,
+      "strike_surface_normal_velocity_m_s": -0.9460789334579823,
+      "unrestricted_peak_frame_50hz": 79,
+      "unrestricted_peak_speed_m_s": 1.2984406042087133,
+      "unrestricted_peak_normal_velocity_m_s": -0.9460789334579823,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-003",
+      "path": "0804_2_kjp-003.npz",
+      "sha256": "7b4c6c4fe5172c12a4197ae5fe5ce6d8a20f0c17f4e08f66fdcd17b93a70353e",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-003.bvh",
+        "sha256": "a9426575bfc17de3e9d334da5411b779d3d2e2ecd050e3cd633f4b6578b5e7bf"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-003.pkl",
+        "sha256": "daa26c780701b552563cb994e90328357a8db863cb176fcbcc664cf0aad23166"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-003.npz",
+        "sha256": "4534ae4a8e68e182137d7aba70c3712d70852d75311be43e978bd6fb4630d147"
+      },
+      "source_robot": "G1",
+      "source_frames": 187,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        39,
+        132
+      ],
+      "used_source_frame_range_50hz": [
+        39,
+        132
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.017056332272479633,
+      "foot_clearance_before_offset_min_m": 0.018056332272479634,
+      "foot_clearance_before_offset_max_m": 0.02077729690584742,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 187,
+        "pkl_frames": 112,
+        "pkl_record_name": "kjp-003.bvh",
+        "football_root_quaternion_max_norm_error": 1.4021326488755648e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999246,
+        "foot_collision_clearance_max_m": 0.003632090568365335,
+        "foot_collision_clearance_at_reset_m": 0.0031988786916289265,
+        "joint_max_abs_velocity_rad_s": 3.971756935119629,
+        "pelvis_height_range_m": [
+          0.7849045532522702,
+          0.7903689878759884
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.234567256375612e-08,
+        "max_body_quat_l2_error": 4.183414527347008e-08,
+        "max_body_com_lin_vel_error_m_s": 3.837708628662284e-08,
+        "max_body_ang_vel_error_rad_s": 1.3581661084671737e-07
+      },
+      "source_strike_frame_50hz": 82,
+      "source_strike_time_s": 1.64,
+      "strike_speed_m_s": 1.642252883953118,
+      "strike_surface_normal_velocity_m_s": 1.4593452357076322,
+      "unrestricted_peak_frame_50hz": 82,
+      "unrestricted_peak_speed_m_s": 1.642252883953118,
+      "unrestricted_peak_normal_velocity_m_s": 1.4593452357076322,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-004",
+      "path": "0804_2_kjp-004.npz",
+      "sha256": "d0ac68e73a54054080550dda8d62ded186a28705c9ab26fa7a7b7587b83b9fcb",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-004.bvh",
+        "sha256": "0c7da3e6fcc12cdeb46bb58f18de2b110f7c070c93ed98405724806299e1fc80"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-004.pkl",
+        "sha256": "e0f91396edd14c493c0b0953a476d765179e7e7803da080f46098632dacf8f02"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-004.npz",
+        "sha256": "5f7275e2612077fd88a65c77e92669e779f71d74f2f474c477491f9f48cec2b1"
+      },
+      "source_robot": "G1",
+      "source_frames": 200,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        32,
+        125
+      ],
+      "used_source_frame_range_50hz": [
+        32,
+        125
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.004738525526952193,
+      "foot_clearance_before_offset_min_m": 0.005738525526952193,
+      "foot_clearance_before_offset_max_m": 0.022828355637183564,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 200,
+        "pkl_frames": 120,
+        "pkl_record_name": "kjp-004.bvh",
+        "football_root_quaternion_max_norm_error": 1.58229485291983e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000001067,
+        "foot_collision_clearance_max_m": 0.01722322938386796,
+        "foot_collision_clearance_at_reset_m": 0.016490986706707993,
+        "joint_max_abs_velocity_rad_s": 6.5937700271606445,
+        "pelvis_height_range_m": [
+          0.7359048565454965,
+          0.8117941459246164
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.95335857781032e-08,
+        "max_body_quat_l2_error": 4.016914575361136e-08,
+        "max_body_com_lin_vel_error_m_s": 6.265424712381673e-08,
+        "max_body_ang_vel_error_rad_s": 2.8079840319605864e-07
+      },
+      "source_strike_frame_50hz": 75,
+      "source_strike_time_s": 1.5,
+      "strike_speed_m_s": 2.706472703195675,
+      "strike_surface_normal_velocity_m_s": 2.6885482604601294,
+      "unrestricted_peak_frame_50hz": 75,
+      "unrestricted_peak_speed_m_s": 2.706472703195675,
+      "unrestricted_peak_normal_velocity_m_s": 2.6885482604601294,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-005",
+      "path": "0804_2_kjp-005.npz",
+      "sha256": "ea91d6fcb97c4ebbfeef98871a1bc2450f3a7016b6f16a2620bed5f55689866d",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-005.bvh",
+        "sha256": "b36d2b53eeb3e753ed89a7e34236d4aff2575133c1ce58bd3c3487b8551f6b24"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-005.pkl",
+        "sha256": "98a871cecd019323a090d710734e305a4c36c3a2b2f09b9b83297f7d948d0e97"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-005.npz",
+        "sha256": "1a24537b87ee1ec8f3e707ef7a0e7d86a461e6a8c9542c781e9dd94d360fa4a3"
+      },
+      "source_robot": "G1",
+      "source_frames": 257,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        59,
+        152
+      ],
+      "used_source_frame_range_50hz": [
+        59,
+        152
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.011840740085979289,
+      "foot_clearance_before_offset_min_m": 0.01284074008597929,
+      "foot_clearance_before_offset_max_m": 0.021367652277464715,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 257,
+        "pkl_frames": 154,
+        "pkl_record_name": "kjp-005.bvh",
+        "football_root_quaternion_max_norm_error": 1.5187832214103025e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000495,
+        "foot_collision_clearance_max_m": 0.009082135318133594,
+        "foot_collision_clearance_at_reset_m": 0.009082135318133594,
+        "joint_max_abs_velocity_rad_s": 5.787058353424072,
+        "pelvis_height_range_m": [
+          0.787899395583729,
+          0.7963058558689158
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.83207390053775e-08,
+        "max_body_quat_l2_error": 4.096821445291477e-08,
+        "max_body_com_lin_vel_error_m_s": 3.6996969710045846e-08,
+        "max_body_ang_vel_error_rad_s": 1.3426216938228208e-07
+      },
+      "source_strike_frame_50hz": 102,
+      "source_strike_time_s": 2.04,
+      "strike_speed_m_s": 1.9217315455832338,
+      "strike_surface_normal_velocity_m_s": -1.4199737001245107,
+      "unrestricted_peak_frame_50hz": 102,
+      "unrestricted_peak_speed_m_s": 1.9217315455832338,
+      "unrestricted_peak_normal_velocity_m_s": -1.4199737001245107,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-006",
+      "path": "0804_2_kjp-006.npz",
+      "sha256": "c298944e68e49acf7820fae7b3cfe8208e1131ab9ebed1d8f57a1c2588a904f3",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-006.bvh",
+        "sha256": "9de151eed25b880b2d8c91ee9b2187fd49d4c4da9a43d43f412a05156b34439a"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-006.pkl",
+        "sha256": "7685ecb7dd0b5c81c924499ff636ddf0490bd3c90be94cd70192bfc63dad74a2"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-006.npz",
+        "sha256": "4f6ebf7d3d0f818c17f02d995f9f641362ff0eb1a23571bd8c420c6878965336"
+      },
+      "source_robot": "G1",
+      "source_frames": 199,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        47,
+        140
+      ],
+      "used_source_frame_range_50hz": [
+        47,
+        140
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.0054889051630954986,
+      "foot_clearance_before_offset_min_m": 0.006488905163095499,
+      "foot_clearance_before_offset_max_m": 0.019789733353768865,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 199,
+        "pkl_frames": 119,
+        "pkl_record_name": "kjp-006.bvh",
+        "football_root_quaternion_max_norm_error": 1.2729050258286634e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999731,
+        "foot_collision_clearance_max_m": 0.01272956775601855,
+        "foot_collision_clearance_at_reset_m": 0.01272956775601855,
+        "joint_max_abs_velocity_rad_s": 7.071477890014648,
+        "pelvis_height_range_m": [
+          0.7830764920994777,
+          0.8034864337727565
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.69349914278672e-08,
+        "max_body_quat_l2_error": 7.217546542183493e-08,
+        "max_body_com_lin_vel_error_m_s": 3.9727367839859085e-08,
+        "max_body_ang_vel_error_rad_s": 3.000165795796761e-07
+      },
+      "source_strike_frame_50hz": 90,
+      "source_strike_time_s": 1.8,
+      "strike_speed_m_s": 1.71139510378498,
+      "strike_surface_normal_velocity_m_s": -1.2728647628821366,
+      "unrestricted_peak_frame_50hz": 90,
+      "unrestricted_peak_speed_m_s": 1.71139510378498,
+      "unrestricted_peak_normal_velocity_m_s": -1.2728647628821366,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-007",
+      "path": "0804_2_kjp-007.npz",
+      "sha256": "132e267d8b6fced5797f0cb32acdf4ab1a8aa1842121f56b4f6184caed04f5bb",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-007.bvh",
+        "sha256": "d853d94d90e63ce2468534ab90a6400d6ee948880708a2ddebb5d38e458edc3f"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-007.pkl",
+        "sha256": "93d336dba9025bb801676b3627a45914caed6f15708ce4b78ba528d45d69b80a"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-007.npz",
+        "sha256": "945de30769c17c0f15384299e1a8e937e565db52a9577d8321b41b342240a8e4"
+      },
+      "source_robot": "G1",
+      "source_frames": 222,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        41,
+        134
+      ],
+      "used_source_frame_range_50hz": [
+        41,
+        134
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.0032538514782525793,
+      "foot_clearance_before_offset_min_m": 0.004253851478252579,
+      "foot_clearance_before_offset_max_m": 0.021306481637957057,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 222,
+        "pkl_frames": 133,
+        "pkl_record_name": "kjp-007.bvh",
+        "football_root_quaternion_max_norm_error": 1.6976933459034171e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999998274,
+        "foot_collision_clearance_max_m": 0.017434368072705486,
+        "foot_collision_clearance_at_reset_m": 0.017434368072705486,
+        "joint_max_abs_velocity_rad_s": 6.314123630523682,
+        "pelvis_height_range_m": [
+          0.7317399639438055,
+          0.808119739944782
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.062483531328212e-08,
+        "max_body_quat_l2_error": 4.243271754301913e-08,
+        "max_body_com_lin_vel_error_m_s": 3.741989207384222e-08,
+        "max_body_ang_vel_error_rad_s": 2.5093636324413637e-07
+      },
+      "source_strike_frame_50hz": 84,
+      "source_strike_time_s": 1.68,
+      "strike_speed_m_s": 2.1416069014051913,
+      "strike_surface_normal_velocity_m_s": -1.669525390415357,
+      "unrestricted_peak_frame_50hz": 84,
+      "unrestricted_peak_speed_m_s": 2.1416069014051913,
+      "unrestricted_peak_normal_velocity_m_s": -1.669525390415357,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-008",
+      "path": "0804_2_kjp-008.npz",
+      "sha256": "d4932ad2a5042bb26424589a7b386f275e86565f410bf430eed937da7cf804ec",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-008.bvh",
+        "sha256": "e1f1d3cfbcde4902cc0e1a9e7043bfcfc35a406ff7fc7d3c5dcd1b7c408b1331"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-008.pkl",
+        "sha256": "56dcc20d34278ef9bf8b068637321da9575951a11c71bb32df556d894a642980"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-008.npz",
+        "sha256": "b9e4ff6fa48975b941b44c8f64a3c6c664c23dc1e1fe9de806e38fbea15d5b08"
+      },
+      "source_robot": "G1",
+      "source_frames": 174,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        34,
+        127
+      ],
+      "used_source_frame_range_50hz": [
+        34,
+        127
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.02152214831363049,
+      "foot_clearance_before_offset_min_m": 0.022522148313630492,
+      "foot_clearance_before_offset_max_m": 0.023742036810225776,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 174,
+        "pkl_frames": 104,
+        "pkl_record_name": "kjp-008.bvh",
+        "football_root_quaternion_max_norm_error": 1.3031225032378302e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999593,
+        "foot_collision_clearance_max_m": 0.002219888496595244,
+        "foot_collision_clearance_at_reset_m": 0.002085320070045662,
+        "joint_max_abs_velocity_rad_s": 4.66596794128418,
+        "pelvis_height_range_m": [
+          0.78656061106671,
+          0.7883927982424608
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.670848984313693e-08,
+        "max_body_quat_l2_error": 3.922729767891038e-08,
+        "max_body_com_lin_vel_error_m_s": 6.886190057064923e-08,
+        "max_body_ang_vel_error_rad_s": 3.267759769443046e-07
+      },
+      "source_strike_frame_50hz": 77,
+      "source_strike_time_s": 1.54,
+      "strike_speed_m_s": 1.151610414910403,
+      "strike_surface_normal_velocity_m_s": -0.9675658275268032,
+      "unrestricted_peak_frame_50hz": 77,
+      "unrestricted_peak_speed_m_s": 1.151610414910403,
+      "unrestricted_peak_normal_velocity_m_s": -0.9675658275268032,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-009",
+      "path": "0804_2_kjp-009.npz",
+      "sha256": "b5c1000161e74185f4a3fc8e388d145dc22360bf1e942379190e1b7dbcf7b252",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-009.bvh",
+        "sha256": "545ef64956d6f815e72efed7176c59c685d1e730ab64bb2d13478a7e0a08b5b6"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-009.pkl",
+        "sha256": "2babc38bf35f8a9b680bc00594ba22c670efd11626c43665d6ce6559c87b272d"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-009.npz",
+        "sha256": "d6d60125a404a91cf9ea33f021b5a4d2768541c2cf1113f5a5061064268fd25c"
+      },
+      "source_robot": "G1",
+      "source_frames": 192,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        57,
+        150
+      ],
+      "used_source_frame_range_50hz": [
+        57,
+        150
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.019514506992313493,
+      "foot_clearance_before_offset_min_m": 0.020514506992313494,
+      "foot_clearance_before_offset_max_m": 0.02353328338424028,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 192,
+        "pkl_frames": 115,
+        "pkl_record_name": "kjp-009.bvh",
+        "football_root_quaternion_max_norm_error": 1.4028659056641857e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000009,
+        "foot_collision_clearance_max_m": 0.003937257318249853,
+        "foot_collision_clearance_at_reset_m": 0.003848700563552866,
+        "joint_max_abs_velocity_rad_s": 4.510560512542725,
+        "pelvis_height_range_m": [
+          0.7878186643753318,
+          0.7899123371277121
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.260276414453813e-08,
+        "max_body_quat_l2_error": 4.750737728561262e-08,
+        "max_body_com_lin_vel_error_m_s": 2.4538759468839544e-08,
+        "max_body_ang_vel_error_rad_s": 1.4437558482072177e-07
+      },
+      "source_strike_frame_50hz": 100,
+      "source_strike_time_s": 2.0,
+      "strike_speed_m_s": 1.1901720693308135,
+      "strike_surface_normal_velocity_m_s": -1.0823059169671194,
+      "unrestricted_peak_frame_50hz": 100,
+      "unrestricted_peak_speed_m_s": 1.1901720693308135,
+      "unrestricted_peak_normal_velocity_m_s": -1.0823059169671194,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-010",
+      "path": "0804_2_kjp-010.npz",
+      "sha256": "9e2e7d80db9fb348158ec0a653d8818eda363a14401f583a9bced7f8528add4c",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-010.bvh",
+        "sha256": "bd07ebd21ecddb4092a9276073341d576864a19b2b8d143ac139ebc0bed09bab"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-010.pkl",
+        "sha256": "3e62884cc46afa73f88a8c25b561ae4c3436423e78039e6676355d3aa37389e5"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-010.npz",
+        "sha256": "1948c5a8dad234afa09f11e05faaa64ad59092435c01d5800c75add6aded9812"
+      },
+      "source_robot": "G1",
+      "source_frames": 190,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        43,
+        136
+      ],
+      "used_source_frame_range_50hz": [
+        43,
+        136
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.015832578502133234,
+      "foot_clearance_before_offset_min_m": 0.016832578502133235,
+      "foot_clearance_before_offset_max_m": 0.02293194164700244,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 190,
+        "pkl_frames": 114,
+        "pkl_record_name": "kjp-010.bvh",
+        "football_root_quaternion_max_norm_error": 1.2311895991601318e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000772,
+        "foot_collision_clearance_max_m": 0.006662343188967301,
+        "foot_collision_clearance_at_reset_m": 0.006249892828571158,
+        "joint_max_abs_velocity_rad_s": 3.0714690685272217,
+        "pelvis_height_range_m": [
+          0.7935719138761016,
+          0.7959123498578521
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.152245456471974e-08,
+        "max_body_quat_l2_error": 4.041226382411483e-08,
+        "max_body_com_lin_vel_error_m_s": 4.0552763480583565e-08,
+        "max_body_ang_vel_error_rad_s": 1.2675756355662315e-07
+      },
+      "source_strike_frame_50hz": 86,
+      "source_strike_time_s": 1.72,
+      "strike_speed_m_s": 1.4523291608431717,
+      "strike_surface_normal_velocity_m_s": 1.4437554506828265,
+      "unrestricted_peak_frame_50hz": 86,
+      "unrestricted_peak_speed_m_s": 1.4523291608431717,
+      "unrestricted_peak_normal_velocity_m_s": 1.4437554506828265,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-011",
+      "path": "0804_2_kjp-011.npz",
+      "sha256": "a1f3c3b9aa71ff73df8f8af4736d07b47f2a9d29b078fc5264ccc53416a5e3e9",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-011.bvh",
+        "sha256": "a056b9c3a3ddbae19bbdf5173d5e0639a36f9c91b49102b097a27ff4c3398efa"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-011.pkl",
+        "sha256": "50671517dfe145f3754b6f2cfe83a0e34551cb66f0e466c38cdcf83345fdbdfa"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-011.npz",
+        "sha256": "3bf180443ed5a122f87d9f5b4ac8105e95812d4db4b1336fbf9194f6ece85948"
+      },
+      "source_robot": "G1",
+      "source_frames": 170,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        30,
+        123
+      ],
+      "used_source_frame_range_50hz": [
+        30,
+        123
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.006628371223698572,
+      "foot_clearance_before_offset_min_m": 0.007628371223698572,
+      "foot_clearance_before_offset_max_m": 0.024234745780072727,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 170,
+        "pkl_frames": 102,
+        "pkl_record_name": "kjp-011.bvh",
+        "football_root_quaternion_max_norm_error": 1.6106211875310805e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.001000000000000046,
+        "foot_collision_clearance_max_m": 0.0176063745563742,
+        "foot_collision_clearance_at_reset_m": 0.01602251906583599,
+        "joint_max_abs_velocity_rad_s": 5.736979961395264,
+        "pelvis_height_range_m": [
+          0.7294414272458449,
+          0.8172756662518874
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.793007061884794e-08,
+        "max_body_quat_l2_error": 4.2435639957583066e-08,
+        "max_body_com_lin_vel_error_m_s": 4.740328807262273e-08,
+        "max_body_ang_vel_error_rad_s": 3.7351192361256835e-07
+      },
+      "source_strike_frame_50hz": 73,
+      "source_strike_time_s": 1.46,
+      "strike_speed_m_s": 2.6116037679244344,
+      "strike_surface_normal_velocity_m_s": 2.587786113724822,
+      "unrestricted_peak_frame_50hz": 73,
+      "unrestricted_peak_speed_m_s": 2.6116037679244344,
+      "unrestricted_peak_normal_velocity_m_s": 2.587786113724822,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-012",
+      "path": "0804_2_kjp-012.npz",
+      "sha256": "075b069995a9c82dc0298261e1914146d6ebf1c0814f798d6e511f5dda52ba39",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-012.bvh",
+        "sha256": "1430f406be5b3bb8255736c274e65649e3cafac6ab85d565c961c47da8e7eb3a"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-012.pkl",
+        "sha256": "ab81acc4940697db95e1ce5786d21818690b79e395cde210fbece22945c56985"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-012.npz",
+        "sha256": "c7204882d0aba7ecd0efdd350497408b6feea998ae144ff569a003d24141a4a4"
+      },
+      "source_robot": "G1",
+      "source_frames": 180,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        85,
+        178
+      ],
+      "used_source_frame_range_50hz": [
+        85,
+        178
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.016538802798092042,
+      "foot_clearance_before_offset_min_m": 0.017538802798092043,
+      "foot_clearance_before_offset_max_m": 0.021063547084792383,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 180,
+        "pkl_frames": 108,
+        "pkl_record_name": "kjp-012.bvh",
+        "football_root_quaternion_max_norm_error": 1.575722103908106e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.000999999999999987,
+        "foot_collision_clearance_max_m": 0.0033922762595465783,
+        "foot_collision_clearance_at_reset_m": 0.0022047561256145834,
+        "joint_max_abs_velocity_rad_s": 4.42567777633667,
+        "pelvis_height_range_m": [
+          0.7913868983432654,
+          0.7935858328983191
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.834283722805367e-08,
+        "max_body_quat_l2_error": 4.148414610057468e-08,
+        "max_body_com_lin_vel_error_m_s": 2.6790404117349453e-08,
+        "max_body_ang_vel_error_rad_s": 9.456561844700673e-08
+      },
+      "source_strike_frame_50hz": 128,
+      "source_strike_time_s": 2.56,
+      "strike_speed_m_s": 1.1881020319459203,
+      "strike_surface_normal_velocity_m_s": -0.17268166371313048,
+      "unrestricted_peak_frame_50hz": 128,
+      "unrestricted_peak_speed_m_s": 1.1881020319459203,
+      "unrestricted_peak_normal_velocity_m_s": -0.17268166371313048,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-013",
+      "path": "0804_2_kjp-013.npz",
+      "sha256": "dcd34ad816309f05ce3ac5aa98e570c52fcd4b4cd0a8e8738704c6949590a38a",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-013.bvh",
+        "sha256": "81793fdfce4d094eddbe6baba4d659f33c8a294ba53c0e6e1729a487114d0999"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-013.pkl",
+        "sha256": "74e09b2ca90453a7ea82561b486d2b97fe21229d0535280a35759c7e4fa004c8"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-013.npz",
+        "sha256": "704ddff8986764d81510043f1b6097b2692a3eee436a950561b5c266ec1cd745"
+      },
+      "source_robot": "G1",
+      "source_frames": 170,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        30,
+        123
+      ],
+      "used_source_frame_range_50hz": [
+        30,
+        123
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.009295627860593549,
+      "foot_clearance_before_offset_min_m": 0.01029562786059355,
+      "foot_clearance_before_offset_max_m": 0.020407275561569398,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 170,
+        "pkl_frames": 102,
+        "pkl_record_name": "kjp-013.bvh",
+        "football_root_quaternion_max_norm_error": 1.4829931882509584e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.00099999999999998,
+        "foot_collision_clearance_max_m": 0.010516948900526082,
+        "foot_collision_clearance_at_reset_m": 0.010516948900526082,
+        "joint_max_abs_velocity_rad_s": 4.847088813781738,
+        "pelvis_height_range_m": [
+          0.7812368418888571,
+          0.8037189986423972
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.346672425967427e-08,
+        "max_body_quat_l2_error": 3.951345228717085e-08,
+        "max_body_com_lin_vel_error_m_s": 2.980913080263825e-08,
+        "max_body_ang_vel_error_rad_s": 3.264050958406983e-07
+      },
+      "source_strike_frame_50hz": 73,
+      "source_strike_time_s": 1.46,
+      "strike_speed_m_s": 1.8257269428574892,
+      "strike_surface_normal_velocity_m_s": -1.5463945744019523,
+      "unrestricted_peak_frame_50hz": 55,
+      "unrestricted_peak_speed_m_s": 2.132166131942775,
+      "unrestricted_peak_normal_velocity_m_s": 1.2570350498857565,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-014",
+      "path": "0804_2_kjp-014.npz",
+      "sha256": "3b0a666a78c09729ceed546c7061ac1069f18a116025ebacb6a67515b394aa0c",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-014.bvh",
+        "sha256": "ebe65cf75442777f6d7940affac1ea3f2bdcc7b762c72c6df480a40a7b162f53"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-014.pkl",
+        "sha256": "384ab1a4eca5b6a0f846b6df2f2c48a47d7e30b6ab311122091875fbcebe6d84"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-014.npz",
+        "sha256": "3d147fe1d8cfc516738f5b82adbd8080405fad525298265bbab4bbc776258ce1"
+      },
+      "source_robot": "G1",
+      "source_frames": 195,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        35,
+        128
+      ],
+      "used_source_frame_range_50hz": [
+        35,
+        128
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.007802318554233378,
+      "foot_clearance_before_offset_min_m": 0.008802318554233378,
+      "foot_clearance_before_offset_max_m": 0.02475299707072564,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 195,
+        "pkl_frames": 117,
+        "pkl_record_name": "kjp-014.bvh",
+        "football_root_quaternion_max_norm_error": 1.4580789653440007e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999998552,
+        "foot_collision_clearance_max_m": 0.016950678516492228,
+        "foot_collision_clearance_at_reset_m": 0.013715605601419392,
+        "joint_max_abs_velocity_rad_s": 5.417571067810059,
+        "pelvis_height_range_m": [
+          0.7460542807766687,
+          0.8074992785641443
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.92656867418151e-08,
+        "max_body_quat_l2_error": 3.942480810078056e-08,
+        "max_body_com_lin_vel_error_m_s": 5.888576282142566e-08,
+        "max_body_ang_vel_error_rad_s": 4.2338031835953416e-07
+      },
+      "source_strike_frame_50hz": 78,
+      "source_strike_time_s": 1.56,
+      "strike_speed_m_s": 2.206037678995485,
+      "strike_surface_normal_velocity_m_s": -1.8753640829802927,
+      "unrestricted_peak_frame_50hz": 78,
+      "unrestricted_peak_speed_m_s": 2.206037678995485,
+      "unrestricted_peak_normal_velocity_m_s": -1.8753640829802927,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-015",
+      "path": "0804_2_kjp-015.npz",
+      "sha256": "2ffad9da880ddcc29d6ee91e52d5a37f405630e544c3e25c1f6f43a978af80fc",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-015.bvh",
+        "sha256": "420bbb297755a205f57fc80ff6dcebd22dc3dc64f9b512a461271e85912e15eb"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-015.pkl",
+        "sha256": "3621fb20f9758742e5777095b722bf2c70d8aa486823469fe3fc78814b247319"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-015.npz",
+        "sha256": "cc4136cc6de18016a91488310be5f28d7a30fde0d5bd1a10411bfa2bdf50e085"
+      },
+      "source_robot": "G1",
+      "source_frames": 164,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "used_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.017939086555595805,
+      "foot_clearance_before_offset_min_m": 0.018939086555595806,
+      "foot_clearance_before_offset_max_m": 0.0224055327484524,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 164,
+        "pkl_frames": 98,
+        "pkl_record_name": "kjp-015.bvh",
+        "football_root_quaternion_max_norm_error": 1.4464577025030678e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999627,
+        "foot_collision_clearance_max_m": 0.0038894453522773723,
+        "foot_collision_clearance_at_reset_m": 0.0038894453522773723,
+        "joint_max_abs_velocity_rad_s": 5.017656326293945,
+        "pelvis_height_range_m": [
+          0.7904773396261974,
+          0.7929276865729137
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.298453558706285e-08,
+        "max_body_quat_l2_error": 3.75833488114922e-08,
+        "max_body_com_lin_vel_error_m_s": 7.303923105217436e-08,
+        "max_body_ang_vel_error_rad_s": 2.9844700000225544e-07
+      },
+      "source_strike_frame_50hz": 70,
+      "source_strike_time_s": 1.4,
+      "strike_speed_m_s": 1.437974286701684,
+      "strike_surface_normal_velocity_m_s": -1.2278276208710417,
+      "unrestricted_peak_frame_50hz": 70,
+      "unrestricted_peak_speed_m_s": 1.437974286701684,
+      "unrestricted_peak_normal_velocity_m_s": -1.2278276208710417,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-016",
+      "path": "0804_2_kjp-016.npz",
+      "sha256": "4fe7c55f6a376db93fbfc448cecc08851bbd3162019993700beab01f4093eebd",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-016.bvh",
+        "sha256": "5faad8c6f806a521b4bd70f85618bd8d2058b5ed1126fe9d902b73ae5fb6429d"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-016.pkl",
+        "sha256": "815d8dee3123ea2f616561ce3f7a2043bd04ff3294f30627f55ae87eed52f852"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-016.npz",
+        "sha256": "7150d6931cb852a24db17d1ad29b963fb2cd9e035a75014d5175fc3df00d5be3"
+      },
+      "source_robot": "G1",
+      "source_frames": 185,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "used_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.011538680898032463,
+      "foot_clearance_before_offset_min_m": 0.012538680898032464,
+      "foot_clearance_before_offset_max_m": 0.020398916631781963,
+      "joint_hard_limit_corrections": 7,
+      "max_joint_hard_limit_correction_rad": 3.9271411123031896e-07,
+      "source_validation": {
+        "football_frames": 185,
+        "pkl_frames": 111,
+        "pkl_record_name": "kjp-016.bvh",
+        "football_root_quaternion_max_norm_error": 1.5326086444389375e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000148,
+        "foot_collision_clearance_max_m": 0.008701738392745559,
+        "foot_collision_clearance_at_reset_m": 0.008701738392745559,
+        "joint_max_abs_velocity_rad_s": 5.547507286071777,
+        "pelvis_height_range_m": [
+          0.7917328511606834,
+          0.7984427248369834
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.222351678353277e-08,
+        "max_body_quat_l2_error": 4.176123821788214e-08,
+        "max_body_com_lin_vel_error_m_s": 2.0747322304615068e-08,
+        "max_body_ang_vel_error_rad_s": 1.098495916451725e-07
+      },
+      "source_strike_frame_50hz": 70,
+      "source_strike_time_s": 1.4,
+      "strike_speed_m_s": 1.2823810470618462,
+      "strike_surface_normal_velocity_m_s": -1.1663072466319224,
+      "unrestricted_peak_frame_50hz": 70,
+      "unrestricted_peak_speed_m_s": 1.2823810470618462,
+      "unrestricted_peak_normal_velocity_m_s": -1.1663072466319224,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-017",
+      "path": "0804_2_kjp-017.npz",
+      "sha256": "2d5d43c6944e75f48a9bfb7c08a04fc7059b3f00fa9b9b1a42602ceb78e4e096",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-017.bvh",
+        "sha256": "bfd2c864e670cd11c903d492e1c2e1db5668c736da394aeda996d2c5b9da5103"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-017.pkl",
+        "sha256": "daf25e6e4b9b14bfa03b75540dddfb1627ca4fd33e8fa6bec8dd7f99cf75d6e1"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-017.npz",
+        "sha256": "57a4a782e3000d2bd40f6be282f1b55a698532c8312d1eab4d3596e578f38830"
+      },
+      "source_robot": "G1",
+      "source_frames": 167,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        18,
+        111
+      ],
+      "used_source_frame_range_50hz": [
+        18,
+        111
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.014853304243418703,
+      "foot_clearance_before_offset_min_m": 0.015853304243418704,
+      "foot_clearance_before_offset_max_m": 0.020658777175027683,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 167,
+        "pkl_frames": 100,
+        "pkl_record_name": "kjp-017.bvh",
+        "football_root_quaternion_max_norm_error": 1.6517163892171283e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000252,
+        "foot_collision_clearance_max_m": 0.0053525251656607875,
+        "foot_collision_clearance_at_reset_m": 0.0053525251656607875,
+        "joint_max_abs_velocity_rad_s": 5.070775985717773,
+        "pelvis_height_range_m": [
+          0.7929885927673845,
+          0.7960136476990252
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.146045294919134e-08,
+        "max_body_quat_l2_error": 4.0105349577750284e-08,
+        "max_body_com_lin_vel_error_m_s": 9.496147307386238e-08,
+        "max_body_ang_vel_error_rad_s": 3.5188697289356696e-07
+      },
+      "source_strike_frame_50hz": 61,
+      "source_strike_time_s": 1.22,
+      "strike_speed_m_s": 1.8554342528100574,
+      "strike_surface_normal_velocity_m_s": 1.8360489357170162,
+      "unrestricted_peak_frame_50hz": 61,
+      "unrestricted_peak_speed_m_s": 1.8554342528100574,
+      "unrestricted_peak_normal_velocity_m_s": 1.8360489357170162,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-018",
+      "path": "0804_2_kjp-018.npz",
+      "sha256": "8bca2c30e8247de11b8efcaf32fdf1598ffd0fcf72a445c929ad77c8cbbb00a3",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-018.bvh",
+        "sha256": "dea4daf4ec9fd3924632cfe2339ac744fab18ccfa177d72cc8ab3a11365f9415"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-018.pkl",
+        "sha256": "e4edf6299077be716ab8519a5d2b68155203886d0bbe81915c3ddda6f4472d24"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-018.npz",
+        "sha256": "b5dd7442e1263943f7e6e93c2476494dd8dcd916059cb8442e69a5d76a2d8250"
+      },
+      "source_robot": "G1",
+      "source_frames": 217,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        39,
+        132
+      ],
+      "used_source_frame_range_50hz": [
+        39,
+        132
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.004232598086681816,
+      "foot_clearance_before_offset_min_m": 0.005232598086681816,
+      "foot_clearance_before_offset_max_m": 0.024188327314854347,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 217,
+        "pkl_frames": 130,
+        "pkl_record_name": "kjp-018.bvh",
+        "football_root_quaternion_max_norm_error": 1.671379123990846e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999558,
+        "foot_collision_clearance_max_m": 0.019955729228172486,
+        "foot_collision_clearance_at_reset_m": 0.015740997975953352,
+        "joint_max_abs_velocity_rad_s": 8.184114456176758,
+        "pelvis_height_range_m": [
+          0.7297620646750064,
+          0.8150371782576175
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.964239496198843e-08,
+        "max_body_quat_l2_error": 6.436794385419819e-08,
+        "max_body_com_lin_vel_error_m_s": 6.357748338903235e-08,
+        "max_body_ang_vel_error_rad_s": 4.57121435815111e-07
+      },
+      "source_strike_frame_50hz": 82,
+      "source_strike_time_s": 1.64,
+      "strike_speed_m_s": 3.0994105181018816,
+      "strike_surface_normal_velocity_m_s": 3.087721509609208,
+      "unrestricted_peak_frame_50hz": 82,
+      "unrestricted_peak_speed_m_s": 3.0994105181018816,
+      "unrestricted_peak_normal_velocity_m_s": 3.087721509609208,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-019",
+      "path": "0804_2_kjp-019.npz",
+      "sha256": "71409502dfd6a6b0a7298f9f49b81e7a74efb93f055d9ec0c048040551d2f8f2",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-019.bvh",
+        "sha256": "e4c960dd7590523b88f4f4f0c65cdbac47029c90701d0667da7f9bc50d0b3acf"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-019.pkl",
+        "sha256": "2403bd1b0ee5ace50404816b8a6d732bc7afd6992d1c0893917d09d812192b3d"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-019.npz",
+        "sha256": "969236a2cc4f51f51139d31165708a6c74171f109c44c2a6b649938541ff30ab"
+      },
+      "source_robot": "G1",
+      "source_frames": 174,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "used_source_frame_range_50hz": [
+        27,
+        120
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.01614014759543246,
+      "foot_clearance_before_offset_min_m": 0.01714014759543246,
+      "foot_clearance_before_offset_max_m": 0.01906304885962066,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 174,
+        "pkl_frames": 104,
+        "pkl_record_name": "kjp-019.bvh",
+        "football_root_quaternion_max_norm_error": 1.2778693236903393e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0014552827640911987,
+        "foot_collision_clearance_max_m": 0.002922901264188184,
+        "foot_collision_clearance_at_reset_m": 0.0016889126952073126,
+        "joint_max_abs_velocity_rad_s": 5.631320953369141,
+        "pelvis_height_range_m": [
+          0.7930985246610373,
+          0.7946439538907736
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 7.04828753139708e-08,
+        "max_body_quat_l2_error": 3.905956781890453e-08,
+        "max_body_com_lin_vel_error_m_s": 5.406076553082784e-08,
+        "max_body_ang_vel_error_rad_s": 2.580534728124917e-07
+      },
+      "source_strike_frame_50hz": 70,
+      "source_strike_time_s": 1.4,
+      "strike_speed_m_s": 1.5232826322068589,
+      "strike_surface_normal_velocity_m_s": -1.137663080254827,
+      "unrestricted_peak_frame_50hz": 51,
+      "unrestricted_peak_speed_m_s": 1.6737488954942725,
+      "unrestricted_peak_normal_velocity_m_s": 0.7831551800518128,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-020",
+      "path": "0804_2_kjp-020.npz",
+      "sha256": "10d2cb5b9e10ad06401215b08a88f4afcb18abb5a79171c4106748f5ad01ff06",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-020.bvh",
+        "sha256": "ac5c971b1fc7bf2c8fa2fcf772e7d393b9a89e059938ed4c7593529be66c6c8a"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-020.pkl",
+        "sha256": "c422da36803a6f6117c308ab22d17d482e705f0d02351a88e60eeb4db3b7edde"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-020.npz",
+        "sha256": "9bc6101e23ec4bdb9281ab5d18b4ee5a05f4ae338878b151ec0bedbce4ee97f0"
+      },
+      "source_robot": "G1",
+      "source_frames": 194,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        36,
+        129
+      ],
+      "used_source_frame_range_50hz": [
+        36,
+        129
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.01231092449652963,
+      "foot_clearance_before_offset_min_m": 0.013310924496529632,
+      "foot_clearance_before_offset_max_m": 0.019397499055202945,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 194,
+        "pkl_frames": 116,
+        "pkl_record_name": "kjp-020.bvh",
+        "football_root_quaternion_max_norm_error": 1.724112066447958e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.001000000000000039,
+        "foot_collision_clearance_max_m": 0.007086574558673356,
+        "foot_collision_clearance_at_reset_m": 0.006411956336024375,
+        "joint_max_abs_velocity_rad_s": 5.213448524475098,
+        "pelvis_height_range_m": [
+          0.792838153872611,
+          0.798595902953269
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.886412890454551e-08,
+        "max_body_quat_l2_error": 6.958241340217275e-08,
+        "max_body_com_lin_vel_error_m_s": 4.069522699379213e-08,
+        "max_body_ang_vel_error_rad_s": 2.0053194837998944e-07
+      },
+      "source_strike_frame_50hz": 79,
+      "source_strike_time_s": 1.58,
+      "strike_speed_m_s": 1.8703135054245328,
+      "strike_surface_normal_velocity_m_s": -1.3341736856059931,
+      "unrestricted_peak_frame_50hz": 61,
+      "unrestricted_peak_speed_m_s": 2.032751981198871,
+      "unrestricted_peak_normal_velocity_m_s": 1.2852639427557722,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-021",
+      "path": "0804_2_kjp-021.npz",
+      "sha256": "8c91a7dbd483aa7476d6503b9b4429772dd444790f743e660a9eed1148c4ab56",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-021.bvh",
+        "sha256": "5921cf50c40ef89a1a5ceac1168d96048806bb7276b4410dda15058b872e887b"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-021.pkl",
+        "sha256": "78dcba136dd5e49e9ff50915fbbcab53ee4281333118803138cedd79c8dea56e"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-021.npz",
+        "sha256": "1684aacd0ad929021e7c943484b736a4ee659559a545915999ed408824e0a457"
+      },
+      "source_robot": "G1",
+      "source_frames": 232,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        64,
+        157
+      ],
+      "used_source_frame_range_50hz": [
+        64,
+        157
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.009758958188391759,
+      "foot_clearance_before_offset_min_m": 0.01075895818839176,
+      "foot_clearance_before_offset_max_m": 0.024151382418396414,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 232,
+        "pkl_frames": 139,
+        "pkl_record_name": "kjp-021.bvh",
+        "football_root_quaternion_max_norm_error": 1.609649722400519e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999998621,
+        "foot_collision_clearance_max_m": 0.014392424230004733,
+        "foot_collision_clearance_at_reset_m": 0.007720306738908011,
+        "joint_max_abs_velocity_rad_s": 4.526374340057373,
+        "pelvis_height_range_m": [
+          0.7720119864069451,
+          0.8022127658449639
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.096307814118518e-08,
+        "max_body_quat_l2_error": 4.377719616488659e-08,
+        "max_body_com_lin_vel_error_m_s": 9.537473677490027e-08,
+        "max_body_ang_vel_error_rad_s": 2.705472912367668e-07
+      },
+      "source_strike_frame_50hz": 107,
+      "source_strike_time_s": 2.14,
+      "strike_speed_m_s": 2.288785486816789,
+      "strike_surface_normal_velocity_m_s": -1.9488919117210406,
+      "unrestricted_peak_frame_50hz": 90,
+      "unrestricted_peak_speed_m_s": 2.3791744609931165,
+      "unrestricted_peak_normal_velocity_m_s": 1.3756907250679307,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-022",
+      "path": "0804_2_kjp-022.npz",
+      "sha256": "7e354cbbb12438201ea0db1b4b132e2e539fae46209e7c380e18f997bd653df5",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-022.bvh",
+        "sha256": "3cbc2eb852c29235fbb7989487000c9c8dcb41744bf4974203b5eb33e45518f6"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-022.pkl",
+        "sha256": "020ecccf0ec2cf962764f6bbf01726a27c99e3b2e974123a986b9718689dc475"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-022.npz",
+        "sha256": "08f6028bd89ff76a5cfbb28c40e85da638790f9866f328027d6ae505966c226d"
+      },
+      "source_robot": "G1",
+      "source_frames": 212,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        66,
+        159
+      ],
+      "used_source_frame_range_50hz": [
+        66,
+        159
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.016439269677009496,
+      "foot_clearance_before_offset_min_m": 0.017439269677009497,
+      "foot_clearance_before_offset_max_m": 0.018788748376062408,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 212,
+        "pkl_frames": 127,
+        "pkl_record_name": "kjp-022.bvh",
+        "football_root_quaternion_max_norm_error": 1.0334051681049061e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0011857152677317018,
+        "foot_collision_clearance_max_m": 0.002213517845015462,
+        "foot_collision_clearance_at_reset_m": 0.0014593282932838028,
+        "joint_max_abs_velocity_rad_s": 7.550111293792725,
+        "pelvis_height_range_m": [
+          0.7936352981177903,
+          0.7954857839194871
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.949480568785305e-08,
+        "max_body_quat_l2_error": 3.6587092450589193e-08,
+        "max_body_com_lin_vel_error_m_s": 2.771145762858751e-08,
+        "max_body_ang_vel_error_rad_s": 2.0144084711404275e-07
+      },
+      "source_strike_frame_50hz": 109,
+      "source_strike_time_s": 2.18,
+      "strike_speed_m_s": 1.9173252502902787,
+      "strike_surface_normal_velocity_m_s": -1.862092842854485,
+      "unrestricted_peak_frame_50hz": 109,
+      "unrestricted_peak_speed_m_s": 1.9173252502902787,
+      "unrestricted_peak_normal_velocity_m_s": -1.862092842854485,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-023",
+      "path": "0804_2_kjp-023.npz",
+      "sha256": "fe1cc363744aea83528b14fc4ff8d2648dcac97536130b6335f898af3e12cc4d",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-023.bvh",
+        "sha256": "4fdf7b5bed9b053365b990d15f142f222ba05dc39d958b6c783e2c3ec64e49b9"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-023.pkl",
+        "sha256": "e3a963454e093238c648bdacaf4e47c1749df6241c426f6774f66ee01b51976f"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-023.npz",
+        "sha256": "2bca31f7a53ca088b23a6c76a46e3163e2e4d79e1d662f9b4cd20e02a9db9a5c"
+      },
+      "source_robot": "G1",
+      "source_frames": 190,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        42,
+        135
+      ],
+      "used_source_frame_range_50hz": [
+        42,
+        135
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.01343701807354401,
+      "foot_clearance_before_offset_min_m": 0.01443701807354401,
+      "foot_clearance_before_offset_max_m": 0.021866442581266785,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 190,
+        "pkl_frames": 114,
+        "pkl_record_name": "kjp-023.bvh",
+        "football_root_quaternion_max_norm_error": 1.7088803661025054e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999835,
+        "foot_collision_clearance_max_m": 0.008429424507722761,
+        "foot_collision_clearance_at_reset_m": 0.0042350336116435475,
+        "joint_max_abs_velocity_rad_s": 10.539448738098145,
+        "pelvis_height_range_m": [
+          0.7905289677014499,
+          0.7969216850629001
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.93553874331343e-08,
+        "max_body_quat_l2_error": 4.0927252168525325e-08,
+        "max_body_com_lin_vel_error_m_s": 5.9200117696889265e-08,
+        "max_body_ang_vel_error_rad_s": 3.672652937325438e-07
+      },
+      "source_strike_frame_50hz": 85,
+      "source_strike_time_s": 1.7,
+      "strike_speed_m_s": 3.019486120176309,
+      "strike_surface_normal_velocity_m_s": -2.4726796297783284,
+      "unrestricted_peak_frame_50hz": 85,
+      "unrestricted_peak_speed_m_s": 3.019486120176309,
+      "unrestricted_peak_normal_velocity_m_s": -2.4726796297783284,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-024",
+      "path": "0804_2_kjp-024.npz",
+      "sha256": "9d912a9874905a4be3a08b4d71298ca157497054e1e67f7d544e86f80dacedfd",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-024.bvh",
+        "sha256": "beb2d97a07f374a244b0cf220b1251946d17a16a2d17230b94d1263b02d0a768"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-024.pkl",
+        "sha256": "960079e088484a314afc57ab8b46a736633cd2e41ec973371343f8d4cc5f4992"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-024.npz",
+        "sha256": "5b9e5c236273f5adbfae542ad09e59d58b2fb032a3216f629878632cc50b8218"
+      },
+      "source_robot": "G1",
+      "source_frames": 199,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        41,
+        134
+      ],
+      "used_source_frame_range_50hz": [
+        41,
+        134
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.01384544515685638,
+      "foot_clearance_before_offset_min_m": 0.01484544515685638,
+      "foot_clearance_before_offset_max_m": 0.01697279346151597,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 199,
+        "pkl_frames": 119,
+        "pkl_record_name": "kjp-024.bvh",
+        "football_root_quaternion_max_norm_error": 1.221521197525277e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000078,
+        "foot_collision_clearance_max_m": 0.003127348304659598,
+        "foot_collision_clearance_at_reset_m": 0.0027651735198849295,
+        "joint_max_abs_velocity_rad_s": 7.887726783752441,
+        "pelvis_height_range_m": [
+          0.7941438541404764,
+          0.7965327486984293
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 5.525797064365179e-08,
+        "max_body_quat_l2_error": 4.0706649958328794e-08,
+        "max_body_com_lin_vel_error_m_s": 4.3323590714905436e-08,
+        "max_body_ang_vel_error_rad_s": 3.395643481951538e-07
+      },
+      "source_strike_frame_50hz": 84,
+      "source_strike_time_s": 1.68,
+      "strike_speed_m_s": 3.1054226158387332,
+      "strike_surface_normal_velocity_m_s": 3.0330046249389317,
+      "unrestricted_peak_frame_50hz": 84,
+      "unrestricted_peak_speed_m_s": 3.1054226158387332,
+      "unrestricted_peak_normal_velocity_m_s": 3.0330046249389317,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-025",
+      "path": "0804_2_kjp-025.npz",
+      "sha256": "f39f69c5b3c4d9e652ad239a3cf5ff6cc98bd702036db44b96f4347d3a3b2634",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-025.bvh",
+        "sha256": "ddb8fd13a16c504ba64b0f15b31cd6da4fa3f4de3e57d74bd75c319f262f34b2"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-025.pkl",
+        "sha256": "fcaa8dc8900eef893ff9bff7a2b94713cf4caf3fe26c9edb2a39faf240f51d44"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-025.npz",
+        "sha256": "1fc3f162c7fce446bffacd977a043c9344e23da9f557e359f5aab66e96f6bfc7"
+      },
+      "source_robot": "G1",
+      "source_frames": 199,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "forehand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        37,
+        130
+      ],
+      "used_source_frame_range_50hz": [
+        37,
+        130
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.005502645542946021,
+      "foot_clearance_before_offset_min_m": 0.006502645542946021,
+      "foot_clearance_before_offset_max_m": 0.024192287449975602,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 199,
+        "pkl_frames": 119,
+        "pkl_record_name": "kjp-025.bvh",
+        "football_root_quaternion_max_norm_error": 1.3507088858499827e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.001000000000000027,
+        "foot_collision_clearance_max_m": 0.018181081572908184,
+        "foot_collision_clearance_at_reset_m": 0.014935014381513938,
+        "joint_max_abs_velocity_rad_s": 10.33642864227295,
+        "pelvis_height_range_m": [
+          0.7261497334930037,
+          0.816658432910118
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.153521781016025e-08,
+        "max_body_quat_l2_error": 3.9617280587929016e-08,
+        "max_body_com_lin_vel_error_m_s": 7.91475061046043e-08,
+        "max_body_ang_vel_error_rad_s": 5.668564284633248e-07
+      },
+      "source_strike_frame_50hz": 80,
+      "source_strike_time_s": 1.6,
+      "strike_speed_m_s": 3.330549383442464,
+      "strike_surface_normal_velocity_m_s": 3.319792125001756,
+      "unrestricted_peak_frame_50hz": 80,
+      "unrestricted_peak_speed_m_s": 3.330549383442464,
+      "unrestricted_peak_normal_velocity_m_s": 3.319792125001756,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-026",
+      "path": "0804_2_kjp-026.npz",
+      "sha256": "e45c12eafa08a08bbbda96af61593066753e32fc9c3fb4777680b507dad2c1a0",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-026.bvh",
+        "sha256": "07ee4da26ccb441aa4f0bfd940f3c08323304b8869d275e12a54680ed7e8047d"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-026.pkl",
+        "sha256": "68304e047ef3468f2b5a84c9eb7358ef8f2e9b1c30c4e281a60829f3ef6a24f2"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-026.npz",
+        "sha256": "43b21e47850d0d04958677bb0a002444f81637513dd80e64958236538e404e66"
+      },
+      "source_robot": "G1",
+      "source_frames": 167,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        33,
+        126
+      ],
+      "used_source_frame_range_50hz": [
+        33,
+        126
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.01537945060419078,
+      "foot_clearance_before_offset_min_m": 0.01637945060419078,
+      "foot_clearance_before_offset_max_m": 0.020304877698848315,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 167,
+        "pkl_frames": 100,
+        "pkl_record_name": "kjp-026.bvh",
+        "football_root_quaternion_max_norm_error": 1.531569728818738e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999998968,
+        "foot_collision_clearance_max_m": 0.004925427094657656,
+        "foot_collision_clearance_at_reset_m": 0.003744077902796423,
+        "joint_max_abs_velocity_rad_s": 8.252288818359375,
+        "pelvis_height_range_m": [
+          0.794425763800869,
+          0.7966114065201378
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.060968226253351e-08,
+        "max_body_quat_l2_error": 3.978990899337743e-08,
+        "max_body_com_lin_vel_error_m_s": 1.0402469730053099e-07,
+        "max_body_ang_vel_error_rad_s": 5.773477802506477e-07
+      },
+      "source_strike_frame_50hz": 76,
+      "source_strike_time_s": 1.52,
+      "strike_speed_m_s": 2.882476129320391,
+      "strike_surface_normal_velocity_m_s": -2.2854347291929913,
+      "unrestricted_peak_frame_50hz": 76,
+      "unrestricted_peak_speed_m_s": 2.882476129320391,
+      "unrestricted_peak_normal_velocity_m_s": -2.2854347291929913,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-027",
+      "path": "0804_2_kjp-027.npz",
+      "sha256": "9784f6659b63d59bd1c3170a73ad3890f0f8a5101250f1303fa09c65dbd71380",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-027.bvh",
+        "sha256": "54d4925cf0a87f1048c0dcf4cfcb1dc0ccb76ec1a0baa2b13fc65a06e39232d8"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-027.pkl",
+        "sha256": "3959626350799694e99cb00f9690feee5a0b2e52dd167ae78bf791e23edd93b5"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-027.npz",
+        "sha256": "cdd822553d3369452e086aef5c558bde34f884539591121fc82925087d05d647"
+      },
+      "source_robot": "G1",
+      "source_frames": 190,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        39,
+        132
+      ],
+      "used_source_frame_range_50hz": [
+        39,
+        132
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.0086249334306596,
+      "foot_clearance_before_offset_min_m": 0.0096249334306596,
+      "foot_clearance_before_offset_max_m": 0.020924926177448535,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 190,
+        "pkl_frames": 114,
+        "pkl_record_name": "kjp-027.bvh",
+        "football_root_quaternion_max_norm_error": 1.532054172415087e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0009999999999999731,
+        "foot_collision_clearance_max_m": 0.01227200256939604,
+        "foot_collision_clearance_at_reset_m": 0.012208909495932202,
+        "joint_max_abs_velocity_rad_s": 8.35914421081543,
+        "pelvis_height_range_m": [
+          0.7963771598844649,
+          0.8074416893034102
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 8.171363052866809e-08,
+        "max_body_quat_l2_error": 4.1990519530822516e-08,
+        "max_body_com_lin_vel_error_m_s": 6.762200666088347e-08,
+        "max_body_ang_vel_error_rad_s": 2.0084576402013e-07
+      },
+      "source_strike_frame_50hz": 82,
+      "source_strike_time_s": 1.64,
+      "strike_speed_m_s": 3.2639074199810265,
+      "strike_surface_normal_velocity_m_s": -2.9533878804696223,
+      "unrestricted_peak_frame_50hz": 82,
+      "unrestricted_peak_speed_m_s": 3.2639074199810265,
+      "unrestricted_peak_normal_velocity_m_s": -2.9533878804696223,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    },
+    {
+      "name": "0804_2_kjp-028",
+      "path": "0804_2_kjp-028.npz",
+      "sha256": "33a6e9b05a6a28efbbbf63f357baba86aeed795eb8910d22fd409d6752e766eb",
+      "capture": "0804_2",
+      "source_bvh": {
+        "path": "/home/lxz/Agibot_A3/motion/pingpong_kjp_0804_2/kjp-028.bvh",
+        "sha256": "4abbe86e7cfd7dbe2ef161fb45073375c15ec34eac900523b205db13e8bf3584"
+      },
+      "tele_gmr_pkl": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-pkl-30hz-20261003/kjp-028.pkl",
+        "sha256": "70f0c8312c0c14dceb61bb4e891ca640bdaf7eb2c25059e6556cd949e07c51da"
+      },
+      "football_npz": {
+        "path": "/home/lxz/Agibot_A3/motion/robot/G1/pingpong_kjp_0804_2-tele_gmr-football-npz-50hz-20261003/kjp-028.npz",
+        "sha256": "cdf91f46f275496afdcdfdb7b5ac8fe4c3b75ced4d2b3db7933dc220f6750f3c"
+      },
+      "source_robot": "G1",
+      "source_frames": 215,
+      "source_fps": 50,
+      "output_frames": 94,
+      "output_fps": 50,
+      "hit_type": "backhand",
+      "hit_type_source": "/home/lxz/Agibot_A3/motion/robot/A3/pingpong_kjp_0804_2_0623-npz--clip-racket-peak/hit_type.json",
+      "requested_source_frame_range_50hz": [
+        46,
+        139
+      ],
+      "used_source_frame_range_50hz": [
+        46,
+        139
+      ],
+      "pre_padding_frames": 0,
+      "post_padding_frames": 0,
+      "strike_frame": 43,
+      "strike_phase": 0.46,
+      "root_height_offset_m": -0.009778844930673495,
+      "foot_clearance_before_offset_min_m": 0.010778844930673496,
+      "foot_clearance_before_offset_max_m": 0.021847136331345524,
+      "joint_hard_limit_corrections": 0,
+      "max_joint_hard_limit_correction_rad": 0.0,
+      "source_validation": {
+        "football_frames": 215,
+        "pkl_frames": 129,
+        "pkl_record_name": "kjp-028.bvh",
+        "football_root_quaternion_max_norm_error": 1.5890719895494954e-07,
+        "football_body_names": [
+          "pelvis",
+          "left_hip_pitch_link",
+          "right_hip_pitch_link",
+          "waist_yaw_link",
+          "left_hip_roll_link",
+          "right_hip_roll_link",
+          "waist_roll_link",
+          "left_hip_yaw_link",
+          "right_hip_yaw_link",
+          "torso_link",
+          "left_knee_link",
+          "right_knee_link",
+          "left_shoulder_pitch_link",
+          "right_shoulder_pitch_link",
+          "left_ankle_pitch_link",
+          "right_ankle_pitch_link",
+          "left_shoulder_roll_link",
+          "right_shoulder_roll_link",
+          "left_ankle_roll_link",
+          "right_ankle_roll_link",
+          "left_shoulder_yaw_link",
+          "right_shoulder_yaw_link",
+          "left_elbow_link",
+          "right_elbow_link",
+          "left_wrist_roll_link",
+          "right_wrist_roll_link",
+          "left_wrist_pitch_link",
+          "right_wrist_pitch_link",
+          "left_wrist_yaw_link",
+          "right_wrist_yaw_link"
+        ]
+      },
+      "validation": {
+        "finite": true,
+        "max_quaternion_norm_error": 5.960464477539063e-08,
+        "foot_collision_clearance_min_m": 0.0010000000000000044,
+        "foot_collision_clearance_max_m": 0.012068291400672032,
+        "foot_collision_clearance_at_reset_m": 0.010104894159242254,
+        "joint_max_abs_velocity_rad_s": 5.810260772705078,
+        "pelvis_height_range_m": [
+          0.7680559281329862,
+          0.8041582230548612
+        ]
+      },
+      "saved_fk_validation": {
+        "max_body_pos_error_m": 6.225101945034339e-08,
+        "max_body_quat_l2_error": 4.263945866852518e-08,
+        "max_body_com_lin_vel_error_m_s": 3.7643795192110474e-08,
+        "max_body_ang_vel_error_rad_s": 2.2680998412738518e-07
+      },
+      "source_strike_frame_50hz": 89,
+      "source_strike_time_s": 1.78,
+      "strike_speed_m_s": 3.0866930639355212,
+      "strike_surface_normal_velocity_m_s": -2.957584543664356,
+      "unrestricted_peak_frame_50hz": 89,
+      "unrestricted_peak_speed_m_s": 3.0866930639355212,
+      "unrestricted_peak_normal_velocity_m_s": -2.957584543664356,
+      "selection": "maximum surface-centre speed in declared hit direction; omit 0.1s edges"
+    }
+  ]
+}

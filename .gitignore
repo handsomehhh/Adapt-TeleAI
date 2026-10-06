@@ -15,6 +15,15 @@ benchmark_results/
 dataset_grasp/
 src/motion/results/
 
+# Local ping-pong training artifacts. Keep the small manifests and README files
+# in Git, but keep raw motion archives and trained checkpoints out of it.
+ckpts/a3_pingpong/*.pt
+ckpts/g1_pingpong/*.pt
+ckpts/g1_pingpong_tele_gmr/*.pt
+dataset/a3_pingpong/raw/
+dataset/g1_pingpong/raw/
+dataset/g1_pingpong_tele_gmr/raw/
+
 # Documentation outputs.
 **/_build/*
 **/generated/*

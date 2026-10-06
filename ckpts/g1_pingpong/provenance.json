@@ -1,0 +1,14 @@
+{
+  "model_999.pt": {
+    "source": "logs/rsl_rl/g1_pingpong_receive_stage2/2026-10-03_22-15-38_g1_stage2_acceptance/model_999.pt",
+    "sha256": "ae724e775d03e2131f1a1554f0a9e1d60fd7bc8425ef1c483cabcd28e16671c6"
+  },
+  "tracker.pt": {
+    "source": "logs/rsl_rl/g1_pingpong_tracking_stage1_random_dt/2026-10-03_22-05-04_g1_stage1_acceptance/jit/modeljit_999.pt",
+    "sha256": "5f982343828188d20f1b588b0183e294f8556e6538cdd6eac591d14c307c4a06"
+  },
+  "tracking_model_999.pt": {
+    "source": "logs/rsl_rl/g1_pingpong_tracking_stage1_random_dt/2026-10-03_22-05-04_g1_stage1_acceptance/model_999.pt",
+    "sha256": "9f9b0d63d2088e7669f79577225ce49c19e9789596e8cc9260e4278f5132f6fb"
+  }
+}

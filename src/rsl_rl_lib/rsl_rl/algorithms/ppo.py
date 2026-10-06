@@ -198,10 +198,11 @@ class PPO:
             to = extras["time_outs"].unsqueeze(1).to(self.device)  # type: ignore[union-attr]
             if self.transition.gae_step_scale is not None:
                 g = self.gamma ** self.transition.gae_step_scale
-                self.transition.rewards += torch.squeeze(
-                    g * self.transition.values * to,  # type: ignore[operator]
-                    1,
-                )
+                # This is a value boundary condition, not a reward rate. Keep it
+                # outside the variable-duration reward integral in compute_returns.
+                # Integrating it again makes timeout targets approximately s*V,
+                # which is expansive for s > 1 and can make the critic diverge.
+                self.transition.timeout_bootstrap = g * self.transition.values * to  # type: ignore[operator]
             else:
                 self.transition.rewards += self.gamma * torch.squeeze(
                     self.transition.values * to,  # type: ignore[operator]
@@ -241,6 +242,7 @@ class PPO:
                 lam_s = self.lam
             delta = (
                 reward_coef * st.rewards[step]
+                + st.timeout_bootstrap[step]
                 + next_is_not_terminal * gamma_s * next_values
                 - st.values[step]
             )

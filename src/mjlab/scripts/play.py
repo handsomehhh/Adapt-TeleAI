@@ -54,6 +54,19 @@ def _validate_play_motion_directory(cfg: "PlayConfig") -> tuple[Path, int] | Non
   return d, len(nzs)
 
 
+def _has_configured_play_motion(cfg: "PlayConfig", motion_cmd) -> bool:
+  """Honor a task's local dataset default unless the caller overrides it."""
+  if cfg.motion_file is not None or cfg.motion_directory is not None or cfg.registry_name:
+    return False
+  if motion_cmd.motion_files:
+    return all(Path(p).expanduser().is_file() for p in motion_cmd.motion_files)
+  if motion_cmd.motion_file:
+    return Path(motion_cmd.motion_file).expanduser().is_file()
+  if motion_cmd.motion_directory:
+    return any(Path(motion_cmd.motion_directory).expanduser().glob("*.npz"))
+  return False
+
+
 @dataclass(frozen=True)
 class PlayConfig:
   agent: Literal["zero", "random", "trained"] = "trained"
@@ -62,6 +75,8 @@ class PlayConfig:
   wandb_checkpoint_name: str | None = None
   """Optional checkpoint name within the W&B run to load (e.g. 'model_4000.pt')."""
   checkpoint_file: str | None = None
+  tracker_file: str | None = None
+  """Frozen Stage-1 JIT tracker for hierarchical tasks; defaults to checkpoint sibling tracker.pt."""
   onnx_file: str | None = None
   """Optional ONNX policy path. If set, inference uses ONNXRuntime (no .pt runner load)."""
   motion_file: str | None = None
@@ -680,6 +695,19 @@ def run_play(task_id: str, cfg: PlayConfig):
   env_cfg = load_env_cfg(task_id, play=True)
   agent_cfg = load_rl_cfg(task_id)
 
+  joint_action_cfg = env_cfg.actions.get("joint_pos")
+  if joint_action_cfg is not None and hasattr(joint_action_cfg, "tracker_file"):
+    bundled_tracker = (
+      Path(cfg.checkpoint_file).expanduser().parent / "tracker.pt"
+      if cfg.checkpoint_file else None
+    )
+    if cfg.tracker_file:
+      joint_action_cfg.tracker_file = cfg.tracker_file
+    elif bundled_tracker is not None and bundled_tracker.is_file():
+      joint_action_cfg.tracker_file = str(bundled_tracker)
+  elif cfg.tracker_file is not None:
+    raise ValueError("--tracker-file requires a task with a frozen tracker action.")
+
   if cfg.racket_hand is not None:
     from mjlab.tasks.adapt_tennis.config.g1.env_cfgs import apply_racket_hand
 
@@ -743,6 +771,8 @@ def run_play(task_id: str, cfg: PlayConfig):
         f"[INFO]: Using motion_directory ({n_clips} clips); "
         "MotionCommand will resample across clips when each ends."
       )
+    elif _has_configured_play_motion(cfg, motion_cmd):
+      print("[INFO]: Using the task's configured local motion dataset.")
     elif DUMMY_MODE:
       if not cfg.registry_name:
         raise ValueError(

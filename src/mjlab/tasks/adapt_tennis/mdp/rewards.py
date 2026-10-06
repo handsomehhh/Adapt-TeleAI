@@ -33,15 +33,18 @@ def _get_body_indexes(
   ]
 
 
-def _get_motion_joint_indexes(joint_names: tuple[str, ...]) -> list[int]:
+def _get_motion_joint_indexes(
+  joint_names: tuple[str, ...],
+  motion_joint_names: tuple[str, ...] = G1_REPLAY_JOINT_NAMES_27,
+) -> list[int]:
   """Indices into motion / robot replay joint vectors (``G1_REPLAY_JOINT_NAMES_27``)."""
-  missing = [n for n in joint_names if n not in G1_REPLAY_JOINT_NAMES_27]
+  missing = [n for n in joint_names if n not in motion_joint_names]
   if missing:
     raise ValueError(
       f"Unknown joint name(s) for motion replay tracking: {missing}. "
-      f"Expected names from G1_REPLAY_JOINT_NAMES_27."
+      f"Expected names from {motion_joint_names}."
     )
-  return [G1_REPLAY_JOINT_NAMES_27.index(n) for n in joint_names]
+  return [motion_joint_names.index(n) for n in joint_names]
 
 
 def motion_global_anchor_position_error_exp(
@@ -153,7 +156,7 @@ def motion_joint_position_error_exp(
   replay layout (same indexing as ``error_joint_pos`` metrics).
   """
   command = cast(MotionCommand, env.command_manager.get_term(command_name))
-  joint_indexes = _get_motion_joint_indexes(joint_names)
+  joint_indexes = _get_motion_joint_indexes(joint_names, command.cfg.joint_names)
   if not joint_indexes:
     return torch.zeros(command.num_envs, dtype=torch.float32, device=command.device)
 
@@ -187,11 +190,13 @@ class motion_keyframe_joint_position_reward:
       raise ValueError("motion_keyframe_joint_position_reward requires keyframe_times.")
 
     self._command_name = command_name
-    self._joint_indexes = _get_motion_joint_indexes(tuple(joint_names))
     self._window_s = float(params.get("window_s", 0.05))
     self._std = float(params.get("std", 0.15))
 
     command = cast(MotionCommand, env.command_manager.get_term(command_name))
+    self._joint_indexes = _get_motion_joint_indexes(
+      tuple(joint_names), command.cfg.joint_names
+    )
     self._motion_to_robot_joint_ids = command._motion_to_robot_joint_ids
     motion = command.motion
     num_motions = motion.num_motions
