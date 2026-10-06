@@ -103,12 +103,12 @@ def run_train(task_id: str, cfg: TrainConfig, log_dir: Path) -> None:
       md = Path(motion_cmd.motion_directory).expanduser().resolve()
       if not md.is_dir():
         raise ValueError(f"motion_directory is not a directory: {md}")
-      nzs = sorted(p for p in md.rglob("*.npz") if p.is_file())
-      if not nzs:
+      first_npz = next((p for p in md.rglob("*.npz") if p.is_file()), None)
+      if first_npz is None:
         raise ValueError(f"No .npz files under motion_directory: {md}")
       print(
-        f"[INFO] Using motion_directory {md} ({len(nzs)} clip(s)); "
-        "MotionCommand loads all for per-env sampling."
+        f"[INFO] Using recursive motion_directory {md}; "
+        "MotionCommand resolves the configured clip subset per worker."
       )
     elif cfg.registry_name:
       # Download from WandB registry.

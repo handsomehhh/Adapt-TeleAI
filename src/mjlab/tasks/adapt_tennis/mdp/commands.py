@@ -605,9 +605,39 @@ def _resolve_motion_paths(cfg: MotionCommandCfg) -> tuple[str, ...]:
     if not d.is_dir():
       raise ValueError(f"motion_directory is not a directory: {d}")
     # Motion datasets are commonly grouped into subdirectories by source,
-    # subject, or split. Keep the directory interface useful for those
-    # datasets by resolving all nested ``.npz`` files deterministically.
-    files = sorted(x for x in d.rglob("*.npz") if x.is_file())
+    # subject, or split. When a cap is active, walk each immediate group only
+    # as far as its quota; this avoids scanning a multi-hundred-thousand-file
+    # archive just to choose a bounded training subset.
+    if cfg.max_motion_clips > 0:
+      groups = sorted(x for x in d.iterdir() if x.is_dir())
+      root_files = sorted(x for x in d.iterdir() if x.is_file() and x.suffix == ".npz")
+      if root_files:
+        groups = [d, *groups]
+      if not groups:
+        groups = [d]
+      base_quota, remainder = divmod(cfg.max_motion_clips, len(groups))
+      files = []
+      for group_index, group in enumerate(groups):
+        quota = base_quota + (1 if group_index < remainder else 0)
+        if quota <= 0:
+          continue
+        if group == d:
+          candidates = root_files
+        else:
+          candidates = []
+          for root, dir_names, file_names in os.walk(group):
+            dir_names.sort()
+            file_names.sort()
+            candidates.extend(
+              Path(root) / name
+              for name in file_names
+              if name.endswith(".npz")
+            )
+            if len(candidates) >= quota:
+              break
+        files.extend(x for x in candidates[:quota] if x.is_file())
+    else:
+      files = sorted(x for x in d.rglob("*.npz") if x.is_file())
     if not files:
       raise ValueError(f"No .npz files under motion_directory: {d}")
     return tuple(str(f) for f in files)
