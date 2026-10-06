@@ -20,6 +20,9 @@ body trajectories) as well as self-describing clips with `joint_names` and
 To keep each distributed worker's GPU memory bounded, the default task selects
 up to 1024 clips evenly across the recursive archive. Set
 `ADAPT_STAGE1_MAX_MOTIONS=0` to load every clip, or choose a different cap.
+Clips are also limited to their first 4096 frames by default so a single very
+long recording cannot make the padded batch exceed GPU memory; override this
+with `ADAPT_STAGE1_MAX_FRAMES=0` when the archive is known to fit.
 
 On the cluster, after installing the repository environment, start an 8-GPU
 run with:

@@ -29,6 +29,7 @@ from mjlab.tasks.adapt_tennis import mdp
 
 DEFAULT_MOTION_DIRECTORY = "/data_zcy/zcy/datasets/motion_data_used_g1"
 DEFAULT_MAX_MOTION_CLIPS = 1024
+DEFAULT_MAX_MOTION_FRAMES = 4096
 
 
 def _motion_directory() -> str:
@@ -69,6 +70,9 @@ def unitree_g1_stage1_tracker_env_cfg(
   motion.motion_directory = _motion_directory()
   motion.max_motion_clips = int(
     os.environ.get("ADAPT_STAGE1_MAX_MOTIONS", str(DEFAULT_MAX_MOTION_CLIPS))
+  )
+  motion.max_motion_frames = int(
+    os.environ.get("ADAPT_STAGE1_MAX_FRAMES", str(DEFAULT_MAX_MOTION_FRAMES))
   )
   motion.joint_names = G1_PINGPONG_JOINT_NAMES
   motion.body_names = G1_PINGPONG_TRACKED_BODIES

@@ -193,26 +193,28 @@ class MotionLoader:
     target_body_names: tuple[str, ...] | None = None,
     target_joint_names: tuple[str, ...] | None = None,
     align_heading_to_frame: AlignHeadingFrame = "last",
+    max_motion_frames: int = 0,
   ) -> None:
     data = np.load(motion_file, allow_pickle=True)
     self.fps = _npz_float(data["fps"], name="fps") if "fps" in data else 30.0
+    frame_stop = max_motion_frames if max_motion_frames > 0 else None
     self._body_pos_w = torch.tensor(
-      data["body_pos_w"], dtype=torch.float32, device=device
+      data["body_pos_w"][:frame_stop], dtype=torch.float32, device=device
     )
     self._body_quat_w = torch.tensor(
-      data["body_quat_w"], dtype=torch.float32, device=device
+      data["body_quat_w"][:frame_stop], dtype=torch.float32, device=device
     )
     self._body_lin_vel_w = torch.tensor(
-      data["body_lin_vel_w"], dtype=torch.float32, device=device
+      data["body_lin_vel_w"][:frame_stop], dtype=torch.float32, device=device
     )
     self._body_ang_vel_w = torch.tensor(
-      data["body_ang_vel_w"], dtype=torch.float32, device=device
+      data["body_ang_vel_w"][:frame_stop], dtype=torch.float32, device=device
     )
     raw_joint_pos = torch.tensor(
-      data["joint_pos"], dtype=torch.float32, device=device
+      data["joint_pos"][:frame_stop], dtype=torch.float32, device=device
     )
     raw_joint_vel = torch.tensor(
-      data["joint_vel"], dtype=torch.float32, device=device
+      data["joint_vel"][:frame_stop], dtype=torch.float32, device=device
     )
 
     npz_body_names = self._read_names(data, "body_names")
@@ -356,6 +358,7 @@ class MultiMotionLoader:
     target_body_names: tuple[str, ...] | None = None,
     target_joint_names: tuple[str, ...] | None = None,
     align_heading_to_frame: AlignHeadingFrame = "last",
+    max_motion_frames: int = 0,
   ) -> None:
     if not motion_paths:
       raise ValueError("MultiMotionLoader requires at least one motion path.")
@@ -367,6 +370,7 @@ class MultiMotionLoader:
         target_body_names=target_body_names,
         target_joint_names=target_joint_names,
         align_heading_to_frame=align_heading_to_frame,
+        max_motion_frames=max_motion_frames,
       )
       for p in motion_paths
     ]
@@ -717,6 +721,7 @@ class MotionCommand(CommandTerm):
       target_body_names=tuple(self.cfg.body_names),
       target_joint_names=motion_joint_names,
       align_heading_to_frame=self.cfg.align_heading_to_frame,
+      max_motion_frames=self.cfg.max_motion_frames,
     )
     self.time_steps = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
     # Monotonic timeline for termination accounting (not clamped at clip end).
@@ -1616,6 +1621,9 @@ class MotionCommandCfg(CommandTermCfg):
 
   max_motion_clips: int = 0
   """Maximum clips loaded from a directory; ``0`` loads the complete archive."""
+
+  max_motion_frames: int = 0
+  """Maximum frames retained per clip; ``0`` keeps each clip intact."""
 
   anchor_body_name: str
   body_names: tuple[str, ...]
