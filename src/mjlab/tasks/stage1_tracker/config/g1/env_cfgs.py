@@ -92,6 +92,10 @@ def unitree_g1_stage1_tracker_env_cfg(
   cfg.rewards.pop("motion_hit_arm", None)
   cfg.terminations["feet_height"].params["body_names"] = G1_PINGPONG_FEET_BODIES
   cfg.viewer.body_name = G1_PINGPONG_ANCHOR_BODY
+  # The 29-DoF G1 has more self-contact candidates than the A3 template.
+  # Leave enough MuJoCo workspace for randomized tracking rollouts.
+  cfg.sim.nconmax = 256
+  cfg.sim.njmax = 1024
 
   if num_envs is None:
     configured_num_envs = int(os.environ.get("ADAPT_STAGE1_NUM_ENVS", "1024"))
