@@ -616,6 +616,27 @@ def _resolve_motion_paths(cfg: MotionCommandCfg) -> tuple[str, ...]:
   )
 
 
+def _select_motion_paths(
+  paths: tuple[str, ...], max_motion_clips: int
+) -> tuple[str, ...]:
+  """Select a deterministic, directory-wide subset when a cap is requested.
+
+  A full motion archive can contain many tens of gigabytes. Loading every clip
+  into every distributed worker would replicate that archive on each GPU. The
+  evenly spaced selection keeps coverage across the sorted recursive archive;
+  setting ``max_motion_clips`` to ``0`` disables the cap.
+  """
+  if max_motion_clips <= 0 or len(paths) <= max_motion_clips:
+    return paths
+  if max_motion_clips == 1:
+    return (paths[0],)
+  last = len(paths) - 1
+  indices = {
+    (i * last) // (max_motion_clips - 1) for i in range(max_motion_clips)
+  }
+  return tuple(paths[i] for i in sorted(indices))
+
+
 class MotionCommand(CommandTerm):
   cfg: MotionCommandCfg
   _env: ManagerBasedRlEnv
@@ -651,7 +672,14 @@ class MotionCommand(CommandTerm):
       device=self.device,
     )
 
-    paths = _resolve_motion_paths(cfg)
+    paths = _select_motion_paths(
+      _resolve_motion_paths(cfg), cfg.max_motion_clips
+    )
+    if cfg.max_motion_clips > 0:
+      print(
+        f"[MotionCommand] Using {len(paths)} motion clips "
+        f"(max_motion_clips={cfg.max_motion_clips})."
+      )
     self.motion = MultiMotionLoader(
       paths,
       self.body_indexes,
@@ -1555,6 +1583,9 @@ class MotionCommandCfg(CommandTermCfg):
 
   motion_file: str = ""
   """Single ``.npz`` path when ``motion_files`` and ``motion_directory`` are empty."""
+
+  max_motion_clips: int = 0
+  """Maximum clips loaded from a directory; ``0`` loads the complete archive."""
 
   anchor_body_name: str
   body_names: tuple[str, ...]

@@ -17,6 +17,9 @@ The supplied cluster dataset is the default path:
 The loader accepts the dataset's legacy seven-array format (`fps`, joint and
 body trajectories) as well as self-describing clips with `joint_names` and
 `body_names`. Legacy clips are interpreted in the native 29-DoF G1 order.
+To keep each distributed worker's GPU memory bounded, the default task selects
+up to 1024 clips evenly across the recursive archive. Set
+`ADAPT_STAGE1_MAX_MOTIONS=0` to load every clip, or choose a different cap.
 
 On the cluster, after installing the repository environment, start an 8-GPU
 run with:

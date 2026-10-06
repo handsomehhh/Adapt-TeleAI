@@ -28,6 +28,7 @@ from mjlab.tasks.a3_pingpong.tracking import A3MotionCommandCfg
 from mjlab.tasks.adapt_tennis import mdp
 
 DEFAULT_MOTION_DIRECTORY = "/data_zcy/zcy/datasets/motion_data_used_g1"
+DEFAULT_MAX_MOTION_CLIPS = 1024
 
 
 def _motion_directory() -> str:
@@ -66,6 +67,9 @@ def unitree_g1_stage1_tracker_env_cfg(
   motion.motion_file = ""
   motion.motion_files = ()
   motion.motion_directory = _motion_directory()
+  motion.max_motion_clips = int(
+    os.environ.get("ADAPT_STAGE1_MAX_MOTIONS", str(DEFAULT_MAX_MOTION_CLIPS))
+  )
   motion.joint_names = G1_PINGPONG_JOINT_NAMES
   motion.body_names = G1_PINGPONG_TRACKED_BODIES
   motion.anchor_body_name = G1_PINGPONG_ANCHOR_BODY
