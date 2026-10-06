@@ -80,6 +80,21 @@ uv run play Mjlab-ServeTracking-Flat-Unitree-G1-Stage1-RandomDt \
 - **`--racket-hand`**: Use `left` for `player1` (left-handed athlete) and `right` for `player2` (right-handed athlete). This selects the racket MJCF and hit-arm reward terms.
 - **Hit-arm keyframes**: Tune `HIT_ARM_KEYFRAME_TIMES_S` in [`stage1_tracking_env_cfg.py`](src/mjlab/tasks/adapt_tennis/stage1_tracking_env_cfg.py) to match your motion clip (e.g., `3.4` s for `player1`, `1.84` s for `player2`).
 
+### Generic G1 Stage-1 Tracker
+
+For a reusable tracker over a recursive collection of 29-DoF G1 `.npz`
+motions, use `Mjlab-Stage1-Tracker-Flat-Unitree-G1`. It defaults to
+`/data_zcy/zcy/datasets/motion_data_used_g1` and can be run on all eight GPUs:
+
+```bash
+export ADAPT_STAGE1_NUM_ENVS=1024
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 \
+  uv run train Mjlab-Stage1-Tracker-Flat-Unitree-G1 --gpu-ids all
+```
+
+See [`docs/STAGE1_TRACKER.md`](docs/STAGE1_TRACKER.md) for dataset format,
+single-GPU smoke runs, and path overrides.
+
 ## Ping-Pong Tasks
 
 A3 multi-motion tracking and adaptive receiving tasks are documented in

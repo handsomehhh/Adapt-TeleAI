@@ -103,7 +103,7 @@ def run_train(task_id: str, cfg: TrainConfig, log_dir: Path) -> None:
       md = Path(motion_cmd.motion_directory).expanduser().resolve()
       if not md.is_dir():
         raise ValueError(f"motion_directory is not a directory: {md}")
-      nzs = sorted(p for p in md.glob("*.npz") if p.is_file())
+      nzs = sorted(p for p in md.rglob("*.npz") if p.is_file())
       if not nzs:
         raise ValueError(f"No .npz files under motion_directory: {md}")
       print(

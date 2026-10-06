@@ -241,7 +241,9 @@ def _resolve_motion_paths(cfg: MotionCommandCfg) -> tuple[str, ...]:
     d = Path(cfg.motion_directory).expanduser().resolve()
     if not d.is_dir():
       raise ValueError(f"motion_directory is not a directory: {d}")
-    files = sorted(x for x in d.glob("*.npz") if x.is_file())
+    # Accept datasets arranged in nested directories (for example one folder
+    # per subject or motion source) while preserving deterministic ordering.
+    files = sorted(x for x in d.rglob("*.npz") if x.is_file())
     if not files:
       raise ValueError(f"No .npz files under motion_directory: {d}")
     return tuple(str(f) for f in files)

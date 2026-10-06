@@ -48,7 +48,7 @@ def _validate_play_motion_directory(cfg: "PlayConfig") -> tuple[Path, int] | Non
   d = Path(cfg.motion_directory).expanduser().resolve()
   if not d.is_dir():
     raise FileNotFoundError(f"motion_directory is not a directory: {d}")
-  nzs = sorted(x for x in d.glob("*.npz") if x.is_file())
+  nzs = sorted(x for x in d.rglob("*.npz") if x.is_file())
   if not nzs:
     raise FileNotFoundError(f"No .npz files under {d}")
   return d, len(nzs)
@@ -63,7 +63,7 @@ def _has_configured_play_motion(cfg: "PlayConfig", motion_cmd) -> bool:
   if motion_cmd.motion_file:
     return Path(motion_cmd.motion_file).expanduser().is_file()
   if motion_cmd.motion_directory:
-    return any(Path(motion_cmd.motion_directory).expanduser().glob("*.npz"))
+    return any(Path(motion_cmd.motion_directory).expanduser().rglob("*.npz"))
   return False
 
 
@@ -522,7 +522,7 @@ def _run_motion_directory_collection(task_id: str, env, policy, cfg: PlayConfig)
       "Per-clip collection requires --motion-directory with at least one .npz file."
     )
   motion_dir, _ = dir_info
-  clip_paths = sorted(motion_dir.glob("*.npz"))
+  clip_paths = sorted(motion_dir.rglob("*.npz"))
 
   run_dir = _collect_run_dir(cfg, task_id)
   uw = env.unwrapped
