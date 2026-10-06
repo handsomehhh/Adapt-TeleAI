@@ -15,4 +15,6 @@ def unitree_g1_stage1_tracker_ppo_runner_cfg():
     experiment_name="g1_stage1_tracker",
     save_interval=500,
     max_iterations=10_000,
+    logger="tensorboard",
+    upload_model=False,
   )
