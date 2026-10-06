@@ -147,9 +147,13 @@ def _root_body_index(target_body_names: tuple[str, ...] | None, n_bodies: int) -
   return 0 if n_bodies > 0 else 0
 
 
-def _npz_float(value: object, *, name: str = "value") -> float:
+def _npz_float(
+  value: object, *, name: str = "value", default: float | None = None
+) -> float:
   """Convert npz scalars, including length-1 arrays such as ``fps`` ``(1,)``."""
   arr = np.asarray(value)
+  if arr.size == 0 and default is not None:
+    return default
   if arr.size != 1:
     raise ValueError(f"Expected a scalar {name}, got shape {arr.shape}")
   return float(arr.reshape(-1)[0])
@@ -196,7 +200,11 @@ class MotionLoader:
     max_motion_frames: int = 0,
   ) -> None:
     data = np.load(motion_file, allow_pickle=True)
-    self.fps = _npz_float(data["fps"], name="fps") if "fps" in data else 30.0
+    self.fps = (
+      _npz_float(data["fps"], name="fps", default=50.0)
+      if "fps" in data
+      else 30.0
+    )
     frame_stop = max_motion_frames if max_motion_frames > 0 else None
     self._body_pos_w = torch.tensor(
       data["body_pos_w"][:frame_stop], dtype=torch.float32, device=device
