@@ -27,6 +27,10 @@ with `ADAPT_STAGE1_MAX_FRAMES=0` when the archive is known to fit.
 The tracker uses 1000 environments per GPU by default, clips raw policy
 actions to one action unit, and starts PPO with a smaller exploration standard
 deviation suited to the 29-DoF G1 actuator scales.
+Training rollouts start at frame zero by default so a random near-end frame is
+not counted as an artificially short episode. Set
+`ADAPT_STAGE1_SAMPLING_MODE=adaptive` only when deliberately testing adaptive
+in-clip sampling.
 
 On the cluster, after installing the repository environment, start an 8-GPU
 run with:

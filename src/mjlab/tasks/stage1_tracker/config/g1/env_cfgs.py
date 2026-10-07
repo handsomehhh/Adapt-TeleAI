@@ -79,7 +79,13 @@ def unitree_g1_stage1_tracker_env_cfg(
   motion.anchor_body_name = G1_PINGPONG_ANCHOR_BODY
   motion.align_heading_to_frame = "none"
   motion.debug_vis = play
-  motion.sampling_mode = "start" if play else "adaptive"
+  # Starting every rollout at frame zero avoids treating a random near-end
+  # frame as a one-step episode.  This is especially important for PPO's
+  # episode statistics and gives the tracker a full clip horizon to learn
+  # from.  Adaptive in-clip sampling remains available for experiments.
+  motion.sampling_mode = "start" if play else os.environ.get(
+    "ADAPT_STAGE1_SAMPLING_MODE", "start"
+  )
   motion.random_dt_training_enabled = not play
   motion.joint_position_range = (0.0, 0.0) if play else (-0.03, 0.03)
   motion.pose_range = {} if play else {"roll": (-0.03, 0.03), "pitch": (-0.03, 0.03)}
