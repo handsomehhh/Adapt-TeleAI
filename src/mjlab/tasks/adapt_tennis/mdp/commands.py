@@ -196,6 +196,8 @@ class MotionLoader:
     *,
     target_body_names: tuple[str, ...] | None = None,
     target_joint_names: tuple[str, ...] | None = None,
+    legacy_body_names: tuple[str, ...] | None = None,
+    legacy_joint_names: tuple[str, ...] | None = None,
     align_heading_to_frame: AlignHeadingFrame = "last",
     max_motion_frames: int = 0,
   ) -> None:
@@ -251,15 +253,31 @@ class MotionLoader:
           "motion via gmr_pkl_sim_to_npz / csv_to_npz to get a "
           "self-describing npz that is robust to XML changes."
         )
-      bi = body_indexes.to(device=device)
       n_body_motion = int(self._body_pos_w.shape[1])
-      if bi.numel() and int(bi.max().item()) >= n_body_motion:
-        motion_body_cols = torch.arange(
-          bi.shape[0], dtype=torch.long, device=device
+      # A number of legacy G1 archives omit names and use the breadth-first
+      # body order from the source model rather than the runtime MJCF's
+      # depth-first order.  If the caller provides that source schema, remap
+      # by name before falling back to the historical index heuristic.
+      if (
+        legacy_body_names is not None
+        and target_body_names is not None
+        and len(legacy_body_names) == n_body_motion
+        and all(name in legacy_body_names for name in target_body_names)
+      ):
+        motion_body_cols = torch.tensor(
+          [legacy_body_names.index(name) for name in target_body_names],
+          dtype=torch.long,
+          device=device,
         )
-        assert len(motion_body_cols) == len(body_indexes)
       else:
-        motion_body_cols = bi
+        bi = body_indexes.to(device=device)
+        if bi.numel() and int(bi.max().item()) >= n_body_motion:
+          motion_body_cols = torch.arange(
+            bi.shape[0], dtype=torch.long, device=device
+          )
+          assert len(motion_body_cols) == len(body_indexes)
+        else:
+          motion_body_cols = bi
     self._body_indexes = motion_body_cols
     self.body_pos_w = self._body_pos_w[:, self._body_indexes]
     self.body_quat_w = self._body_quat_w[:, self._body_indexes]
@@ -285,23 +303,43 @@ class MotionLoader:
     else:
       if target_joint_names is not None and npz_joint_names is None:
         n_target = len(target_joint_names)
-        if raw_joint_pos.shape[1] != n_target:
-          raise ValueError(
-            f"Motion file {motion_file!r} has no ``joint_names`` array and its "
-            f"joint_pos column count {raw_joint_pos.shape[1]} != target joint "
-            f"count {n_target}. Regenerate the motion to embed joint_names, "
-            "or fix the motion source."
+        if (
+          legacy_joint_names is not None
+          and len(legacy_joint_names) == raw_joint_pos.shape[1]
+          and all(name in legacy_joint_names for name in target_joint_names)
+        ):
+          joint_cols = torch.tensor(
+            [legacy_joint_names.index(name) for name in target_joint_names],
+            dtype=torch.long,
+            device=device,
           )
-        print(
-          f"[MotionLoader] WARNING: {motion_file!r} has no ``joint_names`` "
-          "array; assuming joint_pos columns already follow target order. "
-          "Regenerate the motion to get a self-describing npz."
+          self._joint_cols = joint_cols
+          self.joint_pos = raw_joint_pos[:, joint_cols]
+          self.joint_vel = raw_joint_vel[:, joint_cols]
+        else:
+          if raw_joint_pos.shape[1] != n_target:
+            raise ValueError(
+              f"Motion file {motion_file!r} has no ``joint_names`` array and its "
+              f"joint_pos column count {raw_joint_pos.shape[1]} != target joint "
+              f"count {n_target}. Regenerate the motion to embed joint_names, "
+              "or fix the motion source."
+            )
+          print(
+            f"[MotionLoader] WARNING: {motion_file!r} has no ``joint_names`` "
+            "array; assuming joint_pos columns already follow target order. "
+            "Regenerate the motion to get a self-describing npz."
+          )
+          self._joint_cols = torch.arange(
+            raw_joint_pos.shape[1], dtype=torch.long, device=device
+          )
+          self.joint_pos = raw_joint_pos
+          self.joint_vel = raw_joint_vel
+      else:
+        self._joint_cols = torch.arange(
+          raw_joint_pos.shape[1], dtype=torch.long, device=device
         )
-      self._joint_cols = torch.arange(
-        raw_joint_pos.shape[1], dtype=torch.long, device=device
-      )
-      self.joint_pos = raw_joint_pos
-      self.joint_vel = raw_joint_vel
+        self.joint_pos = raw_joint_pos
+        self.joint_vel = raw_joint_vel
 
     self.time_step_total = self.joint_pos.shape[0]
     self.heading_align_yaw_rad: float = 0.0
@@ -365,6 +403,8 @@ class MultiMotionLoader:
     *,
     target_body_names: tuple[str, ...] | None = None,
     target_joint_names: tuple[str, ...] | None = None,
+    legacy_body_names: tuple[str, ...] | None = None,
+    legacy_joint_names: tuple[str, ...] | None = None,
     align_heading_to_frame: AlignHeadingFrame = "last",
     max_motion_frames: int = 0,
   ) -> None:
@@ -377,6 +417,8 @@ class MultiMotionLoader:
         device=device,
         target_body_names=target_body_names,
         target_joint_names=target_joint_names,
+        legacy_body_names=legacy_body_names,
+        legacy_joint_names=legacy_joint_names,
         align_heading_to_frame=align_heading_to_frame,
         max_motion_frames=max_motion_frames,
       )
@@ -728,6 +770,8 @@ class MotionCommand(CommandTerm):
       device=self.device,
       target_body_names=tuple(self.cfg.body_names),
       target_joint_names=motion_joint_names,
+      legacy_body_names=self.cfg.legacy_body_names,
+      legacy_joint_names=self.cfg.legacy_joint_names,
       align_heading_to_frame=self.cfg.align_heading_to_frame,
       max_motion_frames=self.cfg.max_motion_frames,
     )
@@ -946,6 +990,8 @@ class MotionCommand(CommandTerm):
       device=self.device,
       target_body_names=tuple(self.cfg.body_names),
       target_joint_names=self.cfg.joint_names,
+      legacy_body_names=self.cfg.legacy_body_names,
+      legacy_joint_names=self.cfg.legacy_joint_names,
       align_heading_to_frame=self.cfg.align_heading_to_frame,
     )
     self.motion_ids = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
@@ -1626,6 +1672,12 @@ class MotionCommandCfg(CommandTermCfg):
 
   motion_file: str = ""
   """Single ``.npz`` path when ``motion_files`` and ``motion_directory`` are empty."""
+
+  legacy_body_names: tuple[str, ...] | None = None
+  """Optional source body order for nameless legacy archives."""
+
+  legacy_joint_names: tuple[str, ...] | None = None
+  """Optional source joint order for nameless legacy archives."""
 
   max_motion_clips: int = 0
   """Maximum clips loaded from a directory; ``0`` loads the complete archive."""
