@@ -87,7 +87,7 @@ motions, use `Mjlab-Stage1-Tracker-Flat-Unitree-G1`. It defaults to
 `/data_zcy/zcy/datasets/motion_data_used_g1` and can be run on all eight GPUs:
 
 ```bash
-export ADAPT_STAGE1_NUM_ENVS=1024
+export ADAPT_STAGE1_NUM_ENVS=1000
 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 \
   uv run train Mjlab-Stage1-Tracker-Flat-Unitree-G1 --gpu-ids all
 ```

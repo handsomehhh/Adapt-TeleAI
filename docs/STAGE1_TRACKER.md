@@ -24,11 +24,15 @@ Clips are also limited to their first 4096 frames by default so a single very
 long recording cannot make the padded batch exceed GPU memory; override this
 with `ADAPT_STAGE1_MAX_FRAMES=0` when the archive is known to fit.
 
+The tracker uses 1000 environments per GPU by default, clips raw policy
+actions to one action unit, and starts PPO with a smaller exploration standard
+deviation suited to the 29-DoF G1 actuator scales.
+
 On the cluster, after installing the repository environment, start an 8-GPU
 run with:
 
 ```bash
-export ADAPT_STAGE1_NUM_ENVS=1024
+export ADAPT_STAGE1_NUM_ENVS=1000
 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 \
   .venv/bin/train Mjlab-Stage1-Tracker-Flat-Unitree-G1 \
   --gpu-ids all

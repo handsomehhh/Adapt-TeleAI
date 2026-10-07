@@ -98,7 +98,7 @@ def unitree_g1_stage1_tracker_env_cfg(
   cfg.sim.njmax = 1024
 
   if num_envs is None:
-    configured_num_envs = int(os.environ.get("ADAPT_STAGE1_NUM_ENVS", "1024"))
+    configured_num_envs = int(os.environ.get("ADAPT_STAGE1_NUM_ENVS", "1000"))
     num_envs = 1 if play else configured_num_envs
   if num_envs < 1:
     raise ValueError(f"num_envs must be positive, got {num_envs}")

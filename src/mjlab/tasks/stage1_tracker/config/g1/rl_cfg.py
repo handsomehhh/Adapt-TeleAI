@@ -17,4 +17,15 @@ def unitree_g1_stage1_tracker_ppo_runner_cfg():
     max_iterations=10_000,
     logger="tensorboard",
     upload_model=False,
+    clip_actions=1.0,
+    # The 29-DoF G1 action scales are larger than A3's. A full-unit Gaussian
+    # at initialization creates implausible joint targets and terminates most
+    # environments before PPO sees a useful multi-step trajectory.
+    actor=replace(
+      cfg.actor,
+      distribution_cfg={
+        **(cfg.actor.distribution_cfg or {}),
+        "init_std": 0.2,
+      },
+    ),
   )
