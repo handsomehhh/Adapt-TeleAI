@@ -246,13 +246,6 @@ class MotionLoader:
         device=device,
       )
     else:
-      if target_body_names is not None and npz_body_names is None:
-        print(
-          f"[MotionLoader] WARNING: {motion_file!r} has no ``body_names`` "
-          "array; falling back to index-based body mapping. Regenerate the "
-          "motion via gmr_pkl_sim_to_npz / csv_to_npz to get a "
-          "self-describing npz that is robust to XML changes."
-        )
       n_body_motion = int(self._body_pos_w.shape[1])
       # A number of legacy G1 archives omit names and use the breadth-first
       # body order from the source model rather than the runtime MJCF's
@@ -264,12 +257,23 @@ class MotionLoader:
         and len(legacy_body_names) == n_body_motion
         and all(name in legacy_body_names for name in target_body_names)
       ):
+        print(
+          f"[MotionLoader] Remapping nameless legacy body columns by configured "
+          f"schema ({n_body_motion} bodies): {motion_file!r}"
+        )
         motion_body_cols = torch.tensor(
           [legacy_body_names.index(name) for name in target_body_names],
           dtype=torch.long,
           device=device,
         )
       else:
+        if target_body_names is not None and npz_body_names is None:
+          print(
+            f"[MotionLoader] WARNING: {motion_file!r} has no ``body_names`` "
+            "array; falling back to index-based body mapping. Regenerate the "
+            "motion via gmr_pkl_sim_to_npz / csv_to_npz to get a "
+            "self-describing npz that is robust to XML changes."
+          )
         bi = body_indexes.to(device=device)
         if bi.numel() and int(bi.max().item()) >= n_body_motion:
           motion_body_cols = torch.arange(
