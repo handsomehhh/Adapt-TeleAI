@@ -31,3 +31,8 @@ dataset/g1_pingpong_tele_gmr/raw/
 *clip**
 command.md
 host_readme.md
+
+
+dataset/
+
+ckpts/g1*
