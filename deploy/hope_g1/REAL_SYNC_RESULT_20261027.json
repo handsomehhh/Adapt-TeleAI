@@ -1,0 +1,24 @@
+{
+  "verified_files": 40,
+  "upstream_python_files": 14,
+  "upstream_package_equal": true,
+  "upstream_yaml_equal": true,
+  "backup": "/home/lxz/deploy_g1_pingpong/deploy/.backups/planner_sync_20261027_160309",
+  "active_processes": [],
+  "build_succeeded": true,
+  "ros2_package_prefix": "/home/lxz/deploy_g1_pingpong/deploy/ros2_install/hope_g1_deploy_planner",
+  "launch_show_args_succeeded": true,
+  "ros_node_import_succeeded": true,
+  "post_sync_metadata_fix": [
+    "deploy/hope_g1/ros2_planner/package.xml",
+    "deploy/hope_g1/ros2_planner/setup.py"
+  ],
+  "installed_yaml_matches_source": true,
+  "final_manifest_verified": true,
+  "post_sync_fixes": [
+    "deploy/hope_g1/ros2_planner/package.xml",
+    "deploy/hope_g1/ros2_planner/setup.py",
+    "deploy/hope_g1/README.md",
+    "deploy/hope_g1/REAL_DEPLOYMENT.md"
+  ]
+}

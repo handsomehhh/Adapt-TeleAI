@@ -43,6 +43,9 @@ class SimulatedMocap(UDPMocap):
     self.cfg, self.clock = config, clock
     self.accepted = self.rejected = 0
     self.last_error = None
+    self._planner_lock = threading.Lock()
+    self._planner_packet = None
+    self._planner_received = None
     self.root = RootPoseCache(
       config["root_marker_to_pelvis"],
       config["root_stale_timeout"],

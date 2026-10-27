@@ -39,6 +39,9 @@ class UDPMocap:
     self.stop = threading.Event()
     self.rejected = 0
     self.accepted = 0
+    self._planner_lock = threading.Lock()
+    self._planner_packet = None
+    self._planner_received = None
     self.last_error = None
     self.thread = threading.Thread(target=self._receive, daemon=True)
     self.thread.start()
@@ -58,18 +61,42 @@ class UDPMocap:
     if message["frame"] != self.cfg["world_frame"]:
       raise ValueError("Mocap frame differs from deployment world")
     stamp = float(message["stamp"])
-    received = sample_received_time(
-      stamp, self.cfg, wall_time=wall_time, monotonic_time=monotonic_time
-    )
     if message["kind"] == "ball":
+      received = sample_received_time(
+        stamp, self.cfg, wall_time=wall_time, monotonic_time=monotonic_time
+      )
       self.ball.update(message["position"], stamp, received=received)
     elif message["kind"] == "root":
+      received = sample_received_time(
+        stamp, self.cfg, wall_time=wall_time, monotonic_time=monotonic_time
+      )
       self.root.update(
         message["position"], message["quaternion_wxyz"], stamp, received=received
       )
+    elif message["kind"] == "racket_command":
+      vectors = [
+        np.asarray(message[key], dtype=float)
+        for key in ("position", "velocity", "normal")
+      ]
+      tts = float(message["time_to_strike"])
+      if (
+        any(v.shape != (3,) or not np.isfinite(v).all() for v in vectors)
+        or not np.isfinite(tts)
+      ):
+        raise ValueError("Invalid planner racket command")
+      with self._planner_lock:
+        self._planner_packet = dict(message)
+        self._planner_received = monotonic_time
     else:
       raise ValueError("Unknown mocap message kind")
     self.accepted += 1
+
+  def latest_planner_command(self):
+    """Return the most recently received ROS command and its local arrival time."""
+    with self._planner_lock:
+      if self._planner_packet is None:
+        return None, None
+      return dict(self._planner_packet), self._planner_received
 
   def _receive(self):
     while not self.stop.is_set():
@@ -89,6 +116,7 @@ class UDPMocap:
   def diagnostics(self):
     now = time.monotonic()
     ball, root = self.ball.get(now), self.root.get(now)
+    planner_packet, planner_received = self.latest_planner_command()
     result = {
       "accepted": self.accepted,
       "rejected": self.rejected,
@@ -98,6 +126,16 @@ class UDPMocap:
       "ball_position": ball.position.tolist() if ball else None,
       "ball_velocity": ball.velocity.tolist() if ball else None,
       "root_position": root[0].tolist() if root else None,
+      "planner_command_valid": bool(planner_packet and planner_packet.get("valid")),
+      "planner_command_age": (
+        now - planner_received if planner_received is not None else None
+      ),
+      "planner_command_time_to_strike": (
+        planner_packet.get("time_to_strike") if planner_packet else None
+      ),
+      "planner_command_position": (
+        planner_packet.get("position") if planner_packet else None
+      ),
     }
     recorder = getattr(self, "recorder", None)
     if recorder is not None:

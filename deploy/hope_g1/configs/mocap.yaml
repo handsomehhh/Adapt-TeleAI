@@ -14,6 +14,9 @@ source:
   frame: world
   ball_frame: world
   root_frame: map
+# Relayed by deploy.io.mocap bridge from the standalone A30808 ROS planner.
+planner_command_topic: /racket/command
+planner_command_source_frame: world
 ball_topic: /ball/point
 root_topic: /P1/pose
 world_frame: hope_table

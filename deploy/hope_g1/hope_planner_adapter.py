@@ -22,13 +22,17 @@ from deploy.racket_command import RacketCommand
 
 
 class HopePlannerAdapter:
-  def __init__(self, hit_plane_x=-0.25, config_path=None):
+  def __init__(self, hit_plane_x=None, config_path=None):
     if config_path is None:
       config_path = Path(__file__).with_name("configs") / "hope_planner_optimized_2.yaml"
     raw = yaml.safe_load(Path(config_path).read_text())
     params = raw["hope_planner_optimized_2"]["ros__parameters"]
     self.params = params
-    self.hit_plane_x = float(hit_plane_x)
+    self.hit_plane_x = float(params["x_hit"] if hit_plane_x is None else hit_plane_x)
+    publish_x_min = float(params["publish_intercept_x_min"])
+    publish_x_max = float(params["publish_intercept_x_max"])
+    if hit_plane_x is not None:
+      publish_x_min = publish_x_max = self.hit_plane_x
     config = PlannerConfig(
       poly_order=2,
       fit_window=30,
@@ -46,8 +50,8 @@ class HopePlannerAdapter:
       stage3_dt_integrate=float(params["stage3_dt_integrate"]),
       outgoing_velocity_tolerance_m=float(params["outgoing_velocity_tolerance_m"]),
       time_to_strike_invalid_x=float(params["time_to_strike_invalid_x"]),
-      publish_intercept_x_min=self.hit_plane_x,
-      publish_intercept_x_max=self.hit_plane_x,
+      publish_intercept_x_min=publish_x_min,
+      publish_intercept_x_max=publish_x_max,
       publish_intercept_y_min=float(params["publish_intercept_y_min"]),
       publish_intercept_y_max=float(params["publish_intercept_y_max"]),
       publish_intercept_z_min=float(params["publish_intercept_z_min"]),
@@ -104,6 +108,7 @@ class HopePlannerAdapter:
         diagnostic={
           "source": "hope_planner_optimized_2_A30808",
           "source_stamp": float(stamp),
+          "source_ball_position": np.asarray(position, dtype=float).tolist(),
           "received_monotonic": float(received),
           "time_to_strike": remaining,
           "hit_plane_x": self.hit_plane_x,

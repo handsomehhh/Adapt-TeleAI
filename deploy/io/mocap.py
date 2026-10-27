@@ -137,6 +137,78 @@ def subscribe_positions(node, cfg, consume):
   )
 
 
+def subscribe_planner_commands(node, cfg, consume):
+  """Forward ROS planner commands over the same local UDP handoff as mocap."""
+  from hope_msgs.msg import RacketCommand
+  from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
+
+  qos = QoSProfile(
+    depth=10,
+    reliability=ReliabilityPolicy.RELIABLE,
+    durability=DurabilityPolicy.VOLATILE,
+    history=HistoryPolicy.KEEP_LAST,
+  )
+  topic = cfg.get("planner_command_topic", "/racket/command")
+  expected_frame = cfg.get("planner_command_source_frame", "world")
+
+  def receive(msg):
+    if msg.header.frame_id != expected_frame:
+      node.get_logger().error(
+        f"Expected planner command frame {expected_frame}, got {msg.header.frame_id}"
+      )
+      return
+    p, v, n, outgoing = (
+      msg.position,
+      msg.velocity,
+      msg.normal,
+      msg.ball_velocity_outgoing,
+    )
+    position = np.array([p.x, p.y, p.z], dtype=float)
+    velocity = np.array([v.x, v.y, v.z], dtype=float)
+    normal = np.array([n.x, n.y, n.z], dtype=float)
+    outgoing_velocity = np.array([outgoing.x, outgoing.y, outgoing.z], dtype=float)
+    tts = float(msg.time_to_strike)
+    source_ball_time = float(msg.source_ball_time)
+    source_ball_position = np.array(
+      [msg.source_ball_position.x, msg.source_ball_position.y, msg.source_ball_position.z],
+      dtype=float,
+    )
+    valid = bool(msg.valid)
+    if (
+      not np.isfinite(
+        np.r_[position, velocity, normal, outgoing_velocity, source_ball_position, tts, source_ball_time]
+      ).all()
+    ):
+      valid = False
+      position = velocity = outgoing_velocity = np.zeros(3)
+      normal = np.array([0.0, 0.0, 1.0])
+      tts = 0.0
+      source_ball_time = 0.0
+      source_ball_position = np.zeros(3)
+    packet = {
+      "kind": "racket_command",
+      # The planner's world label is normalized to the deployment's already
+      # calibrated HOPE table coordinates; XYZ is not transformed here.
+      "frame": cfg["world_frame"],
+      "stamp": stamp_seconds(msg.header.stamp),
+      "bridge_monotonic": time.monotonic(),
+      "source_ball_time": source_ball_time,
+      "source_ball_position": source_ball_position.tolist(),
+      "position": position.tolist(),
+      "velocity": velocity.tolist(),
+      "normal": normal.tolist(),
+      "outgoing_velocity": outgoing_velocity.tolist(),
+      "time_to_strike": tts,
+      "valid": valid,
+      "clears_net": bool(msg.clears_net),
+      "bypasses_net_posts": bool(msg.bypasses_net_posts),
+      "predicted_bounces": int(msg.predicted_bounces),
+    }
+    consume(packet)
+
+  node.create_subscription(RacketCommand, topic, receive, qos)
+
+
 def multiply(q, p):
   w, v = q[0], np.asarray(q[1:])
   s, u = p[0], np.asarray(p[1:])
@@ -314,8 +386,14 @@ def bridge(config):
     sock.sendto(json.dumps(packet, allow_nan=False).encode(), destination)
 
   subscribe_positions(node, cfg, send)
+  if cfg.get("planner_command_topic"):
+    subscribe_planner_commands(node, cfg, send)
   try:
-    print(f"HOPE ROS topics -> UDP {destination}")
+    planner_topic = cfg.get("planner_command_topic")
+    print(
+      f"HOPE ROS topics -> UDP {destination}"
+      + (f"; planner command input={planner_topic}" if planner_topic else "")
+    )
     rclpy.spin(node)
   except (KeyboardInterrupt, ExternalShutdownException):
     pass

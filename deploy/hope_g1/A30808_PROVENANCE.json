@@ -1,0 +1,20 @@
+{
+  "implementation": "hope_planner_optimized_2_A30808 ROS planner core",
+  "upstream_path_on_200": "/home/lxz/HOPE/hope_ws/src/hope_planner_optimized_2_A30808/hope_planner_optimized_2",
+  "upstream_config_on_200": "/home/lxz/HOPE/hope_ws/src/hope_planner_optimized_2_A30808/config/hope_planner.yaml",
+  "upstream_git_revision_on_200": "887f639862ba20ba740ec701f6f291bc8948bdfd",
+  "transport": "The copied A30808 node.py is launched by the deploy-owned ament_python package in ros2_planner. The in-process adapter remains available to MuJoCo.",
+  "upstream_file_parity": "Read-only snapshot from .200 compared with deploy: all 14 upstream Python files and all YAML bytes match exactly. Only package build metadata/launch are deploy-owned; the config is stored under configs/hope_planner_optimized_2.yaml.",
+  "deploy_ros_package": "deploy/hope_g1/ros2_planner (package hope_g1_deploy_planner)",
+  "deploy_config": "deploy/hope_g1/configs/hope_planner_optimized_2.yaml",
+  "g1_adapter": {
+    "mocap_world": "hope_table (HOPE canonical table frame)",
+    "hit_plane_x_m": 0.0,
+    "publish_intercept_x_min_m": 0.0,
+    "publish_intercept_x_max_m": 0.0,
+    "other_coordinate_or_physics_changes": "none"
+  },
+  "runtime_clock_mapping": "deadline_monotonic = packet_received_monotonic + (planner_t_strike - packet_source_stamp)",
+  "ros_planner_node_required_for_real": true,
+  "ros_planner_node_required_for_mujoco": false
+}

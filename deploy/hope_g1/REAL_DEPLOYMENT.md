@@ -2,7 +2,7 @@
 
 当前正式真机配置 `configs/rally.yaml` 与连续 MuJoCo 的
 `configs/rally_mujoco_random.yaml` 共用相同的 planner、动作选择、球/球桌参数：
-击球平面X=-0.25m，回球目标[2.055,-0.7625,0]，最大启动TTS=0.5s，最晚起始帧29。
+planner 击球平面X=0m，回球目标[2.4,-0.7,0]，最大启动TTS=0.5s，最晚起始帧29。
 保留真机 `real_a3` profile、DDS/动捕及保护配置；不运行仿真发球器。
 0.2s短TTS实验中放宽到第38帧启动的设置未合入真机。
 后文注明2026-10-20日期的观测属于历史状态，不代表当前连接状况。
@@ -46,7 +46,7 @@ ros2 topic echo /P1/pose --once --qos-reliability best_effort
 ros2 topic echo /poses --once --qos-reliability best_effort
 ```
 
-仅在没有现成 ROS→UDP bridge 时启动下面一份，保持终端运行：
+启动更新后的 ROS→UDP bridge 并保持终端运行；若旧 bridge 正在运行，先 Ctrl-C 退出，确保只留一份：
 
 ```zsh
 cd /home/lxz/deploy_g1_pingpong
@@ -64,6 +64,8 @@ cd /home/lxz/deploy_g1_pingpong
 
 要求 root_valid 持续为 true；球在视野中移动时 ball_valid 为 true，rejected 不持续增加。
 monitor 结束后才能启动控制器，两者占用同一 UDP 15050 接收端口。
+这个 bridge 也会订阅 `/racket/command`，并将 ROS planner 的完整命令送到控制进程；
+它仍是控制器 UDP 15050 的唯一接收端。
 输入沿用已有标定：root=/P1/pose（map），ball=/poses（world，slot 0）。
 两个 frame 标签不做 TF 查询。数值约定为 HOPE 桌面世界系：近端左角为原点，
 X 指向对手，桌面X=[0,2.74]、Y=[-1.525,0]、Z=0，地面Z=-0.76。
@@ -78,7 +80,50 @@ X 指向对手，桌面X=[0,2.74]、Y=[-1.525,0]、Z=0，地面Z=-0.76。
 后文2026-10-20的“训练物理/真机标定物理”结果是历史证据，不代表当前配置。
 来源及对拍见 [A3_PLANNER_PARITY_20261021.md](A3_PLANNER_PARITY_20261021.md)。
 
-## 3. 只读接收（不输出电机指令）
+## 3. 独立 ROS planner（单独终端）
+
+ROS planner 订阅 `/poses` 并发布 `/racket/command`。在 deploy 仓库构建、source 并启动本仓库 ROS 包：
+
+```zsh
+source /opt/ros/humble/setup.zsh
+source /home/lxz/HOPE/hope_ws/install/setup.zsh
+export ROS_DOMAIN_ID=23
+export ROS_LOCALHOST_ONLY=0
+export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+
+cd /home/lxz/deploy_g1_pingpong
+export DEPLOY_G1_PINGPONG_ROOT=/home/lxz/deploy_g1_pingpong
+colcon --log-base deploy/ros2_log build \
+  --base-paths deploy/hope_g1/ros2_planner \
+  --packages-select hope_g1_deploy_planner \
+  --build-base deploy/ros2_build \
+  --install-base deploy/ros2_install \
+  --symlink-install
+source deploy/ros2_install/setup.zsh
+ros2 launch hope_g1_deploy_planner hope_planner.launch.py
+```
+
+流程与 HOPE workspace 一致，但 package、planner 核心、参数文件对应本 deploy 仓库：
+source ROS 和已安装的 HOPE ROS 接口 workspace，在本仓库用 `colcon build --symlink-install`
+构建，source 本仓库 install，再启动 planner。节点订阅 `/poses` 并发布
+`/racket/command`；核心来自 `deploy/hope_g1/hope_planner_optimized_2/`，参数来自
+`deploy/hope_g1/configs/hope_planner_optimized_2.yaml`。构建输出全部放在 `deploy/`，
+不构建或修改 `/home/lxz/HOPE`。手动调参只改 deploy 下的 YAML，然后重新 build 并重启。
+
+在另一个 ROS 终端确认话题：
+
+```zsh
+source /opt/ros/humble/setup.zsh
+source /home/lxz/HOPE/hope_ws/install/setup.zsh
+export ROS_DOMAIN_ID=23 ROS_LOCALHOST_ONLY=0 RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+ros2 topic info /racket/command -v
+ros2 topic echo /racket/command --once
+```
+
+只有来球满足 planner 发布条件时才会出现 racket command；没有消息时，同时检查 planner
+启动日志中的 `publish_intercept_box` 和 `/poses` 是否持续更新。
+
+## 4. 只读接收（不输出电机指令）
 
 ```zsh
 cd /home/lxz/deploy_g1_pingpong
@@ -92,7 +137,7 @@ cd /home/lxz/deploy_g1_pingpong
 等待机器人 LowState 成功连接，确认没有根位姿过期、DDS 或时间戳报错。
 若 eno1 没有 carrier/IP 或无 LowState，先解决连接。此步骤和离线测试均不能替代真机验收。
 
-## 4. 电机控制（操作者手动执行）
+## 5. 电机控制（操作者手动执行）
 
 关闭其它机器人控制程序；保持桥接运行。首次测试使用支撑并由操作者监护。
 

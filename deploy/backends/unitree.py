@@ -1320,6 +1320,12 @@ def run_control_loop(
       drain_observations = getattr(mocap.ball, "drain_observations", None)
       if drain_observations is not None and hasattr(engine, "update_ball_observations"):
         engine.update_ball_observations(drain_observations())
+      planner_command_reader = getattr(mocap, "latest_planner_command", None)
+      planner_command_updater = getattr(engine, "update_external_planner_command", None)
+      if planner_command_reader is not None and planner_command_updater is not None:
+        planner_packet, planner_received = planner_command_reader()
+        if planner_packet is not None:
+          planner_command_updater(planner_packet, planner_received)
       policy_started = clock.monotonic()
       target = engine.step(observed, estimate, now)
       policy_seconds = clock.monotonic() - policy_started

@@ -5,17 +5,18 @@ world:
   mujoco_to_world_translation: [-0.65, -0.7625, -0.76]
 physics_profile: mujoco_a3
 ready_seconds: 0.0
+return_steps: 10
 # Complete A3 Stage-2/3 target command; the actor remains the G1 checkpoint.
 target_source: hope_planner_optimized_2
 a3:
   # Matches README-TeleAI's --no-target-clamp --fixed-world-home --no-return-blend.
   target_mode: raw
   reference_mode: a3_live
-  hit_plane_x: -0.25
+  hit_plane_x: 0.0
   flight_seconds: 0.5
   max_command_time_to_strike: 0.5
   command_timeout_seconds: 0.2
-  select_settle_ticks: 25
+  select_settle_ticks: 10
   time_to_strike_invalid_x: 2.5
 # TensorBoard at iteration 18000: curriculum_scale=1.0, position half extent=0.25m.
 # Play restarts the command curriculum at 0.15; that is not this checkpoint's

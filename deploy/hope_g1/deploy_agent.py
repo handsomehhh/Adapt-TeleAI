@@ -150,7 +150,7 @@ def main():
     parser.error(f"Motion IDs must be unique and within 0..{n - 1}")
   # Construction validates the controller contract before any transport opens.
   runtime = yaml.safe_load(args.real_config.read_text())
-  HopeController(
+  validated_controller = HopeController(
     deployment,
     runtime,
     options,
@@ -161,8 +161,11 @@ def main():
   report = deployment.report()
   report.update(
     target_source=options.get("target_source", "reference"),
+    planner_transport=options.get("planner_transport", "embedded"),
     target_mode=options.get("a3", {}).get("target_mode", "raw"),
     target_perturb_scale=options.get("target_perturb_scale"),
+    return_steps=validated_controller.return_frame_count,
+    select_settle_ticks=validated_controller.select_settle_ticks,
   )
   if options.get("target_source") in (
     "hope_planner_optimized_2",
@@ -173,6 +176,7 @@ def main():
     ]["ros__parameters"]
     report["planner"] = {
       "implementation": "hope_planner_optimized_2_A30808",
+      "transport": options.get("planner_transport", "embedded"),
       "config_path": str(planner_config),
       "config_sha256": hashlib.sha256(planner_config.read_bytes()).hexdigest(),
       "ros_parameters": planner_yaml,
@@ -195,11 +199,11 @@ def main():
         "net_height_m": 0.1525,
         "net_overhang_m": 0.15,
       },
-      "g1_hit_plane_x_m": options.get("a3", {}).get("hit_plane_x", -0.25),
+      "g1_hit_plane_x_m": planner_yaml["x_hit"],
       "parameter_overrides": {
-        "x_hit": options.get("a3", {}).get("hit_plane_x", -0.25),
-        "publish_intercept_x_min": options.get("a3", {}).get("hit_plane_x", -0.25),
-        "publish_intercept_x_max": options.get("a3", {}).get("hit_plane_x", -0.25),
+        "x_hit": planner_yaml["x_hit"],
+        "publish_intercept_x_min": planner_yaml["publish_intercept_x_min"],
+        "publish_intercept_x_max": planner_yaml["publish_intercept_x_max"],
       },
     }
   print(json.dumps(report, indent=2))

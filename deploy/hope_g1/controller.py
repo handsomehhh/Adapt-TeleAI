@@ -9,7 +9,7 @@ from deploy.g1_pingpong.lifecycle import Lifecycle
 from deploy.g1_pingpong.motions import MotionLibrary, RebasedMotion
 from deploy.g1_pingpong.perception import ReceivePlanner
 from deploy.hope_g1.a3_planner import ReceivePlan, command_goal
-from deploy.hope_g1.hope_planner_adapter import HopePlannerAdapter
+from deploy.racket_command import RacketCommand
 
 
 @dataclass
@@ -162,6 +162,11 @@ class HopeController:
     if self.target_source not in ("reference", "hope_planner_optimized_2"):
       raise ValueError("target_source must be reference or hope_planner_optimized_2")
     self.planner_active = self.target_source == "hope_planner_optimized_2"
+    self.planner_transport = options.get("planner_transport", "embedded")
+    if self.planner_transport not in ("embedded", "ros2"):
+      raise ValueError("planner_transport must be embedded or ros2")
+    if self.planner_transport == "ros2" and not self.planner_active:
+      raise ValueError("ROS planner transport requires target_source=hope_planner_optimized_2")
     self.a3_options = options.get("a3", {})
     self.target_mode = self.a3_options.get("target_mode", "raw")
     self.reference_mode = self.a3_options.get("reference_mode", "a3_live")
@@ -170,13 +175,17 @@ class HopeController:
       "training_common",
     ):
       raise ValueError("Invalid A3 target_mode/reference_mode")
-    self.command_planner = (
-      HopePlannerAdapter(
-        hit_plane_x=self.a3_options.get("hit_plane_x", -0.25),
+    self.command_planner = None
+    if self.planner_active and self.planner_transport == "embedded":
+      from deploy.hope_g1.hope_planner_adapter import HopePlannerAdapter
+
+      self.command_planner = HopePlannerAdapter(
+        hit_plane_x=self.a3_options.get("hit_plane_x"),
         config_path=options.get("hope_planner_config"),
       )
-      if self.planner_active else None
-    )
+    self.external_planner_command = None
+    self.external_planner_received = None
+    self.external_planner_error = "waiting_for_ros_planner_command"
     self.select_ready_time = 0.0
     self.raw_command = None
     if self.cfg["task"] != "HOPEPingPongMultiMotionG1":
@@ -228,9 +237,19 @@ class HopeController:
       np.asarray(racket["ref_perturb_pos"]) * self.target_perturb_scale
     )
     self.recovery_stable_since = None
-    self.return_frame_count = round(
+    training_return_steps = round(
       self.cfg["hope"]["return_seconds"] / self.cfg["control_dt"]
     )
+    return_steps = options.get("return_steps", training_return_steps)
+    select_settle_ticks = self.a3_options.get("select_settle_ticks", 25)
+    for name, value in (
+      ("return_steps", return_steps),
+      ("a3.select_settle_ticks", select_settle_ticks),
+    ):
+      if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        raise ValueError(f"{name} must be a nonnegative integer")
+    self.return_frame_count = return_steps
+    self.select_settle_ticks = select_settle_ticks
     self.return_frames_sent = 0
     self.command_debug = {}
 
@@ -251,7 +270,9 @@ class HopeController:
     return (
       f"[hope_g1] task={self.cfg['task']}; home={self.home_index} "
       f"({self.library.paths[self.home_index].name}); selection={self.selection}; "
-      f"candidates={self.candidate_indices}; actor=175->29; target_source={self.target_source}"
+      f"candidates={self.candidate_indices}; actor=175->29; "
+      f"target_source={self.target_source}; planner_transport={self.planner_transport}; "
+      f"return_steps={self.return_frame_count}; select_settle_ticks={self.select_settle_ticks}"
     )
 
   def candidates(self, state):
@@ -354,18 +375,105 @@ class HopeController:
         reason="planner_selection_settle", remaining=self.select_ready_time - now
       )
       return None
-    command = self.command_planner.latest_command(now)
+    command = self.latest_planner_command(now)
     if command is None:
-      self.debug["decision"] = dict(
+      diagnostics = (
         self.command_planner.last_update_diagnostics
-        or {"reason": "planner_has_no_published_command"}
+        if self.command_planner is not None
+        else {"reason": self.external_planner_error, "planner_transport": "ros2"}
+      )
+      self.debug["decision"] = dict(
+        diagnostics or {"reason": "planner_has_no_published_command"}
       )
       return None
     return self.select_racket_command(state, command, now)
 
+  def latest_planner_command(self, now):
+    if not self.planner_active:
+      return None
+    if self.planner_transport == "embedded":
+      return self.command_planner.latest_command(now)
+    command = self.external_planner_command
+    received = self.external_planner_received
+    timeout = float(self.a3_options.get("command_timeout_seconds", 0.2))
+    if command is None or received is None:
+      return None
+    if now - received > timeout:
+      self.external_planner_error = "ros_planner_command_stale"
+      return None
+    if command.deadline <= now:
+      self.external_planner_error = "ros_planner_command_expired"
+      return None
+    return command
+
+  def update_external_planner_command(self, packet, received):
+    """Accept an A30808 ROS command relayed over local UDP from the ROS bridge."""
+    if self.planner_transport != "ros2" or packet is None:
+      return
+    received = float(received)
+    if not packet.get("valid", False):
+      self.external_planner_command = None
+      self.external_planner_received = received
+      self.external_planner_error = "ros_planner_published_invalid_command"
+      return
+    try:
+      position = np.asarray(packet["position"], dtype=float)
+      velocity = np.asarray(packet["velocity"], dtype=float)
+      normal = np.asarray(packet["normal"], dtype=float)
+      tts = float(packet["time_to_strike"])
+      published = float(packet.get("bridge_monotonic", received))
+    except (KeyError, TypeError, ValueError):
+      self.external_planner_command = None
+      self.external_planner_received = received
+      self.external_planner_error = "malformed_ros_planner_command"
+      return
+    if (
+      position.shape != (3,)
+      or velocity.shape != (3,)
+      or normal.shape != (3,)
+      or not np.isfinite(position).all()
+      or not np.isfinite(velocity).all()
+      or not np.isfinite(normal).all()
+      or np.linalg.norm(normal) < 1e-6
+      or not np.isfinite(tts)
+      or not np.isfinite(received)
+      or not np.isfinite(published)
+      or tts <= 0
+    ):
+      self.external_planner_command = None
+      self.external_planner_received = received
+      self.external_planner_error = "malformed_ros_planner_command"
+      return
+    # The bridge and deploy processes share the host monotonic clock. Using
+    # the bridge timestamp keeps the strike deadline from gaining UDP delay.
+    diagnostic = {
+      "source": "hope_planner_optimized_2_A30808_ros",
+      "source_stamp": float(packet.get("source_ball_time", 0.0)),
+      "planner_stamp": float(packet.get("stamp", 0.0)),
+      "received_monotonic": received,
+      "time_to_strike": tts,
+      "position": position.tolist(),
+      "velocity": velocity.tolist(),
+      "normal": normal.tolist(),
+      "outgoing_velocity": packet.get("outgoing_velocity"),
+      "valid": True,
+      "clears_net": bool(packet.get("clears_net", False)),
+      "bypasses_net_posts": bool(packet.get("bypasses_net_posts", False)),
+      "num_bounces": int(packet.get("predicted_bounces", 0)),
+    }
+    self.external_planner_command = RacketCommand(
+      position=position,
+      velocity=velocity,
+      normal=normal,
+      deadline=published + tts,
+      diagnostic=diagnostic,
+    )
+    self.external_planner_received = received
+    self.external_planner_error = ""
+
   def update_ball_observations(self, observations):
     """Feed source-rate mocap packets directly to the ROS-equivalent planner."""
-    if self.planner_active and observations:
+    if self.command_planner is not None and observations:
       self.command_planner.update_observations(observations)
 
   def select_racket_command(self, state, command, now):
@@ -465,7 +573,7 @@ class HopeController:
         # not from frame-zero pelvis XY.
         self.home_goal = self.reference_goal(self.home, self.home_index)
         self.select_ready_time = (
-          now + self.a3_options.get("select_settle_ticks", 25) * self.cfg["control_dt"]
+          now + self.select_settle_ticks * self.cfg["control_dt"]
         )
       self.home_frozen = True
       self.events.append(
@@ -497,13 +605,14 @@ class HopeController:
           event="swing_finished",
           motion_index=self.motion_index,
           final_frame=len(self.reference.q) - 1,
+          return_steps=self.return_frame_count,
         )
       )
       if self.planner_active:
         self.motion_index = self.home_index
         self.raw_command = None
         self.select_ready_time = (
-          now + self.a3_options.get("select_settle_ticks", 25) * self.cfg["control_dt"]
+          now + self.select_settle_ticks * self.cfg["control_dt"]
         )
     if self.lifecycle.state == "RECOVER":
       settled, _ = self.standing.observe(state)
@@ -535,7 +644,7 @@ class HopeController:
       and (
         estimate is not None
         or racket_command is not None
-        or (self.planner_active and self.command_planner.latest_command(now) is not None)
+        or self.latest_planner_command(now) is not None
       )
     ):
       choice = (

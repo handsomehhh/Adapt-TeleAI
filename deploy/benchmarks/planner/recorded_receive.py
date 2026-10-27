@@ -238,39 +238,46 @@ def analyze(output):
   translation = np.asarray(summary["simulation_world_translation"])
   config = mujoco_ball_config(summary["rally_runtime_config"]["ball"], translation)
   source = json.loads(Path(summary["rally_runtime_config"]["feed"]["recording"]).read_text())
+  selections = [event for event in summary["events"] if event["event"] == "motion_selected"]
+  hit_planes = {float(event["raw_command"].get("hit_plane_x", event["raw_command"]["position"][0]))
+                for event in selections}
   crossings = {}
   remote_racket = SimpleNamespace(racket_pos=np.array([-100., 0., 0.]), racket_normal=np.array([1., 0., 0.]))
   for case in source["cases"]:
-    probe = RecordedBall.create(config, case, translation, "recorded")
-    for _ in range(1600):
-      previous = probe.position.copy()
-      probe.substep(remote_racket, .001)
-      plane = -.25-translation[0]
-      if previous[0] > plane >= probe.position[0]:
-        fraction = (previous[0]-plane)/(previous[0]-probe.position[0])
-        crossings[case["id"]] = [probe.elapsed-.001+fraction*.001,
-          *(previous+fraction*(probe.position-previous)+translation).tolist()]
-        break
+    for hit_plane in hit_planes:
+      probe = RecordedBall.create(config, case, translation, "recorded")
+      for _ in range(1600):
+        previous = probe.position.copy()
+        probe.substep(remote_racket, .001)
+        plane = hit_plane-translation[0]
+        if previous[0] > plane >= probe.position[0]:
+          fraction = (previous[0]-plane)/(previous[0]-probe.position[0])
+          crossings[case["id"], hit_plane] = [probe.elapsed-.001+fraction*.001,
+            *(previous+fraction*(probe.position-previous)+translation).tolist()]
+          break
   predictions = []
-  for event in summary["events"]:
-    if event["event"] != "motion_selected":
-      continue
+  for event in selections:
     command = event["raw_command"]
     current = min(rows, key=lambda row: abs(row["time"]-event["deadline"]))
     # This uses independent physical ball history, never the planner's fit.
     ball = max((b for b in summary["ball_returns"] if b["spawn_time"] <= event["time"]),
                key=lambda b: b["spawn_time"])
-    truth = crossings[ball["recorded_case"]]
+    hit_plane = float(command.get("hit_plane_x", command["position"][0]))
+    truth = crossings.get((ball["recorded_case"], hit_plane))
     history = np.asarray(ball["physical_history"])
     elapsed = event["deadline"]-ball["spawn_time"]
     physical_ball = np.array([np.interp(elapsed, history[:, 0], history[:, j]) for j in range(1, 4)])+translation
     predictions.append(dict(case=ball["recorded_case"], time=event["time"], motion=event["motion_index"],
       deadline=event["deadline"], goal_position=command["position"],
-      tts=command["remaining"], predicted_bounces=command["predicted_bounces"],
+      tts=command.get("remaining", event["deadline"]-event["time"]),
+      predicted_bounces=command.get("predicted_bounces", command.get("num_bounces")),
+      hit_plane_x=hit_plane,
       ball_position_at_deadline=physical_ball.tolist(),
       unperturbed_crossing=truth,
-      position_prediction_error_m=float(np.linalg.norm(np.asarray(command["position"])-truth[1:])),
-      time_prediction_error_s=float(event["deadline"]-ball["spawn_time"]-truth[0]),
+      position_prediction_error_m=(float(np.linalg.norm(np.asarray(command["position"])-truth[1:]))
+                                   if truth is not None else None),
+      time_prediction_error_s=(float(event["deadline"]-ball["spawn_time"]-truth[0])
+                               if truth is not None else None),
       actual_contact=ball["contact"], legal_return=ball["legal_return"],
       prediction_truth_note="Separate unperturbed plant rollout; diagnostic only, never provided to planner",
       deadline_racket_position=current.get("racket_pos"),

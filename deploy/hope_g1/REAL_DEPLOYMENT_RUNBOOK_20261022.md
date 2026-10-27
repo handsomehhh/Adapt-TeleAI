@@ -2,6 +2,11 @@
 
 更新：2026-10-22。适用机器：`192.168.152.200`；部署目录：`/home/lxz/deploy_g1_pingpong`。
 
+> 当前独立 planner 的 package/build/source/launch 流程已迁到本仓库 `deploy/hope_g1/ros2_planner/`，
+> 参数使用本仓库 `deploy/hope_g1/configs/hope_planner_optimized_2.yaml`。本文后续旧链路图中
+> “内置 planner”描述已过时；planner 的 `x_hit` 已按 A30808 设为 `0.0`，取代下文历史记录中的
+> `-0.25`。当前操作命令以 [REAL_DEPLOYMENT_QUICKSTART.md](REAL_DEPLOYMENT_QUICKSTART.md) 为准。
+
 本文整理已有部署问题、当前正式配置及所有需要启动的组件。启动命令由操作者执行；编写本文时没有重启节点、运行电机控制或修改 `/home/lxz/HOPE`。ROS 软件仍使用该目录中已有的安装环境和 launch 文件；读取、source、运行这些文件不需要修改其源码。
 
 ## 1. 本次日志应该如何理解
@@ -60,10 +65,10 @@ Unitree SDK2 / DDS → eno1 → G1
 | `vrpn_mocap` 客户端 | 必须 | 把 VRPN 数据变为 ROS 原始话题 |
 | `vrpn_to_pose` | 必须 | 毫米转米、P2 换边和标准话题输出 |
 | `deploy.io.mocap bridge` | 必须 | 将标准 ROS 位姿发送到部署控制器的 UDP 接口 |
-| `deploy.hope_g1.deploy_agent --env real` | 必须 | 真机任务唯一控制入口；AMP、planner、选择器和 policy 均在其中 |
+| A30808 `hope_planner_optimized_2` ROS 节点 | 必须 | 独立订阅 `/poses`，发布 `/racket/command` |
+| `deploy.hope_g1.deploy_agent --env real` | 必须 | 真机任务唯一控制入口；消费 planner command，执行选择器和 policy |
 | UDP monitor | 启动前临时使用 | 检查结束后退出，不能和控制器同时占用接收端口 |
 | `--env check`、preflight、只读接收 | 启动前检查 | 不是需要一直挂着的控制节点 |
-| 独立 `hope_planner_optimized` ROS 节点 | 当前链路不需要 | G1 部署内部已经计算 racket command |
 | 独立 AMP 控制进程、A3 C++ deploy | 当前链路不需要 | 不要额外运行另一个电机控制程序 |
 | Isaac `scripts/play.py`、MuJoCo 发球器、benchmark | 真机不需要 | 属于训练或仿真测试 |
 | 额外 TF 节点 | 当前这条转换链路不要求 | `map/world` 标签不会在下游自动触发 TF 转换；数值坐标仍必须实际标定正确 |
@@ -415,7 +420,8 @@ A 应在进入 `POSE_HOLD` 后重新按下，不要从定位阶段一直按住�
 → 动捕服务器开启VRPN
 → 启动一份vrpn_mocap，确认两路原始PoseStamped
 → 启动一份vrpn_to_pose，确认/P1/pose和/poses
-→ 启动一份ROS→UDP bridge
+→ 启动独立A30808 planner（/poses → /racket/command）
+→ 启动一份ROS→UDP bridge（同时转发mocap和/racket/command）
 → UDP monitor检查并退出
 → 资产/SDK检查与只读接收，退出检查进程
 → 启动唯一G1真机控制器
