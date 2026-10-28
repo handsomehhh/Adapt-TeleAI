@@ -12,6 +12,7 @@ import numpy as np
 from deploy.g1_pingpong.core import rotation
 from deploy.g1_pingpong.lifecycle import Lifecycle
 from deploy.hope_g1.controller import HopeStanding
+from deploy.racket_command import decode_ros_planner_command
 
 SIDES = ("forehand", "backhand")
 
@@ -189,6 +190,7 @@ class HitterController:
     self.external_planner_command = None
     self.external_planner_received_at = None
     self.external_planner_deadline = None  # Fixed strike deadline computed once
+    self.external_planner_error = "no_valid_external_command"
     self.completed = self.recovered = 0
     self.events, self.debug, self.command_debug = [], {}, {}
     self.previous_target = self.planner = self.physical_limit_observer = None
@@ -222,17 +224,17 @@ class HitterController:
     # External ROS planner receives ball data directly; no update needed here.
     pass
 
-  def update_external_planner_command(self, command, now):
-    """Accept racket command from the external ROS planner.
-
-    Args:
-      command: dict with keys position, velocity, time_to_strike, valid, etc.
-      now: current monotonic time when the command was received
-    """
-    self.external_planner_command = command
-    self.external_planner_received_at = now
-    # Compute deadline once at reception time to avoid drift
-    self.external_planner_deadline = now + command.get("time_to_strike", 0.0)
+  def update_external_planner_command(self, packet, received):
+    """Use the same ROS-to-RacketCommand conversion as the real HOPE policy."""
+    if packet is None:
+      return
+    received = float(received)
+    self.external_planner_command, self.external_planner_error = (
+      decode_ros_planner_command(packet, received)
+    )
+    self.external_planner_received_at = received
+    command = self.external_planner_command
+    self.external_planner_deadline = command.deadline if command is not None else None
 
   def start_policy(self, target, now, *, reset_history=False, blend_reference=True):
     if self.lifecycle.state not in ("STABLE", "POSE_HOLD"):
@@ -251,17 +253,10 @@ class HitterController:
 
   def select(self, now):
     """Use external ROS planner command, backhand only."""
-    if self.external_planner_command is None or not self.external_planner_command.get("valid"):
-      diagnostic = dict(side="backhand", reason="no_valid_external_command")
+    command = self.external_planner_command
+    if command is None:
+      diagnostic = dict(side="backhand", reason=self.external_planner_error)
       return None, [diagnostic]
-
-    # Convert ROS planner command to internal format
-    cmd = self.external_planner_command
-    command = SimpleNamespace(
-      position=np.asarray(cmd["position"]),
-      velocity=np.asarray(cmd["velocity"]),
-      deadline=self.external_planner_deadline,
-    )
 
     shot, diagnostic = self.geometry.evaluate(self.side, command, self.station, now)
     return shot, [diagnostic]

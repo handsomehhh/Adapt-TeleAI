@@ -9,7 +9,7 @@ from deploy.g1_pingpong.lifecycle import Lifecycle
 from deploy.g1_pingpong.motions import MotionLibrary, RebasedMotion
 from deploy.g1_pingpong.perception import ReceivePlanner
 from deploy.hope_g1.a3_planner import ReceivePlan, command_goal
-from deploy.racket_command import RacketCommand
+from deploy.racket_command import decode_ros_planner_command
 
 
 @dataclass
@@ -411,65 +411,10 @@ class HopeController:
     if self.planner_transport != "ros2" or packet is None:
       return
     received = float(received)
-    if not packet.get("valid", False):
-      self.external_planner_command = None
-      self.external_planner_received = received
-      self.external_planner_error = "ros_planner_published_invalid_command"
-      return
-    try:
-      position = np.asarray(packet["position"], dtype=float)
-      velocity = np.asarray(packet["velocity"], dtype=float)
-      normal = np.asarray(packet["normal"], dtype=float)
-      tts = float(packet["time_to_strike"])
-      published = float(packet.get("bridge_monotonic", received))
-    except (KeyError, TypeError, ValueError):
-      self.external_planner_command = None
-      self.external_planner_received = received
-      self.external_planner_error = "malformed_ros_planner_command"
-      return
-    if (
-      position.shape != (3,)
-      or velocity.shape != (3,)
-      or normal.shape != (3,)
-      or not np.isfinite(position).all()
-      or not np.isfinite(velocity).all()
-      or not np.isfinite(normal).all()
-      or np.linalg.norm(normal) < 1e-6
-      or not np.isfinite(tts)
-      or not np.isfinite(received)
-      or not np.isfinite(published)
-      or tts <= 0
-    ):
-      self.external_planner_command = None
-      self.external_planner_received = received
-      self.external_planner_error = "malformed_ros_planner_command"
-      return
-    # The bridge and deploy processes share the host monotonic clock. Using
-    # the bridge timestamp keeps the strike deadline from gaining UDP delay.
-    diagnostic = {
-      "source": "hope_planner_optimized_2_A30808_ros",
-      "source_stamp": float(packet.get("source_ball_time", 0.0)),
-      "planner_stamp": float(packet.get("stamp", 0.0)),
-      "received_monotonic": received,
-      "time_to_strike": tts,
-      "position": position.tolist(),
-      "velocity": velocity.tolist(),
-      "normal": normal.tolist(),
-      "outgoing_velocity": packet.get("outgoing_velocity"),
-      "valid": True,
-      "clears_net": bool(packet.get("clears_net", False)),
-      "bypasses_net_posts": bool(packet.get("bypasses_net_posts", False)),
-      "num_bounces": int(packet.get("predicted_bounces", 0)),
-    }
-    self.external_planner_command = RacketCommand(
-      position=position,
-      velocity=velocity,
-      normal=normal,
-      deadline=published + tts,
-      diagnostic=diagnostic,
+    self.external_planner_command, self.external_planner_error = (
+      decode_ros_planner_command(packet, received)
     )
     self.external_planner_received = received
-    self.external_planner_error = ""
 
   def update_ball_observations(self, observations):
     """Feed source-rate mocap packets directly to the ROS-equivalent planner."""
