@@ -6,7 +6,7 @@ hope_planner_optimized_2:
     # "ball"). Confirm against your live stream: `ros2 topic echo /poses --once`
     # and count the ball's index. TODO: confirm against your live /poses.
     ball_pose_index: 0
-    x_hit: 0.0              # virtual hit plane X (m); ~0.0 = HOPE origin end of table
+    x_hit: -0.256           # Backhand hit plane X for hitter (from contract)
     target_land_x: 2.4 # 2.5 # 2.055   # opponent half-center X (fixed by table geometry)
     target_land_y: -0.7 # -0.7625 # opponent half-center Y (fixed by table geometry)
     delta_t_flight: 0.6 # 0.6    # desired return flight time (s); tune for your robot

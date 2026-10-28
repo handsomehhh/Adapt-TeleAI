@@ -188,6 +188,7 @@ class HitterController:
     self.side = 1
     self.external_planner_command = None
     self.external_planner_received_at = None
+    self.external_planner_deadline = None  # Fixed strike deadline computed once
     self.completed = self.recovered = 0
     self.events, self.debug, self.command_debug = [], {}, {}
     self.previous_target = self.planner = self.physical_limit_observer = None
@@ -195,7 +196,7 @@ class HitterController:
     self.reset_state()
 
   def reset_state(self):
-    self.side = 0
+    # Keep self.side unchanged — hitter is configured for backhand only
     self.station = self.geometry.home_station.copy()
     self.shot = None
 
@@ -230,6 +231,8 @@ class HitterController:
     """
     self.external_planner_command = command
     self.external_planner_received_at = now
+    # Compute deadline once at reception time to avoid drift
+    self.external_planner_deadline = now + command.get("time_to_strike", 0.0)
 
   def start_policy(self, target, now, *, reset_history=False, blend_reference=True):
     if self.lifecycle.state not in ("STABLE", "POSE_HOLD"):
@@ -254,11 +257,10 @@ class HitterController:
 
     # Convert ROS planner command to internal format
     cmd = self.external_planner_command
-    from deploy.hope_g1.hope_planner_adapter import PlannerCommand
-    command = PlannerCommand(
+    command = SimpleNamespace(
       position=np.asarray(cmd["position"]),
       velocity=np.asarray(cmd["velocity"]),
-      deadline=now + cmd["time_to_strike"],
+      deadline=self.external_planner_deadline,
     )
 
     shot, diagnostic = self.geometry.evaluate(self.side, command, self.station, now)
