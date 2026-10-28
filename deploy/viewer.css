@@ -1,0 +1,53 @@
+/* Spacious controls for the deployment viewer; no changes to Viser itself. */
+.pingpong-viewer {
+  padding-top: 12px;
+  font-size: 14px;
+}
+.pingpong-viewer .mantine-Button-root {
+  min-height: 42px !important;
+  height: auto !important;
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  border-radius: 8px;
+}
+.pingpong-viewer .mantine-Flex-root:has(> div > .mantine-Text-root > label) {
+  flex-direction: column;
+  align-items: stretch !important;
+  gap: 8px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+}
+.pingpong-viewer .mantine-Flex-root:has(> div > .mantine-Text-root > label) > div {
+  width: 100% !important;
+}
+.pingpong-viewer label {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: normal;
+}
+.pingpong-viewer .mantine-NumberInput-input {
+  min-height: 44px !important;
+  height: 44px !important;
+  font-size: 18px !important;
+  padding: 8px 14px !important;
+  border-radius: 8px;
+  font-variant-numeric: tabular-nums;
+}
+/* Replace the tiny native spinner with the full-size explicit action buttons. */
+.pingpong-viewer .mantine-NumberInput-controls {
+  display: none !important;
+}
+.pingpong-viewer .mantine-Accordion-item {
+  margin-bottom: 12px;
+}
+.pingpong-viewer .mantine-Accordion-control {
+  min-height: 44px;
+  font-weight: 600;
+}
+.pingpong-viewer .mantine-Slider-root {
+  margin: 10px 4px 16px;
+}
+.pingpong-viewer .mantine-Slider-thumb {
+  width: 20px;
+  height: 20px;
+}

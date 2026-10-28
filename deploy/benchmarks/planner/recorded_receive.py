@@ -298,7 +298,11 @@ def main():
   p.add_argument("--duration", type=float, default=45.)
   p.add_argument("--repetitions", type=int, default=1)
   p.add_argument("--output", type=Path, required=True)
+  from deploy.viewer import add_viewer_arguments, configure_viewer
+
+  add_viewer_arguments(p)
   args = p.parse_args()
+  configure_viewer(args)
   if args.manual and not args.render:
     p.error("manual controls require render")
   if args.repetitions < 1:

@@ -144,6 +144,10 @@ class HopeCommandAdapter:
     if engine.standing.home is not None:
       shared.append(engine.standing.home)
     memo = {id(v): v for v in shared}
+    if engine.command_planner is not None:
+      from deploy.benchmarks.planner_snapshot import PlannerSnapshot
+
+      memo[id(engine.command_planner)] = PlannerSnapshot(engine.command_planner)
     if engine.physical_limit_observer is not None:
       memo[id(engine.physical_limit_observer)] = None
     return copy.deepcopy(engine, memo)

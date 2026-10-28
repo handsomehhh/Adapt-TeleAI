@@ -56,9 +56,9 @@ def run_mujoco(
   results, viewer = [], None
   playback = PlaybackControl()
   if render:
-    import mujoco.viewer
+    from deploy import viewer as deployment_viewer
 
-    viewer = mujoco.viewer.launch_passive(backend.model, backend.data, key_callback=playback.key)
+    viewer = deployment_viewer.launch_passive(backend.model, backend.data, key_callback=playback.key)
     print(f"MuJoCo playback: {PLAYBACK_HELP}", flush=True)
   try:
     for index in indices:

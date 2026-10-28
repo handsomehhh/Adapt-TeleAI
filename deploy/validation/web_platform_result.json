@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-28",
+  "tests_passed": 51,
+  "test_command": ".venv/bin/python -m pytest deploy/validation/web_platform_checks.py deploy/validation/web_viewer_checks.py tests/test_real_log_viewer.py deploy/tests/test_racket_command_benchmark.py deploy/tests/test_receive_benchmark.py -q",
+  "browser_checks": [
+    "Start real_20261027_173921 replay at 137.9 seconds from the platform",
+    "Embedded robot/table and command/error overlays render",
+    "Stop replay and switch to online planner receive evaluation",
+    "Receive evaluation finishes and exposes report.html",
+    "Direct command evaluation finishes and report HTTP status is 200",
+    "Reload page reconnects to active viewer",
+    "Manual stop is classified as stopped",
+    "Hidden mode fields do not block browser form validation",
+    "Collapse settings to enlarge 3D viewport"
+  ],
+  "receive_output": "deploy/recordings/web_runs/20261028_102550_612838_receive",
+  "receive_result": {"accepted": true, "contacts": 0, "legal_returns": 0, "recovered": 1},
+  "command_output": "deploy/recordings/web_runs/20261028_102658_023932_command",
+  "command_result": {"accepted": true, "success": false, "position_error_m": 0.06755655740047967},
+  "scope": "Local launcher only; runs existing simulation/replay entry points. No real deployment or policy/planner algorithm/config changes in this continuation. Not synchronized to .200."
+}

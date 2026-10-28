@@ -39,7 +39,11 @@ def main():
     p.add_argument(
       f"--{name}-config", type=Path, default=Path("deploy/hope_g1/configs") / file
     )
+  from deploy.viewer import add_viewer_arguments, configure_viewer
+
+  add_viewer_arguments(p)
   args = p.parse_args()
+  configure_viewer(args)
   if (
     args.playback_rate <= 0
     or args.capture_first < 0

@@ -49,13 +49,17 @@ class MujocoCommandEnvironment:
     self.paused = self.quit = False
     self.viewer_threads = ()
     if render:
-      from mujoco import viewer
+      from deploy import viewer
 
       before = set(threading.enumerate())
       self.viewer = viewer.launch_passive(
         agent.robot.model, agent.robot.data, key_callback=self.key
       )
-      self.viewer_threads = tuple(t for t in threading.enumerate() if t not in before)
+      self.viewer_threads = (
+        ()
+        if hasattr(self.viewer, "server")
+        else tuple(t for t in threading.enumerate() if t not in before)
+      )
       with self.viewer.lock():
         self.viewer.cam.lookat[:] = [1.3, 0, 0.9]
         self.viewer.cam.distance = 4.6

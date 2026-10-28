@@ -90,7 +90,11 @@ def main():
   )
   parser.add_argument("--home-index", type=int, default=0)
   parser.add_argument("--motion-allow", default="all")
+  from deploy.viewer import add_viewer_arguments, configure_viewer
+
+  add_viewer_arguments(parser)
   args = parser.parse_args()
+  configure_viewer(args)
   if (
     args.playback_rate <= 0
     or args.capture_first < 0

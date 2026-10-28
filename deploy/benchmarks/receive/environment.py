@@ -84,6 +84,9 @@ class ReceiveEnvironment(MujocoCommandEnvironment):
       if self.ball.contact is None and self.ball.elapsed + 1e-10 >= next_observation:
         p = self.ball.position + rng.normal(0, self.config["position_noise_std"], 3)
         estimator.update(p, self.ball.elapsed, received=self.ball.elapsed)
+        observe_ball = getattr(self.agent, "observe_ball", None)
+        if observe_ball is not None:
+          observe_ball(p, self.ball.elapsed, self.ball.elapsed)
         observations.append(dict(time=self.ball.elapsed, position=p.tolist()))
         next_observation += interval
 
@@ -183,8 +186,13 @@ class ReceiveEnvironment(MujocoCommandEnvironment):
         np.linalg.norm(np.array(command["position"]) - feed["oracle_crossing_position"])
       )
       row["planner_time_error_s"] = command["deadline"] - feed["oracle_crossing_time"]
-      row["planned_net_clear"] = bool(command["diagnostic"]["planned_net_clear"])
-      row["planned_bypasses_posts"] = bool(command["diagnostic"]["bypasses_posts"])
+      diagnostic = command["diagnostic"]
+      row["planned_net_clear"] = bool(
+        diagnostic.get("planned_net_clear", diagnostic.get("clears_net", False))
+      )
+      row["planned_bypasses_posts"] = bool(
+        diagnostic.get("bypasses_posts", diagnostic.get("bypasses_net_posts", False))
+      )
     self.completed.append(row)
     folder = Path(self.output) / "traces"
     folder.mkdir(exist_ok=True)

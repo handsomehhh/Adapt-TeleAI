@@ -1,5 +1,8 @@
 # 第二阶段：独立随机来球、planner与策略执行
 
+网页可视化已接入：原命令增加 `--render`，浏览器打开终端打印的地址。默认 `--viewer web`，
+`--viewer native` 保留桌面窗口。详见 [网页可视化](../../WEB_VISUALIZATION.md)。
+
 入口 `deploy.benchmarks.receive.run`。与第一阶段 `racket_command.run` 分开：
 
 ```text

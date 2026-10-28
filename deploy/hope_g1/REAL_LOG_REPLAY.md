@@ -1,5 +1,8 @@
 # 真机日志在 MuJoCo 中回放（离线）
 
+默认在网页中查看，启动后打开终端打印的 `http://127.0.0.1:8080`。
+`--viewer native` 可恢复原生窗口；详见 [网页可视化](../WEB_VISUALIZATION.md)。
+
 在 .200 的桌面终端运行，将 `real_YYYYMMDD_HHMMSS` 替换为实际录制目录：
 
 ```zsh

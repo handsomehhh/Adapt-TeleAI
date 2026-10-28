@@ -437,6 +437,43 @@ class Timeline:
           self.paused = True
       return self.position
 
+  def step_frames(self, count):
+    """Seek by measured robot samples, including irregular recording intervals."""
+    with self.lock:
+      index = self.recording.index(self.position)
+      index = int(np.clip(index + count, 0, len(self.recording.times) - 1))
+      self.position = self.recording.times[index]
+      self.paused = True
+
+  def tts_status(self):
+    """Causal timing on the recording clock; no wall-clock countdown or oracle."""
+    with self.lock:
+      if not hasattr(self.recording, "command"):
+        return None
+      command = self.recording.command(self.position)
+      if command is None:
+        return None
+      start, deadline = command.get("received"), command.get("deadline")
+      if not all(
+        isinstance(v, (int, float)) and math.isfinite(v) for v in (start, deadline)
+      ):
+        return None
+      result = dict(
+        start=start,
+        deadline=deadline,
+        initial=deadline - start,
+        elapsed=self.position - start,
+        remaining=deadline - self.position,
+      )
+      encounter = self.recording.encounter(self.position, command)
+      if encounter is not None:
+        result.update(
+          event_kind=encounter["kind"],
+          event_time=encounter["time"],
+          event_error=encounter["time"] - deadline,
+        )
+      return result
+
   def key(self, key):
     with self.lock:
       if self.speed.key(key):
@@ -451,12 +488,7 @@ class Timeline:
       elif key in (268, 269):  # home/end
         self.position = 0 if key == 268 else self.recording.duration
       elif key in (ord(","), ord(".")):
-        i = self.recording.index(self.position)
-        i = int(
-          np.clip(i + (-1 if key == ord(",") else 1), 0, len(self.recording.times) - 1)
-        )
-        self.position = self.recording.times[i]
-        self.paused = True
+        self.step_frames(-1 if key == ord(",") else 1)
       elif key in (ord("N"), ord("P")):
         events = self.recording.events
         i = (
@@ -643,7 +675,11 @@ def main():
   )
   parser.add_argument("--end", type=float, help="Video end time in recording seconds")
   parser.add_argument("--fps", type=int, default=30)
+  from deploy.viewer import add_viewer_arguments, configure_viewer
+
+  add_viewer_arguments(parser)
   args = parser.parse_args()
+  configure_viewer(args)
   if not math.isfinite(args.start) or args.start < 0 or args.fps <= 0:
     parser.error("start must be finite/nonnegative and fps positive")
   recording = Recording(
@@ -675,12 +711,12 @@ def main():
           writer.append_data(renderer.render())
     print(f"Saved {args.video}")
     return
-  import mujoco.viewer
+  from deploy import viewer as deployment_viewer
 
   print(
     f"{HELP}; R restart; SPACE pause/resume; arrows seek 1s; ,/. step; N/P phase; HOME/END"
   )
-  with mujoco.viewer.launch_passive(
+  with deployment_viewer.launch_passive(
     scene.model, scene.data, key_callback=timeline.key
   ) as viewer:
     viewer.cam.lookat[:] = scene.camera.lookat

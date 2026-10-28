@@ -153,7 +153,7 @@ def run_rally(
     if ball_source == "mocap":
       provider = build_mocap(sensor)
     if render:
-      from mujoco import viewer as mujoco_viewer
+      from deploy import viewer as mujoco_viewer
 
       viewer = mujoco_viewer.launch_passive(robot.model, robot.data, key_callback=playback.key)
       print(f"MuJoCo playback: {PLAYBACK_HELP}", flush=True)

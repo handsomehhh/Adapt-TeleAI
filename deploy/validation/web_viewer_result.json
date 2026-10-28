@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-27",
+  "tests_passed": 42,
+  "comparisons": [
+    {
+      "mode": "command",
+      "checkpoint": "hope_20261012_18000/model_18000.pt",
+      "files": [
+        {
+          "file": "suite.json",
+          "identical": true,
+          "sha256": "af11b2c59e923050a7f07244d75fd1ca575d68a3d2adadf935b486a1924d5252"
+        },
+        {
+          "file": "results.jsonl",
+          "identical": true,
+          "sha256": "97a320eef9864830b1466f344b0447f36b10704915bd8f409a6035c76a0f99e9"
+        },
+        {
+          "file": "traces/trial_00098.json",
+          "identical": true,
+          "sha256": "67562339f1fa4a0f4dfe7c467273a43648fe93d9330c22c0e965e785e6edf399"
+        }
+      ]
+    },
+    {
+      "mode": "receive",
+      "checkpoint": "hope_20261012_18000/model_18000.pt",
+      "files": [
+        {
+          "file": "suite.json",
+          "identical": true,
+          "sha256": "bc3df205f4e0f9246b53ec785c5fdd4dcb6af65bacf94d22801a3dc6e7062f63"
+        },
+        {
+          "file": "results.jsonl",
+          "identical": true,
+          "sha256": "45e47f128fd37020273df27f6736418fb956db7f101d90abf58016a090e34f65"
+        },
+        {
+          "file": "traces/ball_0000.json",
+          "identical": true,
+          "sha256": "6433f2b2ec13a0192e1aa966d16d6281a27ccf8ff7f57bbdbc75b3940b71bf2e"
+        }
+      ]
+    }
+  ],
+  "browser_checks": [
+    "3D robot/table rendering",
+    "locked command",
+    "estimated hit and crossing with same-time racket",
+    "frame step",
+    "precise seek and pause",
+    "phase navigation",
+    "play/pause"
+  ],
+  "scope": "Local visualization migration; no real controller/planner algorithm, checkpoint, PD or task configuration edits.",
+  "compatibility": "Benchmark adapters snapshot production planner numerical state, deliver observations synchronously on the virtual clock; real ROS/worker transport unchanged."
+}

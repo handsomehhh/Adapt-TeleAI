@@ -1,5 +1,8 @@
 c# 随机 racket command 测试
 
+网页可视化已接入：原命令增加 `--render`，浏览器打开终端打印的地址。默认 `--viewer web`，
+`--viewer native` 保留桌面窗口。详见 [网页可视化](../../WEB_VISUALIZATION.md)。
+
 当前默认进行第一阶段的 MuJoCo command 跟踪测试：在冻结的训练支持域内采样位置、
 拍面法向、速度和 TTS，交给现有 motion 选择器和 policy，检查指定 TTS 时刻的实际球拍状态。
 不生成球，不调用球状态估计器或 A3 轨迹/回球 planner，也不依赖碰球或落台结果评分。

@@ -92,7 +92,11 @@ def main():
     "--network-interface", help="Override the G1 DDS network interface"
   )
   parser.add_argument("--torch-threads", type=int, default=1)
+  from deploy.viewer import add_viewer_arguments, configure_viewer
+
+  add_viewer_arguments(parser)
   args = parser.parse_args()
+  configure_viewer(args)
   args.ball_source = args.ball_source or ("mocap" if args.env == "real" else "sim")
   if args.env == "real" and args.ball_source != "mocap":
     parser.error("Real deployment requires measured mocap ball positions")

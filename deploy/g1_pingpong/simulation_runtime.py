@@ -232,7 +232,7 @@ class MujocoRuntime:
       events=self.events,
     )
     if render and self.viewer is None:
-      from mujoco import viewer
+      from deploy import viewer
 
       previous_threads = set(threading.enumerate())
       camera = options.get("viewer", {})
@@ -252,9 +252,9 @@ class MujocoRuntime:
       # launch_passive returns before its daemon renderer exits. Retain the
       # threads created by this launch so Q can wait for GL cleanup before
       # Python's atexit GLFW termination runs.
-      self._viewer_threads = tuple(
+      self._viewer_threads = (() if hasattr(self.viewer, "server") else tuple(
         thread for thread in threading.enumerate() if thread not in previous_threads
-      )
+      ))
       print(
         "MuJoCo keys: ENTER=START, SPACE/P=pause/resume, L=lower, A=AMP, W=UP/pingpong, S=DOWN/AMP, F=ball, T=continuous feed, R=reset, N=single step, B/X=halt, Q=quit, H=help",
         flush=True,
@@ -829,8 +829,16 @@ class MujocoRuntime:
           self.viewer.user_scn.ngeom += 1
         if hasattr(self.feeder, "draw_grid"):
           self.feeder.draw_grid(self.viewer.user_scn)
-      self.viewer.set_texts((None, None, "Playback\n[ / - slower\n] / + faster\n\\ normal",
-                             f"{self.playback.rate:g}x"))
+      command = getattr(self.engine, "raw_command", None)
+      command_text = (
+        str(np.round(command.position, 3).tolist())
+        if command is not None and row.get("state") == "EXECUTE" else "pending"
+      )
+      self.viewer.set_texts((None, None,
+        "MuJoCo simulation\nTime / playback\nState / phase\nMotion\nLocked command XYZ\nBalls served",
+        f"Offline simulation\n{now:.3f}s / {self.playback.rate:g}x\n"
+        f"{row.get('state')} / {row.get('phase')}\n{row.get('motion_index')}\n"
+        f"{command_text}\n{self.served}"))
       self.viewer.sync()
 
   def close(self):

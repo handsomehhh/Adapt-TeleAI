@@ -223,11 +223,11 @@ def plots(output, results, trajectories):
 
 
 def render(results, trajectories, config, playback_rate):
-  import mujoco.viewer
+  from deploy import viewer as deployment_viewer
   model, data = scene(config)
   playback = PlaybackControl(playback_rate)
   print(f"MuJoCo playback: {PLAYBACK_HELP}", flush=True)
-  with mujoco.viewer.launch_passive(model, data, key_callback=playback.key) as viewer:
+  with deployment_viewer.launch_passive(model, data, key_callback=playback.key) as viewer:
     viewer.cam.lookat[:] = [1., -.76, .25]
     viewer.cam.distance = 4.5
     viewer.cam.azimuth, viewer.cam.elevation = 120, -25
@@ -266,7 +266,11 @@ def main():
   parser.add_argument("--render", action="store_true")
   parser.add_argument("--playback-rate", type=float, default=.5)
   parser.add_argument("--output", type=Path, required=True)
+  from deploy.viewer import add_viewer_arguments, configure_viewer
+
+  add_viewer_arguments(parser)
   args = parser.parse_args()
+  configure_viewer(args)
   if args.phases < 1 or args.noise_mm < 0 or args.playback_rate <= 0:
     parser.error("Invalid phases/noise/playback-rate")
   if (args.output / "results.json").exists():

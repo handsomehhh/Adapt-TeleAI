@@ -71,7 +71,11 @@ def main():
     help="Require this fraction to clear the net and first bounce on the opponent table",
   )
   parser.add_argument("--torch-threads", type=int, default=1)
+  from deploy.viewer import add_viewer_arguments, configure_viewer
+
+  add_viewer_arguments(parser)
   args = parser.parse_args()
+  configure_viewer(args)
   if args.duration <= 0 or args.episodes < 1 or args.torch_threads < 1:
     parser.error("duration, episodes and torch-threads must be positive")
   if args.env != "real" and args.enable_motors:

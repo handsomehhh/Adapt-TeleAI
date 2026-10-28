@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>乒乓球测试平台</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Noto Sans SC",sans-serif;color:#172b42;background:#edf2f7;font-size:14px}*{box-sizing:border-box}
+body{margin:0}header{padding:17px 24px;background:#12283e;color:white;display:flex;justify-content:space-between;align-items:center}h1{font-size:20px;margin:0}header small{color:#b2c8db}main{display:grid;grid-template-columns:320px minmax(0,1fr);gap:16px;padding:16px;max-width:2000px;margin:auto}section,aside{background:white;border:1px solid #d5e0eb;border-radius:10px;padding:18px}h2{font-size:16px;margin:0 0 16px}label{display:block;margin:12px 0 5px;font-size:13px;color:#39516b}input,select,button{font:inherit;border:1px solid #bfd0df;border-radius:6px;padding:9px;width:100%;background:white;color:inherit}button{cursor:pointer;font-weight:600}button:hover{background:#eaf1f7}button:disabled{opacity:.45;cursor:default}.primary{background:#146bba;color:white;border-color:#146bba}.primary:hover{background:#105a9d}.danger{color:#ad3030}.row{display:flex;gap:10px}.row>*{min-width:0;flex:1}.help{font-size:12px;line-height:1.7;color:#61768b}.mode-help{background:#f0f6fc;border-radius:6px;padding:10px;min-height:74px}.buttons{display:flex;gap:8px;margin-top:16px}.buttons>*{flex:1}details{margin-top:16px}summary{cursor:pointer;color:#39516b}.stage{padding:0;overflow:hidden;min-height:650px;position:relative}.stagebar{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #d5e0eb;gap:10px}.stagebar a{white-space:nowrap}a{color:#146bba;text-decoration:none}a:hover{text-decoration:underline}iframe{display:block;width:100%;height:calc(100vh - 165px);min-height:590px;border:0}#placeholder{display:grid;place-items:center;height:580px;text-align:center;padding:32px;color:#61768b}#error{color:#af2f2f;white-space:pre-wrap}pre{font-family:ui-monospace,monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;max-height:300px;overflow:auto;background:#101f30;color:#d9e6f3;padding:12px;border-radius:6px}#command{max-height:100px}#reports{max-height:210px;overflow:auto}#reports a{display:block;padding:5px 0;overflow-wrap:anywhere}#result{display:block;margin-top:12px}#refresh{width:auto;padding:5px 10px;font-size:12px}.wide{grid-column:1/-1}.hidden,[hidden]{display:none!important}#status{font-size:13px}#status[data-state=running]{color:#197951}#status[data-state=failed]{color:#ad3030}@media(max-width:950px){main{grid-template-columns:1fr}iframe{height:750px}header small{display:none}}
+main.expanded{grid-template-columns:minmax(0,1fr)}main.expanded>aside{display:none}#toggle-settings{width:auto;padding:5px 10px;font-size:12px}
+</style>
+<header><h1>乒乓球测试平台</h1><small>MuJoCo · Policy · Planner · 真机回放</small></header>
+<main>
+<aside>
+  <h2>测试设置</h2>
+  <form id="form">
+    <label for="mode">运行模式</label>
+    <select name="mode" id="mode">
+      <option value="command">不接 planner · 球拍指令评测</option>
+      <option value="receive">接 planner · 完整接球评测</option>
+      <option value="replay">真机数据回放</option>
+      <option value="simulation">连续仿真 · 手动控制</option>
+    </select>
+    <p id="description" class="help mode-help"></p>
+    <div data-modes="replay">
+      <label for="recording">本地录制数据</label><select id="recording" name="recording"></select>
+      <label for="start">起始时间（秒，启动后暂停）</label><input id="start" name="start" type="number" min="0" step="0.02" value="0">
+    </div>
+    <div data-modes="command receive">
+      <label for="suite">采样方案</label><select id="suite" name="suite"><option value="">使用当前配置生成新样本</option></select>
+      <div class="row">
+        <div><label for="limit">最多测试数量</label><input id="limit" name="limit" type="number" min="1" max="100000" step="1" value="1"></div>
+        <div><label for="seed">随机种子</label><input id="seed" name="seed" type="number" min="0" step="1" value="42"></div>
+      </div>
+    </div>
+    <div data-modes="command" id="point">
+      <label>指定击球平面上的点（米）</label>
+      <div class="row"><div><label for="y">Y</label><input id="y" name="y" type="number" step="0.01" value="-0.8"></div><div><label for="z">Z</label><input id="z" name="z" type="number" step="0.01" value="0.3"></div></div>
+      <p class="help">X、速度、朝向和 TTS 沿用现有采样配置。此模式为纯 command 跟踪，不生成物理球。</p>
+    </div>
+    <div data-modes="simulation"><label for="duration">仿真时长（秒）</label><input id="duration" name="duration" type="number" min="1" max="86400" value="600"><p class="help">启动后在三维页面依次进行 START 等操作和手动发球。</p></div>
+    <div data-modes="command receive replay"><label for="rate">播放速度</label><select id="rate" name="rate"><option>0.25</option><option>0.5</option><option selected>1</option><option>2</option><option>4</option></select></div>
+    <details data-modes="command receive"><summary>Policy / 环境配置</summary>
+      <div data-modes="command"><label for="adapter">Policy adapter</label><input id="adapter" name="adapter" placeholder="deploy.hope_g1.command_adapter:HopeCommandAdapter"></div>
+      <p class="help">填写仓库内配置文件路径；留空使用原入口默认值。配置中的 checkpoint 决定策略。接 planner 模式目前沿用现有 HopeReceiveAdapter。</p>
+      <label for="task">Task YAML</label><input id="task" name="task" placeholder="deploy/hope_g1/configs/task.yaml">
+      <label for="rally">Rally YAML</label><input id="rally" name="rally" placeholder="deploy/hope_g1/configs/rally_mujoco.yaml">
+      <label for="runtime">Runtime YAML</label><input id="runtime" name="runtime" placeholder="deploy/hope_g1/configs/real.yaml">
+      <label for="mocap">Mocap YAML</label><input id="mocap" name="mocap" placeholder="deploy/hope_g1/configs/mocap.yaml">
+    </details>
+    <div class="buttons"><button id="launch" class="primary" type="submit">启动测试</button><button id="stop" class="danger" type="button" disabled>停止</button></div>
+    <p id="error" role="alert"></p>
+  </form>
+  <a id="result" hidden target="_blank" rel="noopener">打开本次评测报告 ↗</a>
+  <p class="help" id="output"></p>
+  <details><summary>历史报告</summary><div id="reports"></div></details>
+</aside>
+<section class="stage">
+  <div class="stagebar"><span id="status" aria-live="polite">等待启动</span><div><button id="toggle-settings" type="button">收起设置</button> <button id="refresh" type="button">重新连接画面</button> <a id="external" target="_blank" rel="noopener" hidden>独立打开 ↗</a></div></div>
+  <div id="placeholder"><div><h2>选择测试模式，然后启动</h2><p>模型加载与运行进度会显示在下方日志中。</p><p class="help">每次运行一个测试。切换模式时，先停止当前测试。</p></div></div>
+  <iframe id="viewer" title="MuJoCo 三维测试场景" hidden></iframe>
+</section>
+<section class="wide"><h2>运行日志与启动命令</h2><pre id="command">尚未启动</pre><pre id="logs" aria-label="运行日志">等待测试…</pre></section>
+</main>
+<script>
+const token = '__TOKEN__';
+const $ = id => document.getElementById(id);
+const descriptions = {
+  command: '直接采样 racket command → motion 选择 / policy → 跟踪误差评分。沿用现有评测标准。',
+  receive: '随机发球 → 在线带噪观测 → 估计 / planner → policy → 击球与回位。策略不读取未来轨迹。',
+  replay: '播放本地真机记录，比较执行 command、实测击球 / 穿平面点，以及对应时刻的球拍位置。',
+  simulation: '运行现有 MuJoCo 部署流程，在三维页面使用启动、下放、发球和回位等控制。'
+};
+const statusNames = {
+  idle: '等待启动', running: '正在运行 · 首次加载模型可能需要一些时间',
+  stopping: '正在停止并保存结果…', stopped: '测试已手动停止',
+  complete: '本次测试已结束', failed: '进程已退出 · 请查看下方日志'
+};
+let catalog = {suites: []};
+let generation = null, attached = false, busy = false, lastState = 'idle';
+const isActive = status => ['running', 'stopping'].includes(status);
+
+function fill(select, values, empty) {
+  const old = select.value;
+  select.replaceChildren();
+  if (empty !== undefined) select.add(new Option(empty, ''));
+  for (const path of values) select.add(new Option(path, path));
+  if (values.includes(old)) select.value = old;
+}
+
+function modeChanged() {
+  const mode = $('mode').value;
+  for (const element of document.querySelectorAll('[data-modes]')) {
+    element.hidden = !element.dataset.modes.split(' ').includes(mode);
+  }
+  $('description').textContent = descriptions[mode];
+  const group = mode === 'receive' ? 'receive' : 'racket_command';
+  const suites = catalog.suites.filter(path =>
+    path.includes('/' + group + '/') ||
+    (path.includes('web_runs/') && path.includes('_' + mode + '/'))
+  );
+  fill($('suite'), suites, '使用当前配置生成新样本');
+  suiteChanged();
+}
+
+function suiteChanged() {
+  $('point').hidden = $('mode').value !== 'command' || !!$('suite').value;
+  // Hidden modes must not participate in browser form validation or submission.
+  for (const field of document.querySelectorAll('#form input,#form select')) {
+    field.disabled = !!field.closest('[hidden]');
+  }
+  $('seed').disabled = $('seed').disabled || !!$('suite').value;
+}
+
+async function loadCatalog() {
+  const response = await fetch('/api/catalog');
+  if (!response.ok) throw Error('无法获取本地数据列表');
+  catalog = await response.json();
+  fill($('recording'), catalog.recordings);
+  modeChanged();
+  $('reports').replaceChildren();
+  for (const path of catalog.reports.slice().reverse()) {
+    const link = document.createElement('a');
+    link.href = '/artifacts/' + path.split('/').map(encodeURIComponent).join('/');
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = path;
+    $('reports').append(link);
+  }
+}
+
+async function post(path, data) {
+  const response = await fetch(path, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'X-Platform-Token': token},
+    body: JSON.stringify(data)
+  });
+  const value = await response.json();
+  if (!response.ok) throw Error(value.error || '操作失败');
+  return value;
+}
+
+function connect(port) {
+  const url = new URL(location.href);
+  url.port = port;
+  url.pathname = '/';
+  url.search = '';
+  url.hash = '';
+  $('viewer').src = url.href;
+  $('viewer').hidden = false;
+  $('placeholder').hidden = true;
+  $('external').href = url.href;
+  $('external').hidden = false;
+  attached = true;
+}
+
+function show(state) {
+  if (generation === null && state.mode) {
+    $('mode').value = state.mode;
+    modeChanged();
+  }
+  lastState = state.status;
+  const active = isActive(state.status);
+  $('launch').disabled = active || busy;
+  $('stop').disabled = !active || state.status === 'stopping' || busy;
+  $('status').textContent = statusNames[state.status] +
+    (state.exit_code ? `（退出码 ${state.exit_code}）` : '');
+  $('status').dataset.state = state.status;
+  $('command').textContent = state.command.length
+    ? state.command.map(arg => /^[\w./:=+-]+$/.test(arg) ? arg : JSON.stringify(arg)).join(' ')
+    : '尚未启动';
+  const log = $('logs');
+  const atBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 60;
+  log.textContent = state.logs.join('\n') || '等待测试…';
+  if (atBottom) log.scrollTop = log.scrollHeight;
+  $('output').textContent = state.output ? '结果目录：' + state.output : '';
+  $('result').hidden = !state.report;
+  if (state.report) $('result').href = state.report;
+
+  if (generation !== state.generation) {
+    generation = state.generation;
+    attached = false;
+    $('viewer').hidden = true;
+    $('viewer').src = 'about:blank';
+    $('external').hidden = true;
+    $('placeholder').hidden = false;
+    $('placeholder').firstElementChild.textContent = state.generation
+      ? '模型加载中，进度见下方日志…'
+      : '选择测试模式，然后启动。';
+  }
+  if (!active && state.generation > 0) {
+    $('viewer').hidden = true;
+    $('external').hidden = true;
+    $('placeholder').hidden = false;
+    $('placeholder').firstElementChild.textContent = state.report
+      ? '本次测试已结束，可在设置栏打开报告。'
+      : state.status === 'failed'
+        ? '运行失败，请查看下方日志。'
+        : '本次运行已结束，可选择模式再次启动。';
+  }
+  if (active && !attached && state.logs.some(line => line.includes('[Web viewer] http://'))) {
+    connect(state.viewer_port);
+  }
+}
+
+$('form').addEventListener('submit', async event => {
+  event.preventDefault();
+  busy = true;
+  $('launch').disabled = true;
+  $('error').textContent = '';
+  try {
+    const data = Object.fromEntries(new FormData(event.target));
+    show(await post('/api/start', data));
+  } catch (error) {
+    $('error').textContent = error.message;
+  } finally {
+    busy = false;
+    $('launch').disabled = isActive(lastState);
+  }
+});
+
+$('stop').onclick = async () => {
+  busy = true;
+  $('stop').disabled = true;
+  try {
+    show(await post('/api/stop', {}));
+  } catch (error) {
+    $('error').textContent = error.message;
+  } finally {
+    busy = false;
+  }
+};
+$('toggle-settings').onclick = () => {
+  const expanded = document.querySelector('main').classList.toggle('expanded');
+  $('toggle-settings').textContent = expanded ? '展开设置' : '收起设置';
+};
+$('refresh').onclick = () => {
+  if (attached) $('viewer').src = $('viewer').src;
+};
+$('mode').onchange = modeChanged;
+$('suite').onchange = suiteChanged;
+
+// When focus is outside the viewer iframe, forward only simulation shortcuts.
+window.addEventListener('keydown', event => {
+  if (!attached || !isActive(lastState) || event.repeat || event.ctrlKey ||
+      event.metaKey || event.altKey || event.isComposing) return;
+  if (event.target instanceof Element && event.target.closest(
+      'input,textarea,select,button,[contenteditable="true"],[role="textbox"]')) return;
+  const key = event.key;
+  if (![' ', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End', ',', '.',
+        '[', ']', '-', '=', '+', '\\'].includes(key) &&
+      !/^[rlawsftnbxqph]$/i.test(key)) return;
+  event.preventDefault();
+  $('viewer').contentWindow.postMessage({type: 'pingpong-key', key,
+    code: event.code, shiftKey: event.shiftKey}, new URL($('viewer').src).origin);
+});
+
+async function poll() {
+  try {
+    const response = await fetch('/api/status');
+    if (!response.ok) throw Error('平台服务未响应');
+    const state = await response.json();
+    const finished = isActive(lastState) && !isActive(state.status);
+    show(state);
+    if (finished) await loadCatalog();
+  } catch (error) {
+    $('status').textContent = '连接中断：' + error.message;
+  } finally {
+    setTimeout(poll, 1000);
+  }
+}
+loadCatalog().catch(error => $('error').textContent = error.message);
+modeChanged();
+poll();
+</script>
+</html>
