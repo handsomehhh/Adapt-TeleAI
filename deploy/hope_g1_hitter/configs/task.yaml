@@ -1,0 +1,3 @@
+task: HOPEHitterPingPongG1
+# Populate with deploy/hope_g1_hitter/export_contract.py (see its docstring).
+artifact_dir: deploy/hope_g1_hitter/artifacts/hitter_20261027_9500

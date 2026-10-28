@@ -1,0 +1,85 @@
+hope_planner_optimized_2:
+  ros__parameters:
+    ball_rigid_body_name: "pingpong_ball"
+    # ball_pose_index: which slot in the /poses PoseArray is the ball.
+    # HOW TO GET: with the avatar_pro relay this is 0 (pose_array_order starts with
+    # "ball"). Confirm against your live stream: `ros2 topic echo /poses --once`
+    # and count the ball's index. TODO: confirm against your live /poses.
+    ball_pose_index: 0
+    x_hit: 0.0              # virtual hit plane X (m); ~0.0 = HOPE origin end of table
+    target_land_x: 2.4 # 2.5 # 2.055   # opponent half-center X (fixed by table geometry)
+    target_land_y: -0.7 # -0.7625 # opponent half-center Y (fixed by table geometry)
+    delta_t_flight: 0.6 # 0.6    # desired return flight time (s); tune for your robot
+    # TODO(calibrate): drag + restitution. Defaults are reasonable starting points
+    # from the HITTER paper. HOW TO GET: record >=15 ball trajectories with the
+    # mocap, export to CSV (t,x,y,z), then run
+    #   ros2 run hope_planner_optimized_2 hope_planner_optimized_2_calibrate traj1.csv ... traj15.csv
+    # and paste the printed values here.
+
+
+    # TEST 1
+    # drag_k: 0.1537 # 0.8781         # Calibrated from salvaged traj01 split into 15 toss chunks.
+    # # restitution_h: 0.69 # 0.8527  # Calibrated from salvaged traj01 split into 15 toss chunks.
+    # # restitution_v: 1.01 # 0.8518  # Calibrated from salvaged traj01 split into 15 toss chunks.
+    # restitution_h: 0.7558 # 0.8527 0.7558 #   # Calibrated from salvaged traj01 split into 15 toss chunks.
+    # restitution_v: 0.9 # 1.01 # 0.8518 1.0176 #  # Calibrated from salvaged traj01 split into 15 toss chunks.
+
+
+    # TEST 2，codex根据10次实验的现象给出的建议调参数方向
+    # drag_k: 0.20
+    # restitution_h: 0.72
+    # restitution_v: 0.95
+
+
+    # 每次只改xz中的一个
+
+    #大粪
+    # drag_k: 0.1537
+    # restitution_h: 0.72
+    # restitution_v: 0.90
+  
+    # drag_k: 0.1537
+    # # restitution_h: 0.69 # 感觉这一个参数不过：1）太大了，tts正常，但是带着Y偏了；2）太早了，tts太大
+    # # restitution_v: 1.01
+    # restitution_h: 0.79 # 0.7558 # 0.69 # 感觉这一个参数不过：1）太大了，tts正常，但是带着Y偏了；2）太早了，tts太大
+    # restitution_v: 0.949 # 0.9 # 1.06
+
+# k   = 0.096355
+# C_h = 0.816019
+# C_v = 0.862769
+
+
+    drag_k: 0.096 # 0.096355
+    # restitution_h: 0.69 # 感觉这一个参数不过：1）太大了，tts正常，但是带着Y偏了；2）太早了，tts太大
+    # restitution_v: 1.01
+    restitution_h: 0.816019 # 0.7558 # 0.69 # 感觉这一个参数不过：1）太大了，tts正常，但是带着Y偏了；2）太早了，tts太大
+    restitution_v: 0.862769 # 0.9 # 1.06
+
+    # 反弹水平模型（2026-10-27，Take_006(转正)+plane2+plane3 共 286 条来球，按规划器口径拟合，
+    # MoCap_ball_traj/ball_task_fit.py）。CV 留出：
+    #   constant: 击球面 yz 中位 2.33cm  |dt| 8.8ms   （上面这组 0.096/0.816/0.863 同水平）
+    #   friction: 击球面 yz 中位 2.16cm  |dt| 5.9ms   （C_h 随入射角/速度变化，跨球员更稳）
+    # 切到 friction 时 drag_k / restitution_v 要一起换成：drag_k: 0.1053  restitution_v: 0.8729
+    bounce_model: "constant"     # "constant" | "friction"
+    bounce_friction_mu: 0.0852   # friction: v_h+ = max(rolling, 1 - mu (1+C_v)|vz|/|vh|) v_h
+    bounce_rolling_ratio: 0.6
+
+    restitution_racket: 0.6 # 0.88
+    # Stage 2 incoming-ball trajectory prediction.  2 ms preservrpnves the
+    # benchmark's command count while roughly halving Stage 2 compute time.
+    dt_integrate: 0.002
+    # Stage 3 return-flight solver.  Keep these production defaults unless a
+    # recorded-trajectory benchmark has validated a coarser setting.
+    stage3_dt_integrate: 0.001 # 0.01 # 10ms的迭代步长 # 0.001
+    outgoing_velocity_tolerance_m: 0.0001 # 0.05 # 5cm的误差容忍 # 0.0001
+
+    # Publish /racket/command only when the predicted interception point lies
+    # in this inclusive HOPE-world workspace. x is the virtual hit plane.
+    publish_intercept_x_min: 0.0
+    publish_intercept_x_max: 0.0
+    publish_intercept_y_min: -1.54
+    publish_intercept_y_max: -0.0
+    publish_intercept_z_min: -0.2
+    publish_intercept_z_max: 0.2
+
+    time_to_strike_invalid_x: 1.5 # 1.3

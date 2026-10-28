@@ -1,0 +1,91 @@
+# Copy of hope_g1/configs/real.yaml; only stable_policy.transition_seconds differs.
+# Confirm these against the actual 29-DoF, unlocked-waist G1.
+network_interface: eno1
+# Real-only public HOPE stop behavior; MuJoCo retains its existing behavior.
+stop_policy: hope_67a1a72
+io_process: true
+# Fresh snapshots: avoid the former 5ms blocking command wait.
+io_poll_seconds: 0.001
+# DDS write completion is host timing, not confirmation of motor actuation.
+record_io_diagnostics: true
+# Binary journal of every actual DDS Write (including held/damping targets).
+record_command_writes: true
+# Runs only after robot IO and all writers have closed.
+latency_auto_summary: true
+# Passive LowState recording, in a bounded writer thread; 0 disables it.
+record_lowstate_hz: 200
+domain_id: 0
+expected_mode_machine: 5
+connection_timeout: 10.0
+state_timeout: 0.1
+command_timeout: 0.1
+halt_kd: 2.0
+# START: AMP default pose; A: stable AMP; UP: ping-pong; DOWN: stable AMP.
+transition_seconds: 3.0
+# No post-swing recovery/standing wait; START positioning is unchanged.
+recovery_seconds: 0.0
+# Fixed ramp/hold and recovery timers; measured stability is diagnostic only.
+readiness_mode: timed
+standing:
+  dwell_seconds: 1.0
+  timeout_seconds: 15.0
+  max_joint_velocity: 0.1
+  max_gyro: 0.1
+  max_tilt_degrees: 10.0
+  max_anchor_velocity: 0.05
+  max_height_error: 0.1
+max_tilt_degrees: 45.0
+imu_to_pelvis_quaternion_wxyz: [1.0, 0.0, 0.0, 0.0]
+# HOPE: mocap position/yaw, IMU inclination, torso orientation from FK.
+root_orientation_source: imu_mocap_yaw
+max_control_overrun: 0.05
+guard:
+  oscillation:
+    # Disabled for operator-controlled observation; SELECT/B/X still halt.
+    enabled: false
+    window_seconds: 0.24
+    rms_speed: 0.8
+    sign_change_ratio: 0.75
+  # RL targets are virtual PD equilibrium positions, not measured joint angles.
+  # Preserve the G1 trained swing command; these are joint, not racket limits.
+  # Policy PREPARE (re-stabilization) uses these bounds. Waiting and recovery
+  # honor the same switches as the swing; measured-state guards always apply.
+  enforce_target_limits: false
+  enforce_target_tracking: false
+  enforce_target_slew: false
+  max_tracking_error: 0.5
+  max_measured_velocity: 20.0
+  max_target_velocity: 15.0
+  measured_limit_margin: 0.05
+  max_measured_step: 0.6
+planner:
+  spatial_tolerance: [0.025, 0.025, 0.015]
+  timing_tolerance: 0.08
+
+# Imported from 225 mjlab-prior football deploy_lhy, zero velocity commands.
+stable_policy:
+  enabled: true
+  asset_dir: deploy/assets/stable_amp
+  # Base gains are literal values in deploy/g1_pingpong/pd_gains.py.
+  # Applies to START PD, AMP and the AMP side of the policy handoff.
+  pd:
+    kp_scale: 1.0
+    kd_scale: 1.0
+  # The 104-D hitter falls with the 1.5 s AMP->policy blend (MuJoCo, 2026-10-28);
+  # 0.2-0.8 s all stand. Keep the longest tested value.
+  transition_seconds: 0.8
+  stable_transition_seconds: 0.4
+  settle_seconds: 0.5
+  max_target_velocity: 7.5
+  # Prepare the upper/waist frame-zero pose on AMP before tracker activation.
+  preposition_seconds: 1.5
+  preposition_hold_seconds: 0.5
+  preposition_max_pose_error: 0.15
+  preposition_timeout: 10.0
+
+# Ping-pong base gains are explicit in deploy/g1_pingpong/pd_gains.py.
+# No execution gain is loaded from training YAML/XML or AMP metadata.
+# A named joint scale replaces the global scale for that joint.
+policy_pd:
+  kp_scale: 1.0
+  kd_scale: 1.0
