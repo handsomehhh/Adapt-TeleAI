@@ -1,0 +1,32 @@
+[
+  {
+    "path": "contract.json",
+    "bytes": 7634,
+    "sha256": "394b636abedbb4a992c1c7ae836665794777e462587162e94bc7eef4640c2c63"
+  },
+  {
+    "path": "model_9500.pt",
+    "bytes": 51869581,
+    "sha256": "eafcbdb59073b9f00a8b83e129f56b1d48aa5671e91ebbccd312a008f1d58516"
+  },
+  {
+    "path": "motions/hope_backhand_g1.npz",
+    "bytes": 427418,
+    "sha256": "0b3cbb71b69d0dd7a06aec377419595169fae4622a1cb58ea1e6b1bff62f08ba"
+  },
+  {
+    "path": "motions/hope_forehand_g1.npz",
+    "bytes": 419223,
+    "sha256": "716ad85c0fcfd3c2bdc6667762e2af5b12a57b89d825dcaa0c4f0ef872045d1d"
+  },
+  {
+    "path": "params/agent.yaml",
+    "bytes": 1309,
+    "sha256": "9a3afa5eeaaff5408ad7cb9d2d6a8cacb309a1a4673af34e6e0e9d59bbea986a"
+  },
+  {
+    "path": "params/env.yaml",
+    "bytes": 65706,
+    "sha256": "1b24f87c3a02dd5c17e4d0f0f7dd4c197f67946d8d34fa15fd6c10a3c87ef5d0"
+  }
+]
