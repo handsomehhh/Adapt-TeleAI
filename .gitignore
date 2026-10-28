@@ -9,6 +9,8 @@ debug.py
 motions/
 *_rerun*
 artifacts/
+# Exception: allow hitter deployment artifacts
+!deploy/hope_g1_hitter/artifacts/
 .venv/
 render_robots.py
 benchmark_results/
