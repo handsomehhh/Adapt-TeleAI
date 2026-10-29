@@ -1,5 +1,9 @@
 # Hitter 9500 Deployment Context for lxz@192.168.152.200
 
+> Historical handoff notes. Current side-selection behavior and startup commands
+> are documented in [README.md](README.md); the backhand-only instructions below
+> predate automatic selection.
+
 **Date**: 2024-10-28  
 **Model**: `deploy/hope_g1_hitter/artifacts/hitter_20261027_9500/model_9500.pt`  
 **Task**: Deploy 104-D continuous hitter policy on Unitree G1, backhand only

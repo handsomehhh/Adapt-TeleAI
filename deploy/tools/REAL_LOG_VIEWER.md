@@ -40,6 +40,11 @@
 ## 显示内容与还原范围
 
 - 机器人：实测 `q`、`root_pos`、`root_quat`，按日志的 `robot_command_contract.joint_names` 映射。不是目标关节角，也不重新计算动作。
+- 紫色半透明机器人：进入击球策略后，显示该次策略输入 observation 中的参考关节姿态（HOPE 的 `actor_obs` 前 29 维，兼容 132 维 `tracker_obs`）。每帧将参考机器人的 pelvis 位置和完整朝向对齐到实测 pelvis，以便比较肢体姿态；不展示参考根轨迹的偏移。暂停、逐帧、倒退及视频导出均同步更新。
+- 右侧「状态与误差」新增 `Motion file (observation)`、`Motion frame` 和 `Reference robot`：文件名、当前第几帧 / 总帧数，以及日志中的零起始 index。HOPE 待球和回位时显示实际输入的 home motion 第 1 帧（index 0），挥拍时显示当前参考帧。日志没有记录帧号时明确显示 unknown，不根据回放时间推算。
+- 离开策略、缺失或无效 observation 时隐藏透明机器人。104 维 hitter 策略没有参考 motion 输入，显示 `hitter observation has no reference motion`；不将其陀螺仪或实测关节误当参考姿态。参考显示直接来自日志，无需原始 motion 文件或 checkpoint。
+- Base 目标：使用同一日志帧中的 `goal_base_xy`（即策略的 target base position）。黄色地面靶圈标出目标站位，白圈是实测 pelvis 的地面投影，黄色箭头从当前位置指向目标，长度就是实际水平差距。为避免球桌遮挡，在当前 pelvis 高度也绘制目标圈和水平箭头，并用虚线连接到地面投影。上方标记的高度只是显示平面，不代表目标高度；日志只提供 XY。圈的大小仅为标记尺寸，不代表到位容差。
+- 右侧同时显示当前/目标 XY（桌面世界坐标，米）、水平距离（厘米）、`target - current` 的 ΔX/ΔY，以及按当前 pelvis 航向解释的 forward/backward、left/right 偏差。目标随待球、挥拍、回位及时间跳转更新；不受 `--command-view` 影响。HOPE 和 104 维 hitter 均支持，缺失目标或退出策略时隐藏标记并显示 `--`。
 - 橙色球：`mocap_packets.jsonl` 中原始、已转换到 `hope_table` 的实测球位置；小橙点表示最近 0.4 秒内已收到的观测。
 - 绿色点和箭头：机器人已接收并执行的 planner racket command 目标位置、法向；蓝色箭头表示目标速度（画图缩放 0.06 秒）。仅在日志含 `raw_racket_command` 且处于 EXECUTE/SWING 时显示，挥拍结束即隐藏；发球前的 home goal、待球目标及未接受的 planner 预测均不显示。没有已接收指令时，TTS 显示 `--`。这些是指令，不是实测球拍。
 - 界面：日志名、当前时间、倍速、暂停状态、state、phase、motion、球的桌面坐标和机器人帧龄。

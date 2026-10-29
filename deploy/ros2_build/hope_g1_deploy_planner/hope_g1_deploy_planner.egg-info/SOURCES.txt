@@ -1,0 +1,15 @@
+package.xml
+setup.cfg
+setup.py
+config/hope_planner_optimized_2.yaml
+hope_g1_deploy_planner/__init__.py
+hope_g1_deploy_planner/planner_node.py
+hope_g1_deploy_planner.egg-info/PKG-INFO
+hope_g1_deploy_planner.egg-info/SOURCES.txt
+hope_g1_deploy_planner.egg-info/dependency_links.txt
+hope_g1_deploy_planner.egg-info/entry_points.txt
+hope_g1_deploy_planner.egg-info/requires.txt
+hope_g1_deploy_planner.egg-info/top_level.txt
+hope_g1_deploy_planner.egg-info/zip-safe
+launch/hope_planner.launch.py
+resource/hope_g1_deploy_planner

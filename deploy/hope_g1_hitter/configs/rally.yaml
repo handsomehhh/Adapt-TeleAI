@@ -56,7 +56,11 @@ ball:
   - 0.0
   max_ball_time: 3.0
 hitter:
+  side_selection: auto
+  # First UP captures the measured base XY; new shots may interrupt the return.
+  return_tolerance_m: 0.05
   station:
   - -0.65
   - -0.7625
-  planner_config: deploy/hope_g1_hitter/configs/hope_planner.yaml
+  # Informational path: start the external ROS planner separately with this file.
+  planner_config: deploy/hope_g1_hitter/configs/hope_planner_ros2.yaml

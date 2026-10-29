@@ -1,0 +1,3 @@
+[console_scripts]
+hope_g1_deploy_planner_node = hope_g1_deploy_planner.planner_node:main
+

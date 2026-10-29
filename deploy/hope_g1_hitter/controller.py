@@ -102,12 +102,19 @@ class HitterGeometry:
       raise ValueError("Expected forehand then backhand hitter clips")
     self.windup = np.array([c["strike_frame"] * dt for c in clips])
     self.follow = np.array([(c["frames"] - 1 - c["strike_frame"]) * dt for c in clips])
+    self.follow[:] = 0.5
     low, high = contract["base_target_y_range"]
     self.station_y = (self.home_station[1] + low, self.home_station[1] + high)
     self.max_station_step = float(high)
 
   def plane_x(self, side):
     return float(self.home_station[0] + self.boxes[side, 0].mean())
+
+  def common_x_range(self):
+    """One physical planner plane can serve both sides inside this overlap."""
+    return self.home_station[0] + np.array(
+      [self.boxes[:, 0, 0].max(), self.boxes[:, 0, 1].min()]
+    )
 
   def centre(self, side, station):
     c = self.boxes[side].mean(axis=1)
@@ -123,6 +130,8 @@ class HitterGeometry:
       reason = "planner_invalid_command"
     elif not 0.04 < remaining < 2.5:
       reason = "time_window"
+    elif not box[0, 0] <= target[0] - self.home_station[0] <= box[0, 1]:
+      reason = "x_outside_training_box"
     elif not box[2, 0] <= target[2] - self.floor_z <= box[2, 1]:
       reason = "height_outside_training_box"
     new_y = float(np.clip(station[1], target[1] - box[1, 1], target[1] - box[1, 0]))
@@ -154,7 +163,7 @@ class HitterController:
 
   ARMED feeds the side's training-box centre with the frozen wind-up time to
   strike. An accepted planner command starts EXECUTE; the clock runs down to
-  -follow, then the actor returns to the idle target (play_1v0 behaviour).
+  -follow, then ARMED returns to the captured anchor while accepting new shots.
   """
 
   def __init__(
@@ -185,8 +194,17 @@ class HitterController:
     self.lifecycle = Lifecycle(default_q, runtime["transition_seconds"])
     self.controller = HitterActor(self.cfg, deployment.actor)
     self.standing = HopeStanding(self.controller, runtime, self.home)
-    # Hitter uses external ROS planner, backhand only (side=1).
-    self.side = 1
+    self.side_selection = hitter.get("side_selection", "backhand")
+    if self.side_selection not in ("auto", *SIDES):
+      raise ValueError("hitter.side_selection must be auto, forehand or backhand")
+    # Auto starts in the established backhand idle posture. The side is selected
+    # from reachable targets when a shot begins, then locked through follow-through.
+    self.idle_side = 0 if self.side_selection == "forehand" else 1
+    self.side = self.idle_side
+    self.return_anchor = None
+    self.return_tolerance = float(hitter.get("return_tolerance_m", 0.05))
+    if not np.isfinite(self.return_tolerance) or self.return_tolerance <= 0:
+      raise ValueError("hitter.return_tolerance_m must be finite and positive")
     self.external_planner_command = None
     self.external_planner_received_at = None
     self.external_planner_deadline = None  # Fixed strike deadline computed once
@@ -198,12 +216,38 @@ class HitterController:
     self.reset_state()
 
   def reset_state(self):
-    # Keep self.side unchanged — hitter is configured for backhand only
-    self.station = self.geometry.home_station.copy()
+    self.side = self.idle_side
+    self.station = (
+      self.geometry.home_station.copy()
+      if self.return_anchor is None else self.return_anchor[:2].copy()
+    )
     self.shot = None
+    self.returning = False
+    self.return_pending = False
+
+  def capture_return_anchor(self, root_pos, now, *, source="policy_entry"):
+    """Capture once per controller lifetime, including across DOWN/UP cycles.
+
+    The actor commands base XY only. Keep measured Z for diagnostics, but keep
+    racket height in the calibrated table/floor world rather than adding base Z.
+    """
+    if self.return_anchor is not None:
+      return
+    position = np.asarray(root_pos, dtype=float)
+    if position.shape != (3,) or not np.isfinite(position).all():
+      raise ValueError("Hitter return anchor requires a valid measured base XYZ")
+    self.return_anchor = position.copy()
+    self.station = position[:2].copy()
+    self.events.append(dict(
+      time=now, event="return_anchor_captured", source=source,
+      position=self.return_anchor.tolist(),
+    ))
+    print(f"[hope_g1_hitter] return anchor={self.return_anchor.tolist()} ({source})", flush=True)
 
   @property
   def phase(self):
+    if self.lifecycle.state == "ARMED" and self.returning:
+      return "RETURN"
     return {"ARMED": "IDLE", "EXECUTE": "SWING"}.get(
       self.lifecycle.state, self.lifecycle.state
     )
@@ -212,8 +256,11 @@ class HitterController:
     g = self.geometry
     return (
       f"[hope_g1_hitter] task={self.cfg['task']}; actor=104->29; "
+      f"side_selection={self.side_selection}; "
       f"station={g.home_station.tolist()}; "
       f"planes FH={g.plane_x(0):.3f} BH={g.plane_x(1):.3f}; "
+      f"common_x_range={g.common_x_range().tolist()}; "
+      f"return_anchor=first_UP; return_tolerance={self.return_tolerance:.3f}m; "
       f"windup={g.windup.tolist()}; follow={g.follow.tolist()}"
     )
 
@@ -251,20 +298,52 @@ class HitterController:
     self.lifecycle.state = "WAIT"
     self.events.append(dict(time=now, event="returned_to_stable"))
 
-  def select(self, now):
-    """Use external ROS planner command, backhand only."""
+  def select(self, now, state=None):
+    """Pick the reachable side requiring least lateral travel from the robot.
+
+    Preserve the planner's position and deadline: neither can be moved to a
+    different X plane without replanning the incoming ball trajectory.
+    """
     command = self.external_planner_command
     if command is None:
-      diagnostic = dict(side="backhand", reason=self.external_planner_error)
+      diagnostic = dict(side=SIDES[self.side], reason=self.external_planner_error)
       return None, [diagnostic]
 
-    shot, diagnostic = self.geometry.evaluate(self.side, command, self.station, now)
-    return shot, [diagnostic]
+    sides = [self.side]
+    if self.side_selection == "auto" and self.shot is None:
+      sides.append(1 - self.side)
+    reference_y = self.station[1] if state is None else state.root_pos[1]
+    selection_station = self.station
+    if self.shot is None and state is not None:
+      # A return target is not the robot's current position. Evaluate the next
+      # shot's lateral step from measured Y, including while returning. Strike
+      # station X and workspace remain in the existing table calibration.
+      selection_station = np.array([self.geometry.home_station[0], reference_y])
+    attempts, candidates = [], []
+    for side in sides:
+      shot, diagnostic = self.geometry.evaluate(side, command, selection_station, now)
+      diagnostic["selected"] = False
+      if shot is not None:
+        travel = abs(shot.station[1] - reference_y)
+        diagnostic["lateral_travel_m"] = float(travel)
+        # Keep the previous side on ties. Velocity clipping is not a substitute
+        # for reaching the target position.
+        candidates.append(((travel, side != self.side), shot))
+      attempts.append(diagnostic)
+    if not candidates:
+      return None, attempts
+    shot = min(candidates, key=lambda item: item[0])[1]
+    shot.diagnostic["selected"] = True
+    return shot, attempts
 
   def step(self, state, estimate, now, *, racket_command=None):
     # racket_command is handled via update_external_planner_command, not here
     if self.lifecycle.state == "HALT":
       return None
+    if self.return_anchor is None and self.lifecycle.state in ("ARMED", "EXECUTE"):
+      # Direct/offline callers without the shared operator hook capture at the
+      # first policy observation. Real IO captures at the UP edge, before posture.
+      self.capture_return_anchor(state.root_pos, now)
     self.standing.observe(state)
     if self.standing.debug["tilt_degrees"] > self.runtime["max_tilt_degrees"]:
       error = ValueError("Hitter robot tilt exceeds configured limit")
@@ -277,27 +356,49 @@ class HitterController:
       and now - self.shot.strike_at > g.follow[self.side]
     ):
       self.completed += 1
-      self.recovered += 1
       self.shot = None
+      self.station = self.return_anchor[:2].copy()
+      self.return_pending = True
       self.lifecycle.state = "ARMED"
       self.events.append(dict(time=now, event="swing_finished", side=SIDES[self.side]))
+      self.events.append(dict(
+        time=now, event="return_to_anchor_started",
+        anchor_xy=self.return_anchor[:2].tolist(),
+      ))
     decision = {"reason": "waiting_for_ball"}
     # play_1v0 re-accepts every reachable solve, including a new ball arriving
     # during follow-through; expired commands are dropped by the planners.
     if self.receiving and self.lifecycle.state in ("ARMED", "EXECUTE"):
-      shot, attempts = self.select(now)
+      shot, attempts = self.select(now, state)
       decision = dict(reason="accepted" if shot else "no_reachable_command")
       decision["attempts"] = attempts
       if shot is not None:
         if self.lifecycle.state == "ARMED":
+          if self.return_pending:
+            self.events.append(dict(time=now, event="return_interrupted_by_command"))
+          self.return_pending = False
           self.lifecycle.state = "EXECUTE"
           self.events.append(dict(time=now, event="motion_selected", **shot.diagnostic))
         self.shot, self.side, self.station = shot, shot.side, shot.station
+    anchor_error = (
+      None if self.return_anchor is None
+      else float(np.linalg.norm(state.root_pos[:2] - self.return_anchor[:2]))
+    )
+    self.returning = False
     if self.shot is not None:
       position, velocity = self.shot.position, self.shot.velocity
       remaining = self.shot.strike_at - now
       tts = float(np.clip(remaining, -g.follow[self.side], g.windup[self.side]))
     else:
+      if self.return_anchor is not None:
+        self.station = self.return_anchor[:2].copy()
+        self.returning = anchor_error > self.return_tolerance
+        if self.return_pending and not self.returning:
+          self.recovered += 1
+          self.return_pending = False
+          self.events.append(dict(
+            time=now, event="return_anchor_reached", error_m=anchor_error,
+          ))
       position = g.centre(self.side, self.station)
       velocity = g.velocity_boxes[self.side].mean(axis=1)
       tts = float(g.windup[self.side])
@@ -308,6 +409,11 @@ class HitterController:
       self.controller.debug,
       side=SIDES[self.side],
       swing_active=self.shot is not None,
+      return_anchor_world=(
+        None if self.return_anchor is None else self.return_anchor.copy()
+      ),
+      return_anchor_error_m=anchor_error,
+      returning_to_anchor=self.returning,
       decision=decision,
     )
     self.debug = dict(self.command_debug, decision=decision)

@@ -13,6 +13,8 @@ import yaml
 
 from deploy.backends.playback import HELP, PlaybackControl
 
+POLICY_STATES = {"TO_POLICY", "PREPARE", "READY", "ARMED", "EXECUTE", "RECOVER"}
+
 
 def json_rows(path):
   """Permit a final incomplete write from a recording still being copied."""
@@ -42,6 +44,65 @@ def received_command(row):
   ):
     return command
   return None
+
+
+def observation_reference(row):
+  """Read the reference joints actually supplied to this tick's policy."""
+  if row.get("state") not in POLICY_STATES:
+    return None, "policy inactive"
+  # The 104-D hitter actor has no motion reference. Its first 29 values are
+  # gyro/measured joints, so accepting an arbitrary obs prefix is incorrect.
+  if vector(row.get("actor_obs"), 104) is not None:
+    return None, "hitter observation has no reference motion"
+  for key, size in (("actor_obs", 175), ("tracker_obs", 132)):
+    obs = vector(row.get(key), size)
+    if obs is not None:
+      return obs[:29].copy(), key
+  return None, "reference observation missing/invalid"
+
+
+def base_target(row):
+  """Same-tick planar base goal/error in the recorded world and robot heading."""
+  if row.get("state") not in POLICY_STATES:
+    return None
+  target = vector(row.get("goal_base_xy"), 2)
+  current = vector(row.get("root_pos"), 3)
+  if target is None or current is None:
+    return None
+  delta = target - current[:2]
+  heading_delta = None
+  quat = vector(row.get("root_quat"), 4)
+  if quat is not None and np.linalg.norm(quat) > 1e-8:
+    from deploy.g1_pingpong.core import rotation
+
+    forward = rotation(quat / np.linalg.norm(quat))[:2, 0]
+    length = np.linalg.norm(forward)
+    if length > 1e-8:
+      forward /= length
+      heading_delta = np.array([
+        forward @ delta, np.array([-forward[1], forward[0]]) @ delta
+      ])
+  return dict(
+    current=current[:2], target=target, delta=delta,
+    distance=float(np.linalg.norm(delta)), heading_delta=heading_delta,
+  )
+
+
+def base_target_text(row):
+  status = base_target(row)
+  if status is None:
+    return ("--", "--", "--", "--", "--")
+  heading = status["heading_delta"]
+  return (
+    np.array2string(status["current"], precision=3),
+    np.array2string(status["target"], precision=3),
+    f"{status['distance'] * 100:.1f} cm",
+    f"X {status['delta'][0] * 100:+.1f} cm; Y {status['delta'][1] * 100:+.1f} cm",
+    "heading unavailable" if heading is None else (
+      f"{'forward' if heading[0] >= 0 else 'backward'} {abs(heading[0]) * 100:.1f} cm; "
+      f"{'left' if heading[1] >= 0 else 'right'} {abs(heading[1]) * 100:.1f} cm"
+    ),
+  )
 
 
 class Recording:
@@ -96,9 +157,14 @@ class Recording:
       "state",
       "phase",
       "motion_index",
+      "motion",
+      "reference_frame",
+      "reference_frame_count",
+      "reference_time",
       "goal_position",
       "goal_normal",
       "goal_velocity",
+      "goal_base_xy",
       "raw_racket_command",
       "time_to_strike",
       "racket_pos",
@@ -126,6 +192,7 @@ class Recording:
         self.origin = stamp
       t = stamp - self.origin
       saved = {key: row.get(key) for key in keys}
+      saved["reference_q"], saved["reference_status"] = observation_reference(row)
       if not self.rows or (saved["state"], saved["phase"], saved["motion_index"]) != (
         self.rows[-1]["state"],
         self.rows[-1]["phase"],
@@ -137,6 +204,23 @@ class Recording:
     if not self.rows:
       raise ValueError("No usable measured robot frames in trace.jsonl")
     self.duration = self.times[-1]
+    self.motion_names = {
+      row["motion_index"]: Path(row["motion"]).name
+      for row in self.rows
+      if isinstance(row.get("motion"), str)
+    }
+    for event in self.summary.get("events", []):
+      if isinstance(event.get("motion"), str):
+        self.motion_names[event.get("motion_index")] = Path(event["motion"]).name
+    # Some recordings only name the fixed home in their file provenance.
+    indices = sorted(
+      set([self.summary.get("home_motion", 0)] + (self.summary.get("motion_allow") or []))
+    )
+    files = self.summary.get("policy_files", {}).get("motions", [])
+    if len(indices) == len(files):
+      for index, info in zip(indices, files, strict=True):
+        if isinstance(info, dict) and isinstance(info.get("path"), str):
+          self.motion_names.setdefault(index, Path(info["path"]).name)
     self.locked_commands, self.locked_times = [], []
     events = self.summary.get("events", [])
     for event in events:
@@ -399,6 +483,31 @@ class Recording:
       return None
     return self.ball_positions[i]
 
+  def reference_text(self, row):
+    """Sidebar metadata for the observation reference, including fixed home."""
+    if row["reference_q"] is None:
+      return "--", "--", row["reference_status"]
+    index = row.get("motion_index")
+    # HOPE idle/recovery feeds home frame zero, even if motion_index still
+    # identifies the swing that just finished.
+    if (
+      row["reference_status"] == "actor_obs"
+      and row["state"] != "EXECUTE"
+      and row.get("phase") != "SWING"
+    ):
+      index = self.summary.get("home_motion", index)
+    name = self.motion_names.get(index, "unknown (not recorded)")
+    frame, count = row.get("reference_frame"), row.get("reference_frame_count")
+    frame_text = "unknown (not recorded)"
+    if isinstance(frame, int) and frame >= 0:
+      if isinstance(count, int) and count > 0:
+        # Same clamping as HopeActorController.observation().
+        frame = min(frame, count - 1)
+        frame_text = f"{frame + 1} / {count} (index {frame}, zero-based)"
+      else:
+        frame_text = f"{frame + 1} (index {frame}, zero-based)"
+    return name, frame_text, f"{row['reference_status']}; pelvis pose aligned"
+
   def describe(self):
     return dict(
       recording=str(self.directory),
@@ -416,6 +525,7 @@ class Recording:
       simulation_world_translation=self.offset.tolist(),
       ball_clock="local packet arrival_time; causal sample-and-hold",
       replay="measured q/root pose; no policy or physics integration",
+      observation_reference_frames=sum(r["reference_q"] is not None for r in self.rows),
     )
 
 
@@ -518,6 +628,7 @@ class LogScene:
       SceneCfg(
         entities={
           "robot": get_g1_pingpong_robot_cfg(),
+          "reference": get_g1_pingpong_robot_cfg(),
           "table": table_cfg(mujoco_ball_config(ball, recording.offset)),
         },
         terrain=TerrainEntityCfg(terrain_type="plane"),
@@ -528,10 +639,23 @@ class LogScene:
     self.addresses = [
       self.model.jnt_qposadr[self.model.joint("robot/" + n).id] for n in recording.names
     ]
-    free = np.flatnonzero(self.model.jnt_type == mujoco.mjtJoint.mjJNT_FREE)
-    if len(free) != 1:
-      raise ValueError("Expected one robot root free joint")
-    self.root = self.model.jnt_qposadr[free[0]]
+    self.reference_addresses = [
+      self.model.jnt_qposadr[self.model.joint("reference/" + n).id]
+      for n in recording.names
+    ]
+    self.root = self.model.jnt_qposadr[
+      self.model.body_jntadr[self.model.body("robot/pelvis").id]
+    ]
+    self.reference_root = self.model.jnt_qposadr[
+      self.model.body_jntadr[self.model.body("reference/pelvis").id]
+    ]
+    for gid in range(self.model.ngeom):
+      body = self.model.body(self.model.geom_bodyid[gid]).name
+      if body.startswith("reference/"):
+        self.model.geom_contype[gid] = self.model.geom_conaffinity[gid] = 0
+        self.model.geom_matid[gid] = -1
+        self.model.geom_rgba[gid] = [0.65, 0.35, 1.0, 0.3]
+    self.reference_visible = False
     self.camera = mujoco.MjvCamera()
     self.camera.lookat[:] = [1.2, 0, 0.9]
     self.camera.distance, self.camera.azimuth, self.camera.elevation = 4.5, 135, -22
@@ -546,6 +670,15 @@ class LogScene:
     )
     quat = np.asarray(row["root_quat"])
     self.data.qpos[self.root + 3 : self.root + 7] = quat / np.linalg.norm(quat)
+    self.reference_visible = row["reference_q"] is not None
+    root = self.reference_root
+    self.data.qpos[root : root + 7] = self.data.qpos[self.root : self.root + 7]
+    if self.reference_visible:
+      self.data.qpos[self.reference_addresses] = row["reference_q"]
+    else:
+      # Park beneath the floor when absent. Both native and web renderers use
+      # these body transforms; no stale reference remains after a seek/exit.
+      self.data.qpos[root : root + 3] = [0, 0, -1000]
     self.data.time = seconds
     mujoco.mj_forward(self.model, self.data)
     return row
@@ -572,7 +705,7 @@ class LogScene:
 
     def arrow(p, direction, color, scale):
       v = vector(direction, 3)
-      if v is None or scene.ngeom >= scene.maxgeom:
+      if v is None or np.linalg.norm(v) < 1e-8 or scene.ngeom >= scene.maxgeom:
         return
       geom = scene.geoms[scene.ngeom]
       mujoco.mjv_initGeom(
@@ -586,6 +719,59 @@ class LogScene:
       a = np.asarray(p) - self.recording.offset
       mujoco.mjv_connector(geom, mujoco.mjtGeom.mjGEOM_ARROW, 0.008, a, a + v * scale)
       scene.ngeom += 1
+
+    def segment(a, b, radius, color):
+      if scene.ngeom >= scene.maxgeom:
+        return
+      geom = scene.geoms[scene.ngeom]
+      mujoco.mjv_initGeom(
+        geom, mujoco.mjtGeom.mjGEOM_CAPSULE, np.ones(3), np.zeros(3),
+        np.eye(3).ravel(), np.asarray(color, dtype=np.float32),
+      )
+      mujoco.mjv_connector(
+        geom, mujoco.mjtGeom.mjGEOM_CAPSULE, radius,
+        np.asarray(a) - self.recording.offset, np.asarray(b) - self.recording.offset,
+      )
+      scene.ngeom += 1
+
+    def ring(center, radius, color):
+      angles = np.linspace(0, 2 * np.pi, 33)
+      points = center + radius * np.column_stack(
+        (np.cos(angles), np.sin(angles), np.zeros_like(angles))
+      )
+      for a, b in zip(points[:-1], points[1:], strict=True):
+        segment(a, b, 0.004, color)
+
+    base = base_target(row)
+    if base is not None:
+      # goal_base_xy has no target Z. Project both points onto the floor,
+      # slightly lifted to avoid z-fighting; circle size is not a tolerance.
+      z = self.recording.offset[2] + 0.018
+      current, target = np.r_[base["current"], z], np.r_[base["target"], z]
+      yellow, white = [1, 0.9, 0.1, 1], [0.95, 0.95, 1, 1]
+      ring(target, 0.10, yellow)
+      ring(current, 0.06, white)
+      for axis in ([0.06, 0, 0], [0, 0.06, 0]):
+        segment(target - axis, target + axis, 0.005, yellow)
+      arrow(current, target - current, yellow, 1)
+      # Repeat the horizontal measurement at pelvis height so the table does
+      # not hide it. This is a projection plane, not a commanded target height.
+      pelvis = np.asarray(row["root_pos"])
+      raised_target = np.r_[base["target"], pelvis[2]]
+      ring(raised_target, 0.075, yellow)
+      arrow(pelvis, raised_target - pelvis, yellow, 1)
+      # Dashed guides tie both elevated points to their ground projections.
+      for f in np.arange(0, 1, 0.15):
+        segment(
+          current + (pelvis - current) * f,
+          current + (pelvis - current) * (f + 0.075),
+          0.002, [0.95, 0.95, 1, 0.45],
+        )
+        segment(
+          target + (raised_target - target) * f,
+          target + (raised_target - target) * (f + 0.075),
+          0.002, [1, 0.9, 0.1, 0.45],
+        )
 
     sphere(self.recording.ball(seconds), 0.02, [1, 0.65, 0.05, 1])
     # Trail includes only observations already delivered; never bridges missing data.
@@ -695,6 +881,7 @@ def main():
   import mujoco
 
   scene = LogScene(recording)
+  scene.update(timeline.position)
   if args.video:
     import imageio.v2 as imageio
 
@@ -773,14 +960,18 @@ def main():
             errors_text = (
               f"ball-command {error * 100:.1f}cm; racket measurement missing"
             )
+      motion_name, motion_frame, reference_status = recording.reference_text(row)
+      base_text = "\n".join(base_target_text(row))
       viewer.set_texts(
         (
           None,
           None,
-          "RECORDED REAL STATE\nTime / speed\nState / phase / motion\nBall (table world)\nCommand TTS (s)\nDisplayed command XYZ\nHit / crossing XYZ\nRacket XYZ at same event time\nEvent errors (center distances)\nRobot frame age\nLegend\nControls",
+          "RECORDED REAL STATE\nTime / speed\nState / phase / motion\nMotion file (observation)\nMotion frame\nReference robot\nBase XY (table world, m)\nTarget base XY (m)\nBase horizontal distance\nBase error (target - current)\nTarget relative to robot heading\nBall (table world)\nCommand TTS (s)\nDisplayed command XYZ\nHit / crossing XYZ\nRacket XYZ at same event time\nEvent errors (center distances)\nRobot frame age\nLegend\nControls",
           f"{recording.directory.name}\n{t:.2f}/{recording.duration:.2f}s  {timeline.speed.rate:g}x {'PAUSED' if timeline.paused else ''}\n"
-          f"{row['state']} / {row['phase']} / {row['motion_index']}\n{ball_text}\n{command_tts}\n{command_text}\n{crossing_text}\n{racket_text}\n{errors_text}\n{t - recording.times[recording.index(t)]:.3f}s\n"
-          "orange: live ball; green: command; blue: velocity; magenta: hit/crossing; cyan: racket at event\nR restart; SPACE pause/resume; [ ] speed; arrows seek 1s; , . step; N/P phase",
+          f"{row['state']} / {row['phase']} / {row['motion_index']}\n"
+          f"{motion_name}\n{motion_frame}\n{reference_status}\n{base_text}\n"
+          f"{ball_text}\n{command_tts}\n{command_text}\n{crossing_text}\n{racket_text}\n{errors_text}\n{t - recording.times[recording.index(t)]:.3f}s\n"
+          "yellow ring/arrow: base target/gap; white ring: current base; purple transparent robot: observation reference; orange: live ball; green: command; blue: velocity; magenta: hit/crossing; cyan: racket at event\nR restart; SPACE pause/resume; [ ] speed; arrows seek 1s; , . step; N/P phase",
         )
       )
       viewer.sync()

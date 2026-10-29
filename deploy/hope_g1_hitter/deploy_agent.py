@@ -35,6 +35,10 @@ def main():
   parser.add_argument("--episodes", type=int, default=1)
   parser.add_argument("--network-interface")
   parser.add_argument("--enable-motors", action="store_true")
+  parser.add_argument(
+    "--side-selection", choices=["auto", "forehand", "backhand"],
+    help="Override hitter.side_selection in the rally config",
+  )
   parser.add_argument("--render", action="store_true")
   parser.add_argument("--sim-controls", choices=["auto", "manual"], default="auto")
   parser.add_argument(
@@ -69,6 +73,8 @@ def main():
     "rally_mujoco.yaml" if args.env == "mujoco" else "rally.yaml"
   )
   options = yaml.safe_load(args.rally_config.read_text())
+  if args.side_selection is not None:
+    options["hitter"]["side_selection"] = args.side_selection
   options["hitter"]["planner_config"] = str(
     Path(options["hitter"]["planner_config"]).resolve()
   )
@@ -84,6 +90,8 @@ def main():
   report = deployment.report()
   report.update(
     station=options["hitter"]["station"],
+    side_selection=validated.side_selection,
+    common_hit_plane_x_range=validated.geometry.common_x_range().tolist(),
     planner_config=options["hitter"]["planner_config"],
   )
   print(json.dumps(report, indent=2))

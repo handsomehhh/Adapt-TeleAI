@@ -1,0 +1,12 @@
+Metadata-Version: 2.1
+Name: hope-g1-deploy-planner
+Version: 0.1.0
+Summary: Standalone ROS 2 wrapper for the deploy-owned A30808 planner.
+Home-page: UNKNOWN
+Maintainer: deploy_g1_pingpong
+Maintainer-email: lxz@example.com
+License: Apache-2.0
+Platform: UNKNOWN
+
+UNKNOWN
+

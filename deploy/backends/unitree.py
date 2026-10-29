@@ -1148,6 +1148,15 @@ def run_control_loop(
           limits = np.asarray(cfg["robot"]["joint_limits"])
           if np.any(goal < limits[:, 0]) or np.any(goal > limits[:, 1]):
             raise ValueError("Home preparation pose outside joint limits")
+          capture_anchor = getattr(engine, "capture_return_anchor", None)
+          if capture_anchor is not None:
+            # Capture the operator's actual UP position, before AMP preposition
+            # can move the base. The task retains the first anchor on re-entry.
+            capture_anchor(
+              None if root is None or (root_grace is not None and root_grace.frozen)
+              else root[0],
+              now, source="up_button",
+            )
           home_posture = HomePosture(
             cfg["robot"]["joint_names"],
             last_command[0],
@@ -1306,6 +1315,10 @@ def run_control_loop(
       kinematics_seconds = clock.monotonic() - kinematics_started
       observed.gyro = rotation(real_cfg["imu_to_pelvis_quaternion_wxyz"]) @ gyro
       if enter_policy:
+        capture_anchor = getattr(engine, "capture_return_anchor", None)
+        if capture_anchor is not None:
+          # Also covers policy entry without AMP; does not overwrite an UP anchor.
+          capture_anchor(observed.root_pos, now)
         if stable is not None:
           handoff = begin_handoff(now)
           engine.receiving = False

@@ -6,7 +6,9 @@ hope_planner_optimized_2:
     # "ball"). Confirm against your live stream: `ros2 topic echo /poses --once`
     # and count the ball's index. TODO: confirm against your live /poses.
     ball_pose_index: 0
-    x_hit: -0.256           # Backhand hit plane X for hitter (from contract)
+    # Shared plane inside BOTH side boxes: X overlap [-0.222358, -0.215784].
+    # Recompute this overlap if hitter.station.x or contract X boxes change.
+    x_hit: -0.219
     target_land_x: 2.4 # 2.5 # 2.055   # opponent half-center X (fixed by table geometry)
     target_land_y: -0.7 # -0.7625 # opponent half-center Y (fixed by table geometry)
     delta_t_flight: 0.6 # 0.6    # desired return flight time (s); tune for your robot
@@ -75,11 +77,12 @@ hope_planner_optimized_2:
 
     # Publish /racket/command only when the predicted interception point lies
     # in this inclusive HOPE-world workspace. x is the virtual hit plane.
-    publish_intercept_x_min: 0.0
-    publish_intercept_x_max: 0.0
+    publish_intercept_x_min: -0.219
+    publish_intercept_x_max: -0.219
     publish_intercept_y_min: -1.54
     publish_intercept_y_max: -0.0
-    publish_intercept_z_min: -0.2
-    publish_intercept_z_max: 0.2
+    # The controller still applies each side's own contract height limits.
+    publish_intercept_z_min: -0.3
+    publish_intercept_z_max: 0.5
 
     time_to_strike_invalid_x: 1.5 # 1.3
