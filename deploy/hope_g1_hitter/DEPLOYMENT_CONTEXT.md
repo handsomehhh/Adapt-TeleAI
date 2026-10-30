@@ -1,7 +1,7 @@
 # Hitter 9500 Deployment Context for lxz@192.168.152.200
 
 **Date**: 2024-10-28  
-**Model**: `deploy/hope_g1_hitter/artifacts/hitter_20261027_9500/model_9500.pt`  
+**Model**: `deploy/hope_g1_hitter/artifacts/hitter_20261027_9500/model_selected.pt`\
 **Task**: Deploy 104-D continuous hitter policy on Unitree G1, backhand only
 
 ---
@@ -215,7 +215,7 @@ See `controller.py:observation()` for implementation.
 │   ├── deploy_agent.py          # Entry point
 │   ├── controller.py            # HitterController
 │   ├── artifacts/hitter_20261027_9500/
-│   │   ├── model_9500.pt        # 50 MB checkpoint
+│   │   ├── model_selected.pt    # 50 MB checkpoint
 │   │   ├── contract.json        # Training metadata
 │   │   ├── manifest.json        # SHA256 checksums
 │   │   └── motions/*.npz        # Reference motions (metadata only)
