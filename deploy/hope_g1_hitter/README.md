@@ -4,6 +4,16 @@
 `unitree_g1_hitter_pingpong_extended_mjlab`。部署入口仍是
 `python -m deploy.hope_g1_hitter.deploy_agent`。
 
+默认 checkpoint 使用 Git LFS 存储。新电脑克隆后先安装 Git LFS，并在仓库中执行：
+
+```bash
+git lfs install --local
+git lfs pull
+```
+
+`model_10700.pt` 下载后约 143 MiB；不要将 Git 中的 LFS 指针文本当作模型文件。
+模型内容及 `manifest.json` 中的 SHA256 保持不变。
+
 ## 已确认的配置
 
 | 项目 | 当前设置 |
