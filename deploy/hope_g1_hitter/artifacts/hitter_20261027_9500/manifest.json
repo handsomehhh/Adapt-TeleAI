@@ -5,7 +5,7 @@
     "sha256": "394b636abedbb4a992c1c7ae836665794777e462587162e94bc7eef4640c2c63"
   },
   {
-    "path": "model_9500.pt",
+    "path": "model_selected.pt",
     "bytes": 51869581,
     "sha256": "eafcbdb59073b9f00a8b83e129f56b1d48aa5671e91ebbccd312a008f1d58516"
   },
