@@ -110,6 +110,10 @@ class MujocoBackend:
     mujoco.mj_objectVelocity(
       self.model, self.data, mujoco.mjtObj.mjOBJ_BODY, self.root, velocity, 0
     )
+    racket_velocity = np.zeros(6)
+    mujoco.mj_objectVelocity(
+      self.model, self.data, mujoco.mjtObj.mjOBJ_SITE, self.racket, racket_velocity, 0
+    )
     return RobotState(
       self.data.qpos[self.qpos].copy(),
       self.data.qvel[self.qvel].copy(),
@@ -122,6 +126,8 @@ class MujocoBackend:
       self.data.xquat[self.anchor].copy(),
       self.data.site_xpos[self.racket].copy(),
       self.data.site_xmat[self.racket].reshape(3, 3)[:, 1].copy(),
+      racket_velocity[3:].copy(),
+      racket_velocity[:3].copy(),
     )
 
   def forward_kinematics(self):
@@ -246,6 +252,11 @@ class SimBall:
       legal_return=success,
       outcome=outcome,
       physics={
+        "racket_contact_model": self.cfg.get(
+          "racket_contact_model", "constant_restitution"
+        )
+      }
+      | {
         key: self.cfg[key]
         for key in (
           "gravity",
@@ -415,6 +426,15 @@ class SimBall:
     p0, v0 = tensor(self.position), tensor(self.velocity)
     live_dt = min(self.elapsed - max(previous_elapsed, self.launch), dt)
     p1, v1 = ballistic_step(p0, v0, live_dt, self.cfg["gravity"], self.cfg["drag"])
+    g1_contact = None
+    if self.cfg.get("racket_contact_model") == "g1_1v1":
+      if not hasattr(self, "g1_contact"):
+        from deploy.hope_g1_hitter.sim_contact import G1Contact
+
+        self.g1_contact = G1Contact(self.cfg["ball_radius"])
+      g1_contact = self.g1_contact
+      p1, v1 = g1_contact.add_magnus(p1, v1, v0, live_dt)
+      g1_contact.state = state
     if not self.hit:
       p1, v1, contact = swept_racket_collision(
         p0,
@@ -427,6 +447,7 @@ class SimBall:
         ball_radius=self.cfg["ball_radius"],
         racket_radius=self.cfg["racket_radius"],
         restitution=self.cfg["racket_restitution"],
+        contact_response=g1_contact.response if g1_contact is not None else None,
       )
       self.hit |= bool(contact.item())
       if bool(contact.item()):
@@ -438,6 +459,8 @@ class SimBall:
           racket_velocity=((state.racket_pos - self.previous_racket) / dt).tolist(),
           racket_normal=state.racket_normal.tolist(),
         )
+        if g1_contact is not None:
+          self.contact.update(g1_contact.diagnostic)
     net_x = (self.cfg["table_near_x"] + self.cfg["table_far_x"]) / 2
     p1, v1, net_hit, net_clear = swept_net_collision(
       p0,

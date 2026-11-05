@@ -1,5 +1,10 @@
 # Hitter 9500 Deployment Context for lxz@192.168.152.200
 
+> Historical deployment notes for model 9500. The `test/native_planner` branch now
+> defaults to model 10700, the new G1 planner, both forehand/backhand and the new
+> racket XML. Follow [README.md](README.md) for current coordinates, messages,
+> configuration and launch commands; the old instructions below are archival.
+
 **Date**: 2024-10-28  
 **Model**: `deploy/hope_g1_hitter/artifacts/hitter_20261027_9500/model_selected.pt`\
 **Task**: Deploy 104-D continuous hitter policy on Unitree G1, backhand only

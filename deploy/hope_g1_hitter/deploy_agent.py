@@ -10,7 +10,7 @@ import torch
 import yaml
 
 from deploy.hope_g1.deploy_agent import request_shutdown
-from deploy.hope_g1_hitter.configuration import TASK, load_deployment
+from deploy.hope_g1_hitter.configuration import TASK, load_deployment, resolve_physics
 from deploy.hope_g1_hitter.controller import HitterController
 
 CONFIG_DIR = Path(__file__).resolve().parent / "configs"
@@ -23,9 +23,7 @@ def main():
   parser.add_argument("--config", type=Path, default=CONFIG_DIR / "task.yaml")
   parser.add_argument("--artifact-dir", type=Path)
   parser.add_argument("--real-config", type=Path, default=CONFIG_DIR / "real.yaml")
-  parser.add_argument(
-    "--mocap-config", type=Path, default=HOPE_CONFIG_DIR / "mocap.yaml"
-  )
+  parser.add_argument("--mocap-config", type=Path, default=CONFIG_DIR / "mocap.yaml")
   parser.add_argument(
     "--rally-config",
     type=Path,
@@ -74,18 +72,25 @@ def main():
   )
   if yaml.safe_load(args.mocap_config.read_text()).get("world_frame") != "hope_table":
     parser.error("HOPE G1 mocap must publish normalized packets in hope_table world")
-  if args.env == "real" and options.get("physics_profile") != "real_a3":
-    parser.error("Real HOPE requires the real_a3 profile (configs/rally.yaml)")
+  if args.env == "real" and options.get("physics_profile") != "real_g1":
+    parser.error("Real G1 hitter requires the real_g1 profile (configs/rally.yaml)")
+  options = resolve_physics(options, "sim" if args.env == "mujoco" else "real")
   deployment = load_deployment(
-    artifact_dir, ball_config=options["ball"], world_config=options["world"]
+    artifact_dir,
+    ball_config=options["ball"],
+    world_config=options["world"],
+    station=options["hitter"]["station"],
   )
   runtime = yaml.safe_load(args.real_config.read_text())
   validated = HitterController(deployment, runtime, options)
   report = deployment.report()
   report.update(
+    physics=options["physics_profile_report"],
     station=options["hitter"]["station"],
     planner_config=options["hitter"]["planner_config"],
   )
+  if "embedded_planner_source" in options:
+    report["embedded_planner_source"] = options["embedded_planner_source"]
   print(json.dumps(report, indent=2))
   print(validated.describe())
   if args.env == "check":

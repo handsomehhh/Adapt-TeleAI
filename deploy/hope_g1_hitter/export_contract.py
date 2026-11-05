@@ -13,7 +13,7 @@ import hashlib
 import json
 from pathlib import Path
 
-import numpy as np
+import torch
 
 
 def sha256(path):
@@ -27,7 +27,15 @@ def main():
   from hope_mjlab import g1_robot
 
   arrays = g1_robot.nominal_arrays()
-  command = g1_robot.RECIPE["commands"]["racket_target"]
+  checkpoints = list(args.artifact_dir.glob("model_*.pt"))
+  if len(checkpoints) != 1:
+    raise ValueError("Expected exactly one model_*.pt in artifact_dir")
+  checkpoint = checkpoints[0]
+  raw = torch.load(checkpoint, map_location="cpu", weights_only=False)
+  from hope_mjlab.training_play import TrainingPlayProfile
+
+  profile = TrainingPlayProfile(raw)
+  command = profile.command
   rows = g1_robot.reference_metadata()
   motions = [Path(p) for p in g1_robot.motion_files()]
   for source in motions:
@@ -37,10 +45,13 @@ def main():
   contract = dict(
     actor_obs_contract="g1_hitter_pure_v1",
     action_contract="default_pose_plus_scaled_action_soft_clamp_v1",
+    checkpoint_sha256=sha256(checkpoint),
+    iteration=int(raw["iter"]),
+    task_identity=raw["infos"]["hope_recipe"].get("task_identity", {}),
     control_dt=0.02,
     joint_names=list(g1_robot.POLICY_JOINT_NAMES),
     default_q=arrays["default_q"].tolist(),
-    action_scale=arrays["action_scale"].tolist(),
+    action_scale=profile.action_scale.tolist(),
     kp=arrays["kp"].tolist(),
     kd=arrays["kd"].tolist(),
     effort=arrays["effort"].tolist(),
@@ -50,8 +61,15 @@ def main():
     soft_limit_factor=0.9,
     ready_height=g1_robot.ready_height(),
     # Training world: robot station at origin facing +x, floor at z=0.
-    racket_pos_range_per_clip=np.asarray(command["racket_pos_range_per_clip"]).tolist(),
-    racket_vel_range_per_clip=np.asarray(command["racket_vel_range_per_clip"]).tolist(),
+    racket_pos_range_per_clip=profile.core_positions.tolist(),
+    racket_vel_range_per_clip=profile.final_velocities.tolist(),
+    position_curriculum_progress=profile.position_progress,
+    windup=profile.windup.tolist(),
+    follow=profile.follow.tolist(),
+    racket_mount_offset=list(command["mount_offset"]),
+    racket_mount_quat=list(command["mount_quat"]),
+    robot_xml="robot/g1.xml",
+    robot_xml_sha256=sha256(args.artifact_dir / "robot/g1.xml"),
     base_target_y_range=list(command["base_target_y_range"]),
     clips=[
       dict(
@@ -59,11 +77,13 @@ def main():
         file=path.name,
         sha256=sha256(path),
         frames=row["frames"],
-        strike_frame=row["strike"],
+        strike_frame=int(round(profile.windup[i] / 0.02)),
         strike_position=row["position"].tolist(),
         strike_velocity=row["velocity"].tolist(),
       )
-      for side, path, row in zip(("forehand", "backhand"), motions, rows, strict=True)
+      for i, (side, path, row) in enumerate(
+        zip(("forehand", "backhand"), motions, rows, strict=True)
+      )
     ],
   )
   (args.artifact_dir / "contract.json").write_text(

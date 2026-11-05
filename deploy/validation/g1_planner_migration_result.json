@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-04",
+  "branch": "test/native_planner",
+  "policy_sha256": "003cf3f66b63af4d7b1ff20d48ad6315e0b5d66d5e3678aa8461c25c91a0492b",
+  "contract_sha256": "09ccfb51e8e684ae83b111a87a42e8dc23e0d7174af9ad66bc40df3553d60b57",
+  "pytest": {
+    "passed": 28,
+    "command": ".venv/bin/python -m pytest deploy/validation/hitter_planner_checks.py deploy/validation/g1_upstream_parity_checks.py -q -s"
+  },
+  "planner_parity": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "cases_per_seed_per_physics": 40,
+    "total_cases": 640,
+    "original_physics": {
+      "forehand": 52,
+      "backhand": 74,
+      "rejected": 194
+    },
+    "production_physics": {
+      "forehand": 66,
+      "backhand": 80,
+      "rejected": 174
+    },
+    "comparison": "Original MultiPlanner methods, same physical parameters on both sides, tabletop/floor Z conversion"
+  },
+  "observation_actor_action_random_cases": 100,
+  "racket_fk_random_poses": 20,
+  "artifact_hashes_verified": 59,
+  "smoke_command": ".venv/bin/python -m deploy.hope_g1_hitter.deploy_agent --env mujoco --sim-controls auto --duration 24 --episodes 2 --seed 42",
+  "smoke_summary": {
+    "passed": true,
+    "flow_passed": true,
+    "error": null,
+    "simulated_balls": 3,
+    "simulated_hits": 2,
+    "simulated_legal_returns": 0,
+    "completed_swings": 2,
+    "recovered_swings": 2,
+    "physics_validation": {
+      "max_tilt_degrees": 10.844108151796307,
+      "min_root_height_m": 0.7372916873014477,
+      "first_loss_of_standing_time": null
+    }
+  },
+  "limitations": [
+    "ROS 2 unavailable; colcon and live ROS transport untested.",
+    "No hardware output or live robot testing.",
+    "Shared deployment simulation still uses its simplified paddle collision; smoke return rates do not establish 1v1 or hardware performance.",
+    "Extra ground-start test fell during static PD before hitter entry; default suspended start passed."
+  ]
+}

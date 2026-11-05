@@ -1,0 +1,208 @@
+{
+  "upstream_commit": "a931da5a70320ba3f07d38debcf71458a005530d",
+  "source_files": {
+    "tracking": {
+      "path": "latent_mj/envs/g1_tracking/train/g1_env_tracking_tennis.py",
+      "git_blob_sha1": "468966eb22c0553ebf67bdd5666911efbba40bc7",
+      "sha256": "22a66e2b461bebe6abbe0d5d00172b3c8ae9c195fc48ae0652d8b566671583fe",
+      "url": "https://github.com/GalaxyGeneralRobotics/LATENT/blob/a931da5a70320ba3f07d38debcf71458a005530d/latent_mj/envs/g1_tracking/train/g1_env_tracking_tennis.py"
+    },
+    "constants": {
+      "path": "latent_mj/envs/g1_tracking/g1_tracking_constants_tennis.py",
+      "git_blob_sha1": "293373066731ade73e1802a43a4963a7e2582df6",
+      "sha256": "6eb7f96cd1e7d74832784f3f8855654a9ac20103bb5253f3a554e98bba0231d4",
+      "url": "https://github.com/GalaxyGeneralRobotics/LATENT/blob/a931da5a70320ba3f07d38debcf71458a005530d/latent_mj/envs/g1_tracking/g1_tracking_constants_tennis.py"
+    }
+  },
+  "scales": {
+    "rigid_body_pos_tracking_upper": 1.0,
+    "rigid_body_pos_tracking_lower": 0.5,
+    "rigid_body_rot_tracking": 0.5,
+    "rigid_body_linvel_tracking": 0.5,
+    "rigid_body_angvel_tracking": 0.5,
+    "joint_pos_tracking": 0.75,
+    "joint_vel_tracking": 0.5,
+    "roll_pitch_tracking": 1.0,
+    "root_linvel_tracking": 1.0,
+    "root_angvel_tracking": 1.0,
+    "root_height_tracking": 1.0,
+    "feet_height_tracking": 1.0,
+    "feet_pos_tracking": 2.1,
+    "penalty_action_rate": -0.5,
+    "penalty_torque": -2e-05,
+    "smoothness_joint": -1e-06,
+    "dof_pos_limit": -10,
+    "dof_vel_limit": -5,
+    "collision": -10,
+    "termination": -200,
+    "feet_rot_tracking": 1.0
+  },
+  "auxiliary": {
+    "upper_body_sigma": 1.0,
+    "lower_body_sigma": 1.0,
+    "feet_pos_sigma": 1.0,
+    "body_rot_sigma": 1.0,
+    "feet_rot_sigma": 1.0,
+    "body_linvel_sigma": 5.0,
+    "feet_linvel_sigma": 1.0,
+    "body_angvel_sigma": 50.0,
+    "feet_angvel_sigma": 1.0,
+    "joint_pos_sigma": 10.0,
+    "joint_vel_sigma": 1.0,
+    "root_pos_sigma": 0.5,
+    "root_rot_sigma": 1.0,
+    "root_linvel_sigma": 1.0,
+    "root_angvel_sigma": 10.0,
+    "roll_pitch_sigma": 0.2,
+    "root_height_sigma": 0.1,
+    "feet_height_sigma": 0.1,
+    "global_feet_vel_threshold": 0.5,
+    "global_feet_height_threshold": 0.04,
+    "feet_linvel_threshold": 0.1,
+    "feet_angvel_threshold": 0.1,
+    "feet_slipping_sigma": 2.0
+  },
+  "upstream_collision_pairs": [
+    [
+      "left_hand_collision",
+      "left_thigh"
+    ],
+    [
+      "right_hand_collision",
+      "right_thigh"
+    ],
+    [
+      "left_hand_collision",
+      "right_hand_collision"
+    ],
+    [
+      "left_hand_collision",
+      "right_wrist_pitch_collision"
+    ],
+    [
+      "right_hand_collision",
+      "left_wrist_pitch_collision"
+    ]
+  ],
+  "sum_scale_dt": 0.02,
+  "total_reward_upper_clip": 10000.0,
+  "body_and_joint_constants": {
+    "FEET_ALL_SITES": [
+      "left_foot",
+      "right_foot",
+      "left_foot_top",
+      "right_foot_top"
+    ],
+    "DOF_VEL_LIMITS": [
+      32.0,
+      32.0,
+      32.0,
+      20.0,
+      37.0,
+      37.0,
+      32.0,
+      32.0,
+      32.0,
+      20.0,
+      37.0,
+      37.0,
+      32.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0,
+      37.0
+    ],
+    "ACTION_JOINT_NAMES": [
+      "left_hip_pitch_joint",
+      "left_hip_roll_joint",
+      "left_hip_yaw_joint",
+      "left_knee_joint",
+      "left_ankle_pitch_joint",
+      "left_ankle_roll_joint",
+      "right_hip_pitch_joint",
+      "right_hip_roll_joint",
+      "right_hip_yaw_joint",
+      "right_knee_joint",
+      "right_ankle_pitch_joint",
+      "right_ankle_roll_joint",
+      "waist_yaw_joint",
+      "waist_roll_joint",
+      "waist_pitch_joint",
+      "left_shoulder_pitch_joint",
+      "left_shoulder_roll_joint",
+      "left_shoulder_yaw_joint",
+      "left_elbow_joint",
+      "left_wrist_roll_joint",
+      "left_wrist_pitch_joint",
+      "left_wrist_yaw_joint",
+      "right_shoulder_pitch_joint",
+      "right_shoulder_roll_joint",
+      "right_shoulder_yaw_joint",
+      "right_elbow_joint",
+      "right_wrist_roll_joint",
+      "right_wrist_pitch_joint",
+      "right_wrist_yaw_joint"
+    ],
+    "UPPER_BODY_LINKs": [
+      "left_shoulder_pitch_link",
+      "left_shoulder_roll_link",
+      "left_shoulder_yaw_link",
+      "left_elbow_link",
+      "left_wrist_roll_link",
+      "left_wrist_pitch_link",
+      "left_wrist_yaw_link",
+      "right_shoulder_pitch_link",
+      "right_shoulder_roll_link",
+      "right_shoulder_yaw_link",
+      "right_elbow_link",
+      "right_wrist_roll_link",
+      "right_wrist_pitch_link",
+      "right_wrist_yaw_link"
+    ],
+    "LOWER_BODY_LINKs": [
+      "pelvis",
+      "left_hip_pitch_link",
+      "left_hip_roll_link",
+      "left_hip_yaw_link",
+      "left_knee_link",
+      "left_ankle_pitch_link",
+      "left_ankle_roll_link",
+      "right_hip_pitch_link",
+      "right_hip_roll_link",
+      "right_hip_yaw_link",
+      "right_knee_link",
+      "right_ankle_pitch_link",
+      "right_ankle_roll_link",
+      "waist_yaw_link",
+      "waist_roll_link",
+      "torso_link"
+    ],
+    "FEET_LINKs": [
+      "left_ankle_roll_link",
+      "right_ankle_roll_link"
+    ],
+    "EXCLUDED_ACTION_JOINTs": [
+      "right_wrist_roll_joint",
+      "right_wrist_pitch_joint",
+      "right_wrist_yaw_joint"
+    ],
+    "EXCLUDED_TRACKING_LINKs": [
+      "right_wrist_roll_link",
+      "right_wrist_pitch_link",
+      "right_wrist_yaw_link"
+    ]
+  },
+  "status": "Verified upstream reward specification; environment wiring and asset mapping in progress."
+}

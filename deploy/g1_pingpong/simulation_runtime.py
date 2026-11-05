@@ -71,6 +71,12 @@ class SimulatedMocap(UDPMocap):
       sample.received = now - max(0, time.monotonic() - sample.received)
     return sample
 
+  def publish_planner_state(self, packet):
+    # Offline simulation uses the same ROS-free planner inside its controller.
+    # Live mocap replay forwards feedback through its real local UDP bridge.
+    if self.external is not None:
+      self.external.publish_planner_state(packet)
+
   def publish(self, kind, position, quaternion=None):
     packet = dict(
       kind=kind,
@@ -201,6 +207,10 @@ class MujocoRuntime:
     self.force_ball = False
     self.automatic_up_issued = False
     self.support_active = startup == "suspended"
+    # Preserve the configured station when lowering the robot. Some tasks
+    # spawn away from the court-centred simulation origin.
+    i = self.robot.free_qpos
+    self.support_xy = self.robot.data.qpos[i : i + 2].copy()
     self.support_z = 0.90
     self.landing_started = None
     self.wall_start = time.monotonic()
@@ -588,7 +598,7 @@ class MujocoRuntime:
         )
         print("[MuJoCo] support released", flush=True)
         return
-    r.data.qpos[i : i + 3] = [0, 0, self.support_z]
+    r.data.qpos[i : i + 3] = [*self.support_xy, self.support_z]
     r.data.qpos[i + 3 : i + 7] = [1, 0, 0, 0]
     r.data.qvel[v : v + 6] = 0
     mujoco.mj_forward(r.model, r.data)
@@ -795,6 +805,9 @@ class MujocoRuntime:
           self.balls.append(incoming)
           previous_estimate = self.mocap.ball.get(now)
           self.mocap.ball = BallEstimator(**self.mocap.cfg["estimator"])
+          reset_ball_track = getattr(self.engine, "reset_ball_observations", None)
+          if reset_ball_track is not None:
+            reset_ball_track()
           # A new incoming ball needs three position samples for velocity.
           # Keep the last valid measured estimate with its ORIGINAL timestamp
           # while that fit warms up; do not invent velocity or refresh its age.
@@ -830,15 +843,24 @@ class MujocoRuntime:
         if hasattr(self.feeder, "draw_grid"):
           self.feeder.draw_grid(self.viewer.user_scn)
       command = getattr(self.engine, "raw_command", None)
+      if command is None:
+        command = getattr(self.engine, "shot", None)
       command_text = (
         str(np.round(command.position, 3).tolist())
         if command is not None and row.get("state") == "EXECUTE" else "pending"
       )
+      observer = getattr(self.engine, "embedded_observer", None)
+      planner_text = "--"
+      if observer is not None:
+        reasons = list(dict.fromkeys(
+          attempt["reason"] for attempt in observer.planner.diagnostic.get("attempts", [])
+        ))
+        planner_text = observer.status + (": " + ", ".join(reasons) if reasons else "")
       self.viewer.set_texts((None, None,
-        "MuJoCo simulation\nTime / playback\nState / phase\nMotion\nLocked command XYZ\nBalls served",
+        "MuJoCo simulation\nTime / playback\nState / phase\nMotion\nLocked command XYZ\nBalls served\nContinuous feed (T)\nPlanner",
         f"Offline simulation\n{now:.3f}s / {self.playback.rate:g}x\n"
         f"{row.get('state')} / {row.get('phase')}\n{row.get('motion_index')}\n"
-        f"{command_text}\n{self.served}"))
+        f"{command_text}\n{self.served}\n{'ON' if self.continuous_feed else 'OFF'}\n{planner_text}"))
       self.viewer.sync()
 
   def close(self):

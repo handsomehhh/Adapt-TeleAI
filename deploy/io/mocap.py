@@ -139,6 +139,10 @@ def subscribe_positions(node, cfg, consume):
 
 def subscribe_planner_commands(node, cfg, consume):
   """Forward ROS planner commands over the same local UDP handoff as mocap."""
+  if cfg.get("planner_command_schema") == "g1_1v1_v1":
+    from deploy.io.g1_planner import subscribe
+
+    return subscribe(node, cfg, consume)
   from hope_msgs.msg import RacketCommand
   from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
 
@@ -170,15 +174,25 @@ def subscribe_planner_commands(node, cfg, consume):
     tts = float(msg.time_to_strike)
     source_ball_time = float(msg.source_ball_time)
     source_ball_position = np.array(
-      [msg.source_ball_position.x, msg.source_ball_position.y, msg.source_ball_position.z],
+      [
+        msg.source_ball_position.x,
+        msg.source_ball_position.y,
+        msg.source_ball_position.z,
+      ],
       dtype=float,
     )
     valid = bool(msg.valid)
-    if (
-      not np.isfinite(
-        np.r_[position, velocity, normal, outgoing_velocity, source_ball_position, tts, source_ball_time]
-      ).all()
-    ):
+    if not np.isfinite(
+      np.r_[
+        position,
+        velocity,
+        normal,
+        outgoing_velocity,
+        source_ball_position,
+        tts,
+        source_ball_time,
+      ]
+    ).all():
       valid = False
       position = velocity = outgoing_velocity = np.zeros(3)
       normal = np.array([0.0, 0.0, 1.0])
@@ -381,6 +395,11 @@ def bridge(config):
   node = rclpy.create_node("g1_pingpong_mocap_udp_bridge")
   sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
   destination = (cfg["udp"]["host"], cfg["udp"]["port"])
+  feedback_socket = None
+  if cfg.get("planner_feedback"):
+    from deploy.io.g1_planner import feedback_relay
+
+    feedback_socket = feedback_relay(node, cfg)
 
   def send(packet):
     sock.sendto(json.dumps(packet, allow_nan=False).encode(), destination)
@@ -398,6 +417,8 @@ def bridge(config):
   except (KeyboardInterrupt, ExternalShutdownException):
     pass
   finally:
+    if feedback_socket is not None:
+      feedback_socket.close()
     sock.close()
     node.destroy_node()
     # Humble's signal handler may have already shut down the ROS context.

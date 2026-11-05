@@ -1,0 +1,114 @@
+{
+  "model_sha256": "dae5e40f2c5c736726786ffce2850a57b7d266edd4aece0a665fcdbefdb07b12",
+  "reference_clips": [
+    {
+      "path": "hope_training/motions/g1_from_a3/hope_backhand_g1.npz",
+      "sha256": "de1889a88cc43154b83df0bf38af3d701d2e4db526a27dc6aeef783448d1b9e7",
+      "frames": 109,
+      "joint_trajectories_unchanged": true,
+      "constant_root_shift_m": [
+        0.0,
+        0.0,
+        0.0018619530928765116
+      ],
+      "maximum_racket_fk_error_m": 0.0
+    },
+    {
+      "path": "hope_training/motions/g1_from_a3/hope_forehand_g1.npz",
+      "sha256": "95c9a7374e75b2bbc228ea2c03d1a20f41cf1b31d484d4c3b3f990782de747ac",
+      "frames": 107,
+      "joint_trajectories_unchanged": true,
+      "constant_root_shift_m": [
+        0.0,
+        0.0,
+        0.001729540240745231
+      ],
+      "maximum_racket_fk_error_m": 0.0
+    },
+    {
+      "path": "hope_training/motions/g1_from_a3_tele_gmr_height/hope_backhand_g1.npz",
+      "sha256": "623e60f9b615e9408d76b3552d41672546fce9101dbee24e2abbfd6cf7bde8b6",
+      "frames": 109,
+      "joint_trajectories_unchanged": true,
+      "constant_root_shift_m": [
+        0.0,
+        0.0,
+        0.002500745385343728
+      ],
+      "maximum_racket_fk_error_m": 0.0
+    },
+    {
+      "path": "hope_training/motions/g1_from_a3_tele_gmr_height/hope_forehand_g1.npz",
+      "sha256": "bececb8e7df016a943604dd6632006558a92bd4a96e581c223608081c769f266",
+      "frames": 107,
+      "joint_trajectories_unchanged": true,
+      "constant_root_shift_m": [
+        0.0,
+        0.0,
+        0.0023754428469912048
+      ],
+      "maximum_racket_fk_error_m": 0.0
+    }
+  ],
+  "active_reference_frames": 216,
+  "all_adapted_reference_frames": 432,
+  "tuple_banks": {
+    "g1_physical_tuple_bank": {
+      "sha256": "6b22e9bce48092443982e458958e907207ec92fbdd62f6308f38f5d4afda1673",
+      "rows_per_side": [
+        50000,
+        50000
+      ],
+      "reference_sha256": [
+        "bececb8e7df016a943604dd6632006558a92bd4a96e581c223608081c769f266",
+        "623e60f9b615e9408d76b3552d41672546fce9101dbee24e2abbfd6cf7bde8b6"
+      ]
+    },
+    "g1_extended_tuple_bank": {
+      "sha256": "3f6960769ceb13874c36fd8714dbf6ca8fbb555116a8355e8613d87c4c027cf8",
+      "rows_per_side": [
+        50000,
+        50000
+      ],
+      "reference_sha256": [
+        "bececb8e7df016a943604dd6632006558a92bd4a96e581c223608081c769f266",
+        "623e60f9b615e9408d76b3552d41672546fce9101dbee24e2abbfd6cf7bde8b6"
+      ]
+    }
+  },
+  "regression": {
+    "command": ".venv/bin/python -m pytest tests -q --ignore=tests/test_latent_dataset.py",
+    "passed": 84,
+    "failed": 0,
+    "gpu": "NVIDIA GeForce RTX 4080 SUPER",
+    "covered_tasks": [
+      "HOPE-Mjlab-HitterPingPong-UnitreeG1",
+      "HOPE-Mjlab-HitterPingPong-UnitreeG1-Extended",
+      "HOPE-Mjlab-HitterPingPong-AgibotA3"
+    ],
+    "checks": [
+      "FK and finite-difference velocity validation",
+      "ground clearance and perturbed Teacher reset FK",
+      "PPO update",
+      "new-model checkpoint save/resume",
+      "actor transfer to Extended",
+      "ONNX export",
+      "multiplayer and training-matched play"
+    ]
+  },
+  "teacher": {
+    "full_dataset_validated": false,
+    "expected_clips": 43,
+    "available_raw_clips": 22,
+    "missing_clips": 21,
+    "reason": "Original 43-clip processed dataset is absent and repository ZIP contains only 22 clips. Source split remains unchanged; no partial set substituted.",
+    "geometry_reset_tests_passed": true,
+    "available_raw_conversion_check": {
+      "clips": 22,
+      "frames": 2068,
+      "max_finite_difference_racket_velocity_error_m_s": 4.4727049841597477e-10,
+      "writes_to_pinned_dataset": false
+    }
+  },
+  "old_checkpoint_policy": "Use actor initialization for a new run; old target banks are rejected for exact resume."
+}

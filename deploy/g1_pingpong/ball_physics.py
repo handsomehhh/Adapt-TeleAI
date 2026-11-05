@@ -37,6 +37,7 @@ def swept_racket_collision(
   ball_radius: float = 0.02,
   racket_radius: float = 0.08,
   restitution: float = 0.85,
+  contact_response=None,
 ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
   """Sweep a sphere against either face of a translating circular paddle.
 
@@ -63,6 +64,10 @@ def swept_racket_collision(
     & (radial.square().sum(-1) <= racket_radius**2)
   )
   reflected = velocity - (1.0 + restitution) * relative_normal_speed[:, None] * normal
+  if contact_response is not None and bool(contact.any()):
+    reflected = contact_response(
+      velocity, paddle_velocity, normal, intersection, center_at_hit
+    )
   continued = intersection + reflected * ((1.0 - fraction) * dt)[:, None]
   return (
     torch.where(contact[:, None], continued, position1),

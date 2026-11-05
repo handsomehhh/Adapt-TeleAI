@@ -1328,6 +1328,10 @@ def run_control_loop(
           planner_command_updater(planner_packet, planner_received)
       policy_started = clock.monotonic()
       target = engine.step(observed, estimate, now)
+      planner_feedback = getattr(engine, "planner_state", None)
+      publish_feedback = getattr(mocap, "publish_planner_state", None)
+      if planner_feedback is not None and publish_feedback is not None:
+        publish_feedback(planner_feedback())
       policy_seconds = clock.monotonic() - policy_started
       raw_policy_target = target.copy() if target is not None else None
       kp, kd = np.asarray(cfg["robot"]["kp"]), np.asarray(cfg["robot"]["kd"])

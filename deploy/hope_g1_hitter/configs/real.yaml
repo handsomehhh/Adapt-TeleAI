@@ -1,4 +1,4 @@
-# Copy of hope_g1/configs/real.yaml; only stable_policy.transition_seconds differs.
+# G1 hitter runtime, with the confirmed full mocap root orientation.
 # Confirm these against the actual 29-DoF, unlocked-waist G1.
 network_interface: eno1
 # Real-only public HOPE stop behavior; MuJoCo retains its existing behavior.
@@ -36,8 +36,8 @@ standing:
   max_height_error: 0.1
 max_tilt_degrees: 45.0
 imu_to_pelvis_quaternion_wxyz: [1.0, 0.0, 0.0, 0.0]
-# HOPE: mocap position/yaw, IMU inclination, torso orientation from FK.
-root_orientation_source: imu_mocap_yaw
+# Pelvis position and full orientation from mocap; angular velocity from IMU.
+root_orientation_source: mocap
 max_control_overrun: 0.05
 guard:
   oscillation:

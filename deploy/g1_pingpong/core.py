@@ -67,6 +67,8 @@ class RobotState:
   anchor_quat: np.ndarray
   racket_pos: np.ndarray
   racket_normal: np.ndarray
+  racket_velocity: np.ndarray | None = None
+  racket_angular_velocity: np.ndarray | None = None
 
 
 @dataclass

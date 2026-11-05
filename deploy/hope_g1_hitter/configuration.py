@@ -1,5 +1,6 @@
 """Load the mjlab G1 hitter (104 -> 29) checkpoint and its exported contract."""
 
+import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -62,14 +63,17 @@ class HitterDeployment(Deployment):
 
 def validate_training(env, agent):
   """Reject any checkpoint whose saved actor/action contract is not 104D."""
-  if agent.get("experiment_name") != EXPERIMENT:
+  if agent.get("experiment_name") not in (
+    EXPERIMENT,
+    "unitree_g1_hitter_pingpong_extended_mjlab",
+  ):
     raise ValueError(f"Expected the {EXPERIMENT} training task")
   actor = agent["actor"]
   if (
     actor["class_name"] != "MLPModel"
     or actor["activation"] != "elu"
     or actor["obs_normalization"]
-    or actor.get("rnn_type") is not None
+    # MLPModel ignores the dataclass's default rnn_type; class_name is decisive.
     or agent.get("clip_actions") is not None
   ):
     raise ValueError("Expected an unnormalized feed-forward ELU MLP actor")
@@ -97,7 +101,29 @@ def validate_training(env, agent):
   return control_dt
 
 
-def load_deployment(artifact_dir, *, ball_config, world_config):
+def resolve_physics(options, mode):
+  """Backend selection controls both simulated plant and planner physics."""
+  import copy
+
+  options = copy.deepcopy(options)
+  if mode == "sim" and options.get("planner_transport") == "embedded":
+    from deploy.hope_g1_hitter.planner_source import use_sibling_planner
+
+    options["embedded_planner_source"] = str(use_sibling_planner())
+
+  from hope_planner_g1.profiles import load_profile
+
+  params = yaml.safe_load(Path(options["hitter"]["planner_config"]).read_text())[
+    "hope_planner_g1"
+  ]["ros__parameters"]
+  profile = load_profile(mode, params.get("real_config") or None)
+  options["runtime_mode"] = mode
+  options["physics_profile_report"] = profile.report()
+  options["ball"] = profile.apply_ball_config(options["ball"])
+  return options
+
+
+def load_deployment(artifact_dir, *, ball_config, world_config, station=(-0.65, -0.45)):
   from deploy.hope_g1.scene import table_cfg
   from deploy.hope_g1.world import (
     mujoco_ball_config,
@@ -118,6 +144,11 @@ def load_deployment(artifact_dir, *, ball_config, world_config):
   env, agent = read_yaml(run / "params/env.yaml"), read_yaml(run / "params/agent.yaml")
   control_dt = validate_training(env, agent)
   contract = json.loads((run / "contract.json").read_text())
+  if (
+    contract.get("checkpoint_sha256")
+    != hashlib.sha256(checkpoint.read_bytes()).hexdigest()
+  ):
+    raise ValueError("Deployment contract belongs to a different checkpoint")
   if contract["actor_obs_contract"] != "g1_hitter_pure_v1" or not np.isclose(
     contract["control_dt"], control_dt
   ):
@@ -139,8 +170,32 @@ def load_deployment(artifact_dir, *, ball_config, world_config):
   translation = simulation_translation(world_config)
   simulation_ball = mujoco_ball_config(ball_config, translation)
   robot = get_g1_pingpong_robot_cfg()
+  # Use this checkpoint's robot for FK, inertia and collision geometry. Avoid
+  # replacing shared G1 assets used by the AMP and older deployment tasks.
+  import mujoco
+
+  xml_path = run / contract["robot_xml"]
+  if hashlib.sha256(xml_path.read_bytes()).hexdigest() != contract["robot_xml_sha256"]:
+    raise ValueError("Deployment XML differs from the exported training asset")
+
+  def training_spec():
+    spec = mujoco.MjSpec.from_file(str(xml_path))
+    defaults = mujoco.MjSpec().option
+    spec.option.timestep = defaults.timestep
+    spec.option.integrator = defaults.integrator
+    spec.body("pelvis").pos[:] = (0, 0, 0.82)
+    for key in list(spec.keys):
+      spec.delete(key)
+    for geom in spec.geoms:
+      if geom.group == 3:
+        geom.contype, geom.conaffinity = 1, 4
+    return spec
+
+  robot.spec_fn = training_spec
+  robot.collisions = ()
   robot.init_state.joint_pos = dict(zip(names, default.tolist(), strict=True))
-  robot.init_state.pos = (0.0, 0.0, float(contract["ready_height"]))
+  spawn_xy = np.asarray(station, dtype=float) - translation[:2]
+  robot.init_state.pos = (*spawn_xy, float(contract["ready_height"]))
   model = Scene(
     SceneCfg(
       entities={"robot": robot, "table": table_cfg(simulation_ball)},
@@ -184,6 +239,9 @@ def load_deployment(artifact_dir, *, ball_config, world_config):
       action_scale=contract["action_scale"],
     ),
     hitter=contract,
+    hitter_contract_sha256=hashlib.sha256(
+      (run / "contract.json").read_bytes()
+    ).hexdigest(),
   )
   return HitterDeployment(
     settings=settings,

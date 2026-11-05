@@ -4,6 +4,7 @@ World: hope_table (tabletop Z=0). Training world has the same axes; its origin
 is the robot station on the floor, so every target crosses only a translation.
 """
 
+import uuid
 from dataclasses import dataclass
 from types import SimpleNamespace
 
@@ -12,7 +13,7 @@ import numpy as np
 from deploy.g1_pingpong.core import rotation
 from deploy.g1_pingpong.lifecycle import Lifecycle
 from deploy.hope_g1.controller import HopeStanding
-from deploy.racket_command import decode_ros_planner_command
+from deploy.racket_command import decode_g1_planner_command
 
 SIDES = ("forehand", "backhand")
 
@@ -102,9 +103,8 @@ class HitterGeometry:
       raise ValueError("Expected forehand then backhand hitter clips")
     self.windup = np.array([c["strike_frame"] * dt for c in clips])
     self.follow = np.array([(c["frames"] - 1 - c["strike_frame"]) * dt for c in clips])
-    low, high = contract["base_target_y_range"]
-    self.station_y = (self.home_station[1] + low, self.home_station[1] + high)
-    self.max_station_step = float(high)
+    self.station_y = (-1.25, -0.35)
+    self.max_station_step = 0.35
 
   def plane_x(self, side):
     return float(self.home_station[0] + self.boxes[side, 0].mean())
@@ -114,38 +114,58 @@ class HitterGeometry:
     return np.array([station[0] + c[0], station[1] + c[1], self.floor_z + c[2]])
 
   def evaluate(self, side, command, station, now):
-    """Mirror play_1v0's RandomServer.plan gates for one planner command."""
+    """Validate and execute the planner's complete solve, without modifying it."""
     remaining = command.deadline - now
     target = np.asarray(command.position, dtype=float)
+    requested_station = np.asarray(command.diagnostic["station"], dtype=float)
     box = self.boxes[side]
     reason = None
     if not command.diagnostic.get("valid", True):
       reason = "planner_invalid_command"
-    elif not 0.04 < remaining < 2.5:
+    # The planner already checks 0.04 < TTS < 2.5 at the observation time.
+    # Transport delay must not add a second 40 ms cutoff at the actor.
+    elif not 0 < remaining < 2.5:
       reason = "time_window"
     elif not box[2, 0] <= target[2] - self.floor_z <= box[2, 1]:
       reason = "height_outside_training_box"
-    new_y = float(np.clip(station[1], target[1] - box[1, 1], target[1] - box[1, 0]))
-    if reason is None and (
-      abs(new_y - station[1]) > self.max_station_step
-      or not self.station_y[0] <= new_y <= self.station_y[1]
+    if (
+      reason is None
+      and not self.station_y[0] <= requested_station[1] <= self.station_y[1]
     ):
       reason = "station_outside_workspace"
     bounds = self.velocity_boxes[side]
-    velocity = np.clip(command.velocity, bounds[:, 0], bounds[:, 1])
+    velocity = np.asarray(command.velocity)
+    if reason is None and (
+      np.any(velocity < bounds[:, 0] - 1e-7) or np.any(velocity > bounds[:, 1] + 1e-7)
+    ):
+      reason = "velocity_outside_training_box"
+    relative_xy = target[:2] - requested_station
+    if reason is None and (
+      np.any(relative_xy < box[:2, 0] - 1e-7) or np.any(relative_xy > box[:2, 1] + 1e-7)
+    ):
+      reason = "position_outside_training_box"
+    normal = velocity / max(np.linalg.norm(velocity), 1e-9)
+    if reason is None and not np.allclose(command.normal, normal, atol=1e-6):
+      reason = "normal_velocity_mismatch"
     diagnostic = dict(
       command.diagnostic,
       side=SIDES[side],
       remaining=remaining,
       plane_x=self.plane_x(side),
-      station_y=new_y,
-      velocity_clip_mps=float(np.linalg.norm(velocity - command.velocity)),
+      station_y=float(requested_station[1]),
+      velocity_clip_mps=0.0,
       reason=reason or "accepted",
     )
     if reason is not None:
       return None, diagnostic
-    station = np.array([station[0], new_y])
-    shot = Shot(side, target.copy(), velocity, command.deadline, station, diagnostic)
+    shot = Shot(
+      side,
+      target.copy(),
+      velocity.copy(),
+      command.deadline,
+      requested_station.copy(),
+      diagnostic,
+    )
     return shot, diagnostic
 
 
@@ -185,8 +205,8 @@ class HitterController:
     self.lifecycle = Lifecycle(default_q, runtime["transition_seconds"])
     self.controller = HitterActor(self.cfg, deployment.actor)
     self.standing = HopeStanding(self.controller, runtime, self.home)
-    # Hitter uses external ROS planner, backhand only (side=1).
-    self.side = 1
+    self.contract_hash = self.cfg["hitter_contract_sha256"]
+    self.feedback_sequence = 0
     self.external_planner_command = None
     self.external_planner_received_at = None
     self.external_planner_deadline = None  # Fixed strike deadline computed once
@@ -195,12 +215,62 @@ class HitterController:
     self.events, self.debug, self.command_debug = [], {}, {}
     self.previous_target = self.planner = self.physical_limit_observer = None
     self.command_policy = "hope_hitter_actor"
+    from pathlib import Path
+
+    import yaml
+    from hope_planner_g1.profiles import load_profile
+
+    params = yaml.safe_load(Path(hitter["planner_config"]).read_text())[
+      "hope_planner_g1"
+    ]["ros__parameters"]
+    self.runtime_mode = options.get(
+      "runtime_mode",
+      "sim" if options.get("planner_transport") == "embedded" else "real",
+    )
+    self.physics_profile = load_profile(
+      self.runtime_mode, params.get("real_config") or None
+    )
+    self.embedded_observer = None
+    if options.get("planner_transport") == "embedded":
+      from hope_planner_g1.observation import BallObserver
+      from hope_planner_g1.planner import G1Planner
+
+      planner = G1Planner(
+        self.cfg["hitter"],
+        mode=self.runtime_mode,
+        real_config=params.get("real_config") or None,
+        landing=params["landing_xy"],
+        flight_time=params["return_flight_time"],
+      )
+      self.embedded_observer = BallObserver(planner)
     self.reset_state()
 
   def reset_state(self):
-    # Keep self.side unchanged — hitter is configured for backhand only
+    # Same initial side as MultiPlanner's HomeController.
+    reach = self.geometry.home_station[1] + self.geometry.boxes[0, 1].mean()
+    self.side = 0 if -1.525 + 0.12 < reach < -0.12 else 1
     self.station = self.geometry.home_station.copy()
     self.shot = None
+    self.session_id = uuid.uuid4().hex
+    self.last_command_id = -1
+    self.external_planner_command = None
+    self.external_planner_error = "waiting_for_current_session_command"
+    if self.embedded_observer is not None:
+      self.embedded_observer.reset()
+
+  def planner_state(self):
+    self.feedback_sequence += 1
+    return dict(
+      runtime_mode=self.runtime_mode,
+      physics_sha256=self.physics_profile.source_sha256,
+      contract_sha256=self.contract_hash,
+      session_id=self.session_id,
+      sequence=self.feedback_sequence,
+      enabled=bool(self.receiving and self.lifecycle.state in ("ARMED", "EXECUTE")),
+      side=self.side,
+      station=self.station.tolist(),
+      home=self.geometry.home_station.tolist(),
+    )
 
   @property
   def phase(self):
@@ -212,6 +282,7 @@ class HitterController:
     g = self.geometry
     return (
       f"[hope_g1_hitter] task={self.cfg['task']}; actor=104->29; "
+      f"mode={self.runtime_mode}; physics={self.physics_profile.paddle_model}; "
       f"station={g.home_station.tolist()}; "
       f"planes FH={g.plane_x(0):.3f} BH={g.plane_x(1):.3f}; "
       f"windup={g.windup.tolist()}; follow={g.follow.tolist()}"
@@ -221,16 +292,46 @@ class HitterController:
     return []
 
   def update_ball_observations(self, observations):
-    # External ROS planner receives ball data directly; no update needed here.
-    pass
+    if self.embedded_observer is not None:
+      for _stamp, position, source_monotonic in observations:
+        # The receiver maps acquisition time into the control clock. Keep
+        # source intervals instead of using the policy callback timestamp.
+        self.embedded_observer.observe(source_monotonic, position)
+
+  def reset_ball_observations(self):
+    """A simulator spawn starts a new track, without resetting actor or shot.
+
+    Live ROS input uses its own position-stream gap/direction detection. This
+    explicit boundary is only used when the simulator replaces its ball.
+    """
+    if self.embedded_observer is not None:
+      self.embedded_observer.reset()
 
   def update_external_planner_command(self, packet, received):
     """Use the same ROS-to-RacketCommand conversion as the real HOPE policy."""
     if packet is None:
       return
-    received = float(received)
+    try:
+      received = float(received)
+      command_id = int(packet.get("command_id", -1))
+    except (TypeError, ValueError, OverflowError):
+      self.external_planner_command = None
+      self.external_planner_error = "malformed_g1_command"
+      return
+    if (
+      packet.get("session_id") != self.session_id or command_id <= self.last_command_id
+    ):
+      return
+    self.last_command_id = command_id
     self.external_planner_command, self.external_planner_error = (
-      decode_ros_planner_command(packet, received)
+      decode_g1_planner_command(
+        packet,
+        received,
+        contract_hash=self.contract_hash,
+        session_id=self.session_id,
+        runtime_mode=self.runtime_mode,
+        physics_sha256=self.physics_profile.source_sha256,
+      )
     )
     self.external_planner_received_at = received
     command = self.external_planner_command
@@ -252,13 +353,16 @@ class HitterController:
     self.events.append(dict(time=now, event="returned_to_stable"))
 
   def select(self, now):
-    """Use external ROS planner command, backhand only."""
+    """Consume each solve once; retain an accepted shot through follow-through."""
     command = self.external_planner_command
+    self.external_planner_command = None
     if command is None:
-      diagnostic = dict(side="backhand", reason=self.external_planner_error)
+      diagnostic = dict(side=SIDES[self.side], reason=self.external_planner_error)
       return None, [diagnostic]
-
-    shot, diagnostic = self.geometry.evaluate(self.side, command, self.station, now)
+    if now - self.external_planner_received_at > 0.2:
+      return None, [dict(reason="planner_transport_stale")]
+    side = command.diagnostic["side"]
+    shot, diagnostic = self.geometry.evaluate(side, command, self.station, now)
     return shot, [diagnostic]
 
   def step(self, state, estimate, now, *, racket_command=None):
@@ -272,6 +376,31 @@ class HitterController:
         raise error
       self.physical_limit_observer("hope_tilt", error)
     g = self.geometry
+    if self.embedded_observer is not None and self.receiving:
+      command = self.embedded_observer.update(now, self.station, self.side)
+      if command is not None:
+        self.update_external_planner_command(
+          dict(
+            schema="g1_1v1_v1",
+            runtime_mode=self.runtime_mode,
+            physics_sha256=self.physics_profile.source_sha256,
+            contract_sha256=self.contract_hash,
+            session_id=self.session_id,
+            command_id=self.last_command_id + 1,
+            state_sequence=self.feedback_sequence,
+            valid=True,
+            side=command.side,
+            station=command.station.tolist(),
+            position=command.position.tolist(),
+            velocity=command.velocity.tolist(),
+            normal=command.normal.tolist(),
+            bridge_monotonic=now,
+            time_to_strike=command.strike_time - now,
+            source_ball_time=command.source_time,
+            predicted_bounces=command.bounces,
+          ),
+          now,
+        )
     if (
       self.lifecycle.state == "EXECUTE"
       and now - self.shot.strike_at > g.follow[self.side]
@@ -298,6 +427,12 @@ class HitterController:
       remaining = self.shot.strike_at - now
       tts = float(np.clip(remaining, -g.follow[self.side], g.windup[self.side]))
     else:
+      # HomeController in 1v1 returns its station target at 0.30 m/s; the
+      # actor remains continuous and receives the moving station each tick.
+      delta = g.home_station - self.station
+      self.station += np.clip(
+        delta, -0.30 * self.cfg["control_dt"], 0.30 * self.cfg["control_dt"]
+      )
       position = g.centre(self.side, self.station)
       velocity = g.velocity_boxes[self.side].mean(axis=1)
       tts = float(g.windup[self.side])

@@ -1,0 +1,57 @@
+# Existing vrpn_to_pose -> G1 UDP bridge on 192.168.152.200.
+# Converter outputs are already metres and already include robot_side=P2.
+# Observed labels differ; these checks do not perform a TF lookup.
+# Both inputs use P2-rebased HOPE tabletop coordinates (table Z=0), in metres.
+# Frame labels map/world do not perform a TF lookup.
+# The configured rigid body must represent pelvis. Its calibration belongs to
+# root_marker_to_pelvis, independently of the common table/world transform.
+# Retain the operator-provided zero body offset; do not infer it from one pose.
+source:
+  ball_topic: /poses
+  ball_type: pose_array
+  ball_pose_index: 0
+  root_topic: /P1/pose
+  frame: world
+  ball_frame: world
+  root_frame: map
+# Relayed by deploy.io.mocap bridge from the standalone G1 1v1 ROS planner.
+planner_command_topic: /g1/racket/command
+planner_command_schema: g1_1v1_v1
+planner_feedback:
+  host: 127.0.0.1
+  port: 15051
+  topic: /g1/planner/state
+planner_command_source_frame: world
+ball_topic: /ball/point
+root_topic: /P1/pose
+world_frame: hope_table
+transport: udp
+udp: {host: 127.0.0.1, port: 15050}
+source_clock_offset: 0.0
+source_max_age: 0.15
+transform:
+  scale: 1.0
+  quaternion_wxyz: [1.0, 0.0, 0.0, 0.0]
+  translation: [0.0, 0.0, 0.0]
+root_marker_to_pelvis: [0.0, 0.0, 0.0]  # Input already represents pelvis.
+root_marker_to_pelvis_quaternion_wxyz: [1.0, 0.0, 0.0, 0.0]
+root_stale_timeout: 0.1
+root_pose_filter:
+  # A3 HopePoseFilter / HopeBaseVelocityTracker defaults, per source sample.
+  alpha: 0.5
+  velocity_alpha: 0.3
+  velocity_max_mps: 2.0
+  jump_max_m: 0.15
+  jump_bypass_seconds: 0.2
+  reseed_after: 10
+estimator:
+  # Descend/contact/rise around table Z=0, allowing measured marker bias.
+  # Minimum speed prevents stationary table-ball jitter from clearing the fit.
+  # A3 Stage 1 uses a 31-source-sample quadratic fit, ready at six samples.
+  window: 31
+  minimum_samples: 6
+  bounce_height: 0.0
+  bounce_tolerance: 0.04
+  bounce_min_speed: 0.2
+  max_gap: 0.1
+  stale_timeout: 0.1

@@ -1,0 +1,15 @@
+hope_planner_g1:
+  ros__parameters:
+    ball_topic: /poses
+    ball_pose_index: 0
+    ball_frame: world
+    command_frame: world
+    command_topic: /g1/racket/command
+    state_topic: /g1/planner/state
+    state_timeout: 0.15
+    landing_xy: [2.055, -0.7625]
+    return_flight_time: 0.5
+    # Runtime mode comes automatically from G1PlannerState.
+    # Empty uses the standalone planner's pinned A30808 calibration snapshot.
+    # Set the same absolute override path in deployment and ROS configuration.
+    real_config: ""

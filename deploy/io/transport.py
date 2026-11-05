@@ -79,10 +79,9 @@ class UDPMocap:
         for key in ("position", "velocity", "normal")
       ]
       tts = float(message["time_to_strike"])
-      if (
-        any(v.shape != (3,) or not np.isfinite(v).all() for v in vectors)
-        or not np.isfinite(tts)
-      ):
+      if any(
+        v.shape != (3,) or not np.isfinite(v).all() for v in vectors
+      ) or not np.isfinite(tts):
         raise ValueError("Invalid planner racket command")
       with self._planner_lock:
         self._planner_packet = dict(message)
@@ -97,6 +96,15 @@ class UDPMocap:
       if self._planner_packet is None:
         return None, None
       return dict(self._planner_packet), self._planner_received
+
+  def publish_planner_state(self, packet):
+    options = self.cfg.get("planner_feedback")
+    if options is None:
+      return
+    payload = {**packet, "generated_monotonic": time.monotonic()}
+    self.socket.sendto(
+      json.dumps(payload, allow_nan=False).encode(), (options["host"], options["port"])
+    )
 
   def _receive(self):
     while not self.stop.is_set():

@@ -1,0 +1,39 @@
+{
+  "asset": {
+    "collision_geoms": 31,
+    "source_mass_kg": 33.69842032240641,
+    "compiled_mass_kg": 33.69842032240642,
+    "maximum_com_error_m": 3.0808688933348094e-15,
+    "maximum_inertia_error_kg_m2": 1.0685896612017132e-15,
+    "samples": 32,
+    "maximum_fk_position_error_m": 7.549516567451064e-15,
+    "maximum_fk_rotation_matrix_error": 1.7361112547575885e-14,
+    "limits_exact": true,
+    "full_visual_model_validated": true,
+    "dofs": 29,
+    "articulated_bodies": 30,
+    "meshes": 40,
+    "geoms": 69,
+    "self_collision_disabled": true
+  },
+  "source_urdf_sha256": "ff69e37651da1f2f1ae302000e694433fca4f7ad056473dbf8f60dfabab56c7b",
+  "mjcf_sha256": "dae5e40f2c5c736726786ffce2850a57b7d266edd4aece0a665fcdbefdb07b12",
+  "robot_module_sha256": "666930d105ac401a7fa35d98d11b218dab09fd8d2361c0d5e3e75506582c7636",
+  "note": "Current G1 reference pairs and both tuple banks regenerated. Standard G1, Extended and A3 GPU regressions pass; full Teacher dataset is unavailable, see training_adaptation.json.",
+  "entity": {
+    "entity_compiles": true,
+    "nq": 36,
+    "nv": 35,
+    "nu": 29,
+    "action_dimension": 29,
+    "actuator_effort_limits_exact": true,
+    "ready_height_m": 0.7891133264243038,
+    "minimum_foot_corner_ground_clearance_m": 0.001
+  },
+  "reference_motion_compatibility": {
+    "compatible": true,
+    "frames_checked": 216,
+    "maximum_racket_position_error_m": 0.0,
+    "details": "training_adaptation.json"
+  }
+}

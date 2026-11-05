@@ -67,3 +67,39 @@ def decode_ros_planner_command(packet, received):
     deadline=published + tts,
     diagnostic=diagnostic,
   ), ""
+
+
+def decode_g1_planner_command(
+  packet, received, *, contract_hash, session_id, runtime_mode=None, physics_sha256=None
+):
+  """Consume a complete G1 solve without re-solving station or clipping velocity."""
+  if runtime_mode is not None and packet.get("runtime_mode") != runtime_mode:
+    return None, "wrong_runtime_mode"
+  if physics_sha256 is not None and packet.get("physics_sha256") != physics_sha256:
+    return None, "wrong_physics_profile"
+  if packet.get("schema") != "g1_1v1_v1":
+    return None, "wrong_planner_schema"
+  if packet.get("contract_sha256") != contract_hash:
+    return None, "wrong_policy_contract"
+  if packet.get("session_id") != session_id:
+    return None, "previous_policy_session"
+  try:
+    station = np.asarray(packet["station"], dtype=float)
+    side = int(packet["side"])
+    if station.shape != (2,) or not np.isfinite(station).all() or side not in (0, 1):
+      return None, "invalid_g1_station_or_side"
+    command, error = decode_ros_planner_command(packet, received)
+    if command is None:
+      return None, error
+    command.diagnostic.update(
+      source="hope_planner_g1",
+      station=station.tolist(),
+      side=side,
+      command_id=int(packet["command_id"]),
+      state_sequence=int(packet["state_sequence"]),
+      outgoing_velocity_requested=packet.get("outgoing_velocity_requested"),
+      outgoing_velocity_residual=packet.get("outgoing_velocity_residual"),
+    )
+    return command, ""
+  except (ValueError, TypeError, KeyError):
+    return None, "malformed_g1_command"
