@@ -75,6 +75,9 @@ def test_actor_accepts_both_sides_and_holds_follow(hitter, side):
   hitter.lifecycle.state = "STABLE"
   hitter.start_policy(hitter.controller.default, 100.0)
   packet = packet_for(hitter, side)
+  # Accept an off-centre station so this also checks post-swing behaviour.
+  packet["station"][1] += 0.1
+  packet["position"] = hitter.geometry.centre(side, packet["station"]).tolist()
   hitter.update_external_planner_command(packet, 100.02)
   state = robot_state(hitter)
   target = hitter.step(state, None, 100.03)
@@ -95,6 +98,13 @@ def test_actor_accepts_both_sides_and_holds_follow(hitter, side):
   assert hitter.shot.strike_at == pytest.approx(100.6)
   hitter.step(state, None, 100.6 + hitter.geometry.follow[side] + 0.02)
   assert hitter.shot is None and hitter.lifecycle.state == "ARMED"
+  for delay in (0.1, 0.5, 2.0):
+    hitter.step(state, None, 100.6 + hitter.geometry.follow[side] + delay)
+    np.testing.assert_array_equal(hitter.station, packet["station"])
+    np.testing.assert_array_equal(hitter.planner_state()["station"], packet["station"])
+    np.testing.assert_array_equal(
+      hitter.controller.debug["goal_base_xy"], packet["station"]
+    )
 
 
 @pytest.mark.parametrize(
@@ -123,7 +133,7 @@ def test_reject_bad_new_command(hitter, override, reason):
   assert hitter.external_planner_error == reason
 
 
-def test_previous_session_is_ignored_and_station_returns_home(hitter):
+def test_previous_session_is_ignored_and_idle_station_is_retained(hitter):
   old = packet_for(hitter)
   hitter.reset_state()
   hitter.update_external_planner_command(old, 100.01)
@@ -132,8 +142,10 @@ def test_previous_session_is_ignored_and_station_returns_home(hitter):
   hitter.station[1] -= 0.2
   before = hitter.station.copy()
   hitter.step(robot_state(hitter), None, 101.0)
-  assert hitter.station[1] - before[1] == pytest.approx(0.006)
-  assert hitter.side == 0  # HomeController at the confirmed station starts FH.
+  np.testing.assert_array_equal(hitter.station, before)
+  hitter.reset_state()
+  np.testing.assert_array_equal(hitter.station, [-0.65, -0.7625])
+  assert hitter.side == 0
 
 
 @pytest.mark.parametrize(

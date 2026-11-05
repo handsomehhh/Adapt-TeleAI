@@ -427,12 +427,8 @@ class HitterController:
       remaining = self.shot.strike_at - now
       tts = float(np.clip(remaining, -g.follow[self.side], g.windup[self.side]))
     else:
-      # HomeController in 1v1 returns its station target at 0.30 m/s; the
-      # actor remains continuous and receives the moving station each tick.
-      delta = g.home_station - self.station
-      self.station += np.clip(
-        delta, -0.30 * self.cfg["control_dt"], 0.30 * self.cfg["control_dt"]
-      )
+      # Match 1v0: retain the last accepted station between shots. Only a new
+      # planner command or an explicit policy reset changes the station.
       position = g.centre(self.side, self.station)
       velocity = g.velocity_boxes[self.side].mean(axis=1)
       tts = float(g.windup[self.side])

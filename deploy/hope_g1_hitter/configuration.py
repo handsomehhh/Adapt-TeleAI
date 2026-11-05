@@ -123,7 +123,7 @@ def resolve_physics(options, mode):
   return options
 
 
-def load_deployment(artifact_dir, *, ball_config, world_config, station=(-0.65, -0.45)):
+def load_deployment(artifact_dir, *, ball_config, world_config, station=(-0.65, -0.7625)):
   from deploy.hope_g1.scene import table_cfg
   from deploy.hope_g1.world import (
     mujoco_ball_config,
