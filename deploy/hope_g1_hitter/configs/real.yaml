@@ -34,7 +34,7 @@ standing:
   max_tilt_degrees: 10.0
   max_anchor_velocity: 0.05
   max_height_error: 0.1
-max_tilt_degrees: 45.0
+max_tilt_degrees: 60.0
 imu_to_pelvis_quaternion_wxyz: [1.0, 0.0, 0.0, 0.0]
 # Pelvis position and full orientation from mocap; angular velocity from IMU.
 root_orientation_source: mocap
