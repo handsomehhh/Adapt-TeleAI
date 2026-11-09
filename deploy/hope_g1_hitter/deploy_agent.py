@@ -34,6 +34,17 @@ def main():
   parser.add_argument("--network-interface")
   parser.add_argument("--enable-motors", action="store_true")
   parser.add_argument("--render", action="store_true")
+  live = parser.add_mutually_exclusive_group()
+  live.add_argument(
+    "--live-view",
+    action="store_true",
+    help="Real-only: isolated Viser viewer and synchronized telemetry log",
+  )
+  live.add_argument(
+    "--live-record-only",
+    action="store_true",
+    help="Real-only: record the same telemetry without a web server",
+  )
   parser.add_argument("--sim-controls", choices=["auto", "manual"], default="auto")
   parser.add_argument(
     "--sim-startup", choices=["ground", "suspended"], default="suspended"
@@ -54,6 +65,12 @@ def main():
     parser.error("--enable-motors is only valid for --env real")
   if args.env == "real" and args.render:
     parser.error("render is a simulation option")
+  if (args.live_view or args.live_record_only) and args.env != "real":
+    parser.error(
+      "live-view/live-record-only require --env real; simulation uses --render"
+    )
+  if args.live_view and args.viewer != "web":
+    parser.error("live-view requires --viewer web")
   for rate in (args.min_hit_rate, args.min_return_rate):
     if rate is not None and (args.env != "mujoco" or not 0 <= rate <= 1):
       parser.error("min-hit/return-rate must be in [0, 1] and require MuJoCo")
@@ -164,13 +181,32 @@ def main():
     )
     if runtime["network_interface"] not in network_interfaces():
       parser.error("Configured network interface does not exist")
-    run_control_loop(
-      deployment,
-      runtime,
-      args.mocap_config,
-      enable_motors=args.enable_motors,
-      **common,
-    )
+    visualization = None
+    if args.live_view or args.live_record_only:
+      from deploy.io.live_visualization import LiveVisualization
+
+      if yaml.safe_load(args.mocap_config.read_text()).get("transport") != "udp":
+        parser.error("Live visualization requires the UDP mocap bridge")
+      visualization = LiveVisualization(
+        deployment,
+        options,
+        output,
+        host=args.web_host,
+        port=args.web_port,
+        headless=args.live_record_only,
+      )
+    try:
+      run_control_loop(
+        deployment,
+        runtime,
+        args.mocap_config,
+        enable_motors=args.enable_motors,
+        visualization=visualization,
+        **common,
+      )
+    finally:
+      if visualization is not None:
+        visualization.close()
 
 
 if __name__ == "__main__":

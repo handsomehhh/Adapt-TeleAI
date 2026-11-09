@@ -5,6 +5,9 @@ HOPE G1 当前仿真入口统一见 [仿真测试与回看指令](SIMULATION_TES
 常用命令：[基础 play 与 MuJoCo 测试](PLAY_AND_MUJOCO.md) ·
 [真机部署](REAL_DEPLOYMENT.md) · [MuJoCo 详细说明](MUJOCO_TESTING.md)。
 
+G1 hitter 实机的机器人、球轨迹与规划目标同屏显示，以及同步日志回放，见
+[实机 Viser 可视化](hope_g1_hitter/LIVE_VISUALIZATION.md)。
+
 2026-10-15 最新复核：已精确复现无扰动接球后摔倒，当前版本不具备通用真机部署验证结论。具体原因、代码修复与仍失败的对照见 [FALL_REVIEW_20261015.md](FALL_REVIEW_20261015.md)。
 ## 在 train 同源 play 中验证完整站立—挥拍—站立
 

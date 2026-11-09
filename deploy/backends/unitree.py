@@ -714,6 +714,7 @@ def run_control_loop(
   motion_allow=None,
   simulation_io=None,
   controller_factory=RallyController,
+  visualization=None,
 ):
   """Run a task controller through shared operator, IO and safety machinery.
 
@@ -879,6 +880,8 @@ def run_control_loop(
         row["command_generated_time"] - feedback_context["feedback_callback_time"]
       )
     row["latency"] = latency
+    if visualization is not None:
+      visualization.publish("state", row)
     if simulation_io is not None:
       row["robot_command_scope"] = "simulation"
       row["physical_limit_observations"] = list(limit_observations)
@@ -966,7 +969,11 @@ def run_control_loop(
   }
   try:
     if simulation_io is None:
-      mocap = build_mocap(mocap_cfg)
+      mocap = (
+        build_mocap(mocap_cfg, observer=visualization)
+        if visualization is not None
+        else build_mocap(mocap_cfg)
+      )
       backend_type = (
         DDSProcessBackend if real_cfg.get("io_process", True) else DDSBackend
       )

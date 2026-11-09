@@ -19,8 +19,9 @@ from deploy.io.diagnostics import BufferedWriter, json_default
 
 
 class UDPMocap:
-  def __init__(self, config):
+  def __init__(self, config, *, observer=None):
     self.cfg = config
+    self.observer = observer
     self.recorder = None
     self.ball = BallEstimator(**config["estimator"])
     self.root = RootPoseCache(
@@ -88,6 +89,11 @@ class UDPMocap:
         self._planner_received = monotonic_time
     else:
       raise ValueError("Unknown mocap message kind")
+    if getattr(self, "observer", None) is not None:
+      observed = dict(message)
+      if message["kind"] in ("ball", "root"):
+        observed["sample_monotonic"] = received
+      self.observer.publish("mocap", observed, received=monotonic_time)
     self.accepted += 1
 
   def latest_planner_command(self):
@@ -158,10 +164,12 @@ class UDPMocap:
       self.recorder.close()
 
 
-def build_mocap(config):
+def build_mocap(config, *, observer=None):
   if config["transport"] == "udp":
-    return UDPMocap(config)
+    return UDPMocap(config, observer=observer)
   if config["transport"] == "ros2":
+    if observer is not None:
+      raise ValueError("Live visualization requires the existing UDP mocap bridge")
     from deploy.io.mocap import RosMocap
 
     return RosMocap(config)

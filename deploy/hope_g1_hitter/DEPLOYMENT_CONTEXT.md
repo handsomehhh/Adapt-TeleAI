@@ -229,7 +229,7 @@ See `controller.py:observation()` for implementation.
 │       ├── rally.yaml           # Ball/world/planner transport config
 │       └── hope_planner_ros2.yaml  # Planner parameters (for reference)
 └── deploy/tools/
-    └── live_viewer.py           # Real-time MuJoCo visualization (optional)
+    └── real_viewer.py           # Read-only Viser live display and recorded-event replay
 ```
 
 ### Planner on lxz200:
