@@ -105,6 +105,7 @@ def main():
     physics=options["physics_profile_report"],
     station=options["hitter"]["station"],
     planner_config=options["hitter"]["planner_config"],
+    planner_source=options["planner_source"],
   )
   if "embedded_planner_source" in options:
     report["embedded_planner_source"] = options["embedded_planner_source"]

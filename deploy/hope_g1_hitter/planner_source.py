@@ -1,4 +1,4 @@
-"""Locate the embedded planner relative to the deployment checkout."""
+"""Locate shared planner code relative to the deployment checkout in all modes."""
 
 import importlib
 import sys
@@ -12,8 +12,8 @@ def use_sibling_planner():
   package = source / "hope_planner_g1"
   if not (package / "__init__.py").is_file():
     raise FileNotFoundError(
-      f"Embedded G1 planner not found: {package}. "
-      "Place g1_planner_ros2 beside the Adapt-TeleAI checkout."
+      f"G1 planner source not found: {package}. "
+      "Place g1_planner_ros2 beside the deployment checkout (Adapt-Deploy or Adapt-TeleAI)."
     )
   loaded = sys.modules.get("hope_planner_g1")
   if loaded is not None and Path(loaded.__file__).resolve().parent != package.resolve():

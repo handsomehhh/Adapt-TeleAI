@@ -129,18 +129,17 @@ cd /home/yiranwang/TeleHuman/Adapt-TeleAI
 
 ## 离线验证
 
-MuJoCo 内嵌模式自动从 Adapt-TeleAI 仓库位置解析
+MuJoCo、实机和 check 模式都自动从部署仓库（Adapt-TeleAI 或 Adapt-Deploy）位置解析
 `../g1_planner_ros2/src/hope_planner_g1`，优先加载这里的源码，无需预先安装 planner。
 路径基于代码文件位置，不依赖当前终端目录，也不包含机器用户名。
 换电脑时保持两个仓库并列，安装部署环境的 NumPy/SciPy/PyYAML 等依赖即可。
 找不到该目录会明确报错，不会悄悄使用其他已安装版本；启动报告中的
-`embedded_planner_source` 显示实际来源。
+`planner_source` 显示实际来源；内嵌模式同时保留 `embedded_planner_source`。
 
-实机/check 模式仍按 Python 环境导入 planner，可使用相对路径安装：
+实机 ROS planner 节点仍单独启动；deploy 导入共享物理参数无需再安装包或设置 `PYTHONPATH`。
+离线测试：
 
 ```bash
-uv pip install --python .venv/bin/python --no-deps -e \
-  ../g1_planner_ros2/src/hope_planner_g1
 .venv/bin/python -m pytest \
   deploy/validation/hitter_physics_profile_checks.py \
   deploy/validation/hitter_contact_checks.py \

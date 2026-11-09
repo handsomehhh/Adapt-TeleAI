@@ -105,11 +105,14 @@ def resolve_physics(options, mode):
   """Backend selection controls both simulated plant and planner physics."""
   import copy
 
-  options = copy.deepcopy(options)
-  if mode == "sim" and options.get("planner_transport") == "embedded":
-    from deploy.hope_g1_hitter.planner_source import use_sibling_planner
+  from deploy.hope_g1_hitter.planner_source import use_sibling_planner
 
-    options["embedded_planner_source"] = str(use_sibling_planner())
+  options = copy.deepcopy(options)
+  # Real/check also need the shared calibration and physics implementation,
+  # even when the command solver runs in a separate ROS process.
+  options["planner_source"] = str(use_sibling_planner())
+  if mode == "sim" and options.get("planner_transport") == "embedded":
+    options["embedded_planner_source"] = options["planner_source"]
 
   from hope_planner_g1.profiles import load_profile
 

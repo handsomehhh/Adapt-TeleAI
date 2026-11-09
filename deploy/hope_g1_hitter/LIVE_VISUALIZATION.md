@@ -8,14 +8,14 @@
 
 ```bash
 cd /home/lxz/Adapt-Deploy
-PYTHONPATH="../g1_planner_ros2/src/hope_planner_g1${PYTHONPATH:+:$PYTHONPATH}" \
-  .venv/bin/python -m deploy.hope_g1_hitter.deploy_agent \
+.venv/bin/python -m deploy.hope_g1_hitter.deploy_agent \
   --env real --network-interface eno1 --enable-motors \
   --duration 600 \
   --live-view --viewer web --web-host 0.0.0.0 --web-port 8081
 ```
 
 打开 `http://192.168.152.200:8081`。无需浏览器连接即可运行和录制。
+启动时自动加载并列的 `~/g1_planner_ros2`，无需额外设置 `PYTHONPATH`。
 手柄 START/A/UP/DOWN 与停止按键语义不变。关闭浏览器不会停止机器人。
 查看器的退出和异常不会请求机器人停止；部署退出、机器人 IO 关闭后才清理查看器。
 
