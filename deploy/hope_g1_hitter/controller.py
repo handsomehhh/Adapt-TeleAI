@@ -174,7 +174,7 @@ class HitterController:
 
   ARMED feeds the side's training-box centre with the frozen wind-up time to
   strike. An accepted planner command starts EXECUTE; the clock runs down to
-  -follow, then the actor returns to the idle target (play_1v0 behaviour).
+  -follow, then the idle station target moves back home at 0.30 m/s per axis.
   """
 
   def __init__(
@@ -427,8 +427,12 @@ class HitterController:
       remaining = self.shot.strike_at - now
       tts = float(np.clip(remaining, -g.follow[self.side], g.windup[self.side]))
     else:
-      # Match 1v0: retain the last accepted station between shots. Only a new
-      # planner command or an explicit policy reset changes the station.
+      # Restore 1v1 HomeController behaviour after follow-through. The actor
+      # stays active and a newly accepted shot immediately takes priority.
+      delta = g.home_station - self.station
+      self.station += np.clip(
+        delta, -0.30 * self.cfg["control_dt"], 0.30 * self.cfg["control_dt"]
+      )
       position = g.centre(self.side, self.station)
       velocity = g.velocity_boxes[self.side].mean(axis=1)
       tts = float(g.windup[self.side])

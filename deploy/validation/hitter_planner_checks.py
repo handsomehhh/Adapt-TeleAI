@@ -96,14 +96,17 @@ def test_actor_accepts_both_sides_and_holds_follow(hitter, side):
   )
   hitter.step(state, None, 100.72)
   assert hitter.shot.strike_at == pytest.approx(100.6)
+  np.testing.assert_array_equal(hitter.station, packet["station"])
   hitter.step(state, None, 100.6 + hitter.geometry.follow[side] + 0.02)
   assert hitter.shot is None and hitter.lifecycle.state == "ARMED"
   for delay in (0.1, 0.5, 2.0):
+    before = hitter.station.copy()
     hitter.step(state, None, 100.6 + hitter.geometry.follow[side] + delay)
-    np.testing.assert_array_equal(hitter.station, packet["station"])
-    np.testing.assert_array_equal(hitter.planner_state()["station"], packet["station"])
+    assert hitter.station[1] < before[1]
+    assert hitter.station[1] - before[1] == pytest.approx(-0.006)
+    np.testing.assert_array_equal(hitter.planner_state()["station"], hitter.station)
     np.testing.assert_array_equal(
-      hitter.controller.debug["goal_base_xy"], packet["station"]
+      hitter.controller.debug["goal_base_xy"], hitter.station
     )
 
 
@@ -133,7 +136,7 @@ def test_reject_bad_new_command(hitter, override, reason):
   assert hitter.external_planner_error == reason
 
 
-def test_previous_session_is_ignored_and_idle_station_is_retained(hitter):
+def test_previous_session_is_ignored_and_idle_station_returns_home(hitter):
   old = packet_for(hitter)
   hitter.reset_state()
   hitter.update_external_planner_command(old, 100.01)
@@ -142,10 +145,33 @@ def test_previous_session_is_ignored_and_idle_station_is_retained(hitter):
   hitter.station[1] -= 0.2
   before = hitter.station.copy()
   hitter.step(robot_state(hitter), None, 101.0)
-  np.testing.assert_array_equal(hitter.station, before)
+  assert hitter.station[1] - before[1] == pytest.approx(0.006)
   hitter.reset_state()
   np.testing.assert_array_equal(hitter.station, [-0.65, -0.7625])
   assert hitter.side == 0
+
+
+@pytest.mark.parametrize("mode", ["sim", "real"])
+def test_home_return_stops_at_home_and_new_ball_interrupts(deployment, mode):
+  model, runtime, options = deployment
+  options = dict(
+    options, runtime_mode=mode,
+    planner_transport="embedded" if mode == "sim" else "ros",
+  )
+  hitter = HitterController(model, runtime, options)
+  hitter.lifecycle.state = "ARMED"
+  hitter.station += [0.013, -0.031]
+  state = robot_state(hitter)
+  for tick in range(20):
+    hitter.step(state, None, 100.0 + tick * hitter.cfg["control_dt"])
+  np.testing.assert_allclose(hitter.station, hitter.geometry.home_station, atol=1e-12)
+  hitter.station[1] -= 0.2
+  hitter.step(state, None, 100.4)
+  packet = packet_for(hitter)
+  hitter.update_external_planner_command(packet, 100.4)
+  hitter.step(state, None, 100.42)
+  assert hitter.lifecycle.state == "EXECUTE"
+  np.testing.assert_array_equal(hitter.station, packet["station"])
 
 
 @pytest.mark.parametrize(
