@@ -108,61 +108,159 @@ class Scene:
       self.server.stop()
       raise RuntimeError(f"Port {port} is occupied")
     self.server.scene.set_up_direction("+z")
-    self.server.gui.add_markdown(
-      "**实机观测回放**" if replay else "**实机只读观测 · 后台记录**"
-    )
-    self.server.gui.add_markdown(
-      "绿色：动捕轨迹 · 橙色：辅助预测 · 蓝色：本段首次预测。\n\n"
-      "绿色虚影：骨盆目标 · 金黄色虚影：球拍目标；均为控制器当前执行的目标位置。\n\n"
-      "辅助预测复用 planner 物理模型，不包含球拍/球网碰撞；不是控制器指令。"
-    )
-    self.status = self.server.gui.add_markdown("等待状态…")
-    self.joints = self.server.gui.add_markdown("")
-    self.show_joints = self.server.gui.add_checkbox(
-      "显示实测关节角（度）", initial_value=False
-    )
-    self.show_targets = self.server.gui.add_checkbox(
-      "显示骨盆 / 球拍目标虚影", initial_value=True
-    )
-    self.target_status = self.server.gui.add_markdown("")
-    self.paused = self.server.gui.add_checkbox(
-      "暂停回放", initial_value=True, visible=replay
-    )
-    self.speed = self.server.gui.add_slider(
-      "回放倍速", min=0.1, max=4, step=0.1, initial_value=1, visible=replay
-    )
-    self.restart = False
-    self.seek_to = None
-    if replay:
-      self.progress = self.server.gui.add_slider(
-        "回放进度（秒）", min=0.0, max=1.0, step=0.01, initial_value=0.0
-      )
-      self.ball_gaps = BallGapShading(self.server, self.progress)
-      self.timeline = self.server.gui.add_markdown("正在读取日志…")
-      self.load_error = self.server.gui.add_markdown("")
-
-      @self.progress.on_update
-      def seek(event):
-        # Server-side progress updates must not become user seek requests.
-        if event.client is not None:
-          self.seek_to = float(event.target.value)
-          self.paused.value = True
-
-      self.server.gui.add_button("从头回放").on_click(
-        lambda _: setattr(self, "restart", True)
-      )
-    self.log_path = self.server.gui.add_markdown("")
+    self._build_controls()
     try:
       self.load_recording(directory)
     except Exception:
       self.server.stop()
       raise
 
-    @self.server.on_client_connect
-    def connect(client):
-      client.camera.position = np.array([-2.5, -4, 2.5]) - self.offset
-      client.camera.look_at = np.array([0.7, -0.76, 0.25]) - self.offset
-      client.camera.up_direction = (0, 0, 1)
+    self.server.on_client_connect(self.reset_camera)
+
+  def _build_controls(self):
+    from types import SimpleNamespace
+
+    import viser
+
+    self.restart = False
+    self.seek_to = None
+    self.first_display_time = None
+    self.model_controls = []
+    tabs = self.server.gui.add_tab_group()
+    self.controls_tab = tabs.add_tab("控制", icon=viser.Icon.SETTINGS)
+    self.visual_tab = tabs.add_tab("可视化", icon=viser.Icon.EYE)
+    self.groups_tab = tabs.add_tab("分组", icon=viser.Icon.LAYERS_INTERSECT)
+    with self.controls_tab:
+      self.status = self.server.gui.add_html("")
+      self.clock_display = self.server.gui.add_number(
+        "回放时间（秒）" if self.replay else "显示时间（秒）",
+        initial_value=0,
+        step=0.001,
+        disabled=True,
+      )
+      self.recordings_folder = self.server.gui.add_folder("运行记录", visible=False)
+      self.paused = SimpleNamespace(value=True)
+      with self.server.gui.add_folder("播放", visible=self.replay):
+        self.pause_button = self.server.gui.add_button("播放")
+        self.pause_button.on_click(
+          lambda _: setattr(self.paused, "value", not self.paused.value)
+        )
+
+        def step(_):
+          self.paused.value = True
+          self.seek_to = float(self.progress.value) + 0.02
+
+        self.server.gui.add_button("前进一帧").on_click(step)
+        self.server.gui.add_button("从头回放").on_click(
+          lambda _: setattr(self, "restart", True)
+        )
+        self.speed = self.server.gui.add_slider(
+          "回放倍速",
+          min=0.1,
+          max=4,
+          step=0.1,
+          initial_value=1,
+        )
+        if self.replay:
+          self.progress = self.server.gui.add_slider(
+            "回放进度（秒）",
+            min=0,
+            max=1,
+            step=0.01,
+            initial_value=0,
+          )
+          self.ball_gaps = BallGapShading(self.server, self.progress)
+          self.timeline = self.server.gui.add_markdown("正在读取日志…")
+          self.load_error = self.server.gui.add_markdown("")
+
+          @self.progress.on_update
+          def seek(event):
+            if event.client is not None:
+              self.seek_to = float(event.target.value)
+              self.paused.value = True
+
+      with self.server.gui.add_folder("任务叠加显示"):
+        self.show_targets = self.server.gui.add_checkbox(
+          "显示骨盆 / 球拍目标虚影", initial_value=True
+        )
+        self.show_lines = {
+          name: self.server.gui.add_checkbox(label, initial_value=True)
+          for name, label in (
+            ("latest", "显示最新预测（青色）"),
+            ("measured", "显示实测轨迹（绿色）"),
+            ("reference", "显示首次预测（蓝色）"),
+          )
+        }
+        self.show_bounces = self.server.gui.add_checkbox(
+          "显示预测反弹点（橙色）", initial_value=True
+        )
+      with self.server.gui.add_folder("相机"):
+        self.track_camera = self.server.gui.add_checkbox(
+          "跟随机器人", initial_value=False
+        )
+        self.camera_fov = self.server.gui.add_slider(
+          "视场角（度）", min=10, max=120, step=1, initial_value=45
+        )
+
+        @self.camera_fov.on_update
+        def fov(_):
+          for client in self.server.get_clients().values():
+            client.camera.fov = np.radians(self.camera_fov.value)
+
+        self.server.gui.add_button("重置相机").on_click(lambda _: self.reset_camera())
+      with self.server.gui.add_folder("记录与显示说明", expand_by_default=False):
+        self.target_status = self.server.gui.add_markdown("")
+        self.server.gui.add_markdown(
+          "绿色虚影：骨盆目标 · 金黄色虚影：球拍目标。\n\n"
+          "青色线及橙色反弹点来自记录的辅助预测，不包含球拍/球网碰撞，不是控制器指令。"
+        )
+        self.log_path = self.server.gui.add_markdown("")
+    with self.visual_tab:
+      with self.server.gui.add_folder("实测关节角", expand_by_default=False):
+        self.show_joints = self.server.gui.add_checkbox(
+          "显示实测关节角（度）", initial_value=False
+        )
+        self.joints = self.server.gui.add_markdown("")
+
+  def reset_camera(self, client=None):
+    """PingPong 1v0 camera, translated from table/floor into recorded scene axes."""
+    self.track_camera.value = False
+    azimuth, elevation = np.radians(145), np.radians(20)
+    offset = 4.8 * np.array(
+      [
+        -np.cos(elevation) * np.cos(azimuth),
+        -np.cos(elevation) * np.sin(azimuth),
+        np.sin(elevation),
+      ]
+    )
+    lookat = (
+      np.array([0.65, -0.76, 0.9 - self.meta["physics"]["table"]["height"]])
+      - self.offset
+    )
+    for handle in (
+      [client] if client is not None else self.server.get_clients().values()
+    ):
+      handle.camera.up_direction = (0, 0, 1)
+      handle.camera.fov = np.radians(self.camera_fov.value)
+      handle.camera.position = lookat + offset
+      handle.camera.look_at = lookat
+
+  def _build_model_controls(self):
+    from deploy.tools.replay_style import localize_model_controls
+
+    for folder in self.model_controls:
+      folder.remove()
+    self.model_controls = []
+    for tab, label, build in (
+      (self.visual_tab, "模型显示", self.geometry.create_overlay_gui),
+      (self.groups_tab, "模型分组", self.geometry.create_groups_gui),
+    ):
+      with tab:
+        folder = self.server.gui.add_folder(label)
+        self.model_controls.append(folder)
+        with folder:
+          build()
+        localize_model_controls(folder)
 
   def load_recording(self, directory):
     """Switch models without restarting the web server or its GUI controls."""
@@ -189,6 +287,10 @@ class Scene:
     self.root = model.jnt_qposadr[free[0]]
     self.geometry = ViserMujocoScene(self.server, model, num_envs=1)
     self.geometry.camera_tracking_enabled = False
+    # GUI callbacks mutate display options only; update remains on the viewer loop.
+    self.geometry.set_refresh_handler(lambda: None)
+    self._build_model_controls()
+    self.bounce_markers = []
     self.lines = {}
     style = (
       {"thickness": 3.0, "thickness_units": "screen"}
@@ -197,14 +299,18 @@ class Scene:
       else {"line_width": 3.0}
     )
     for name, color in dict(
-      measured=(26, 255, 90), latest=(255, 140, 13), reference=(89, 166, 255)
+      measured=(26, 255, 90), latest=(26, 217, 255), reference=(89, 166, 255)
     ).items():
       self.lines[name] = self.server.scene.add_line_segments(
         "/live/" + name,
         points=np.zeros((1, 2, 3), np.float32),
         colors=color,
         visible=False,
-        **style,
+        **(
+          {"thickness": 0.008, "thickness_units": "world"}
+          if name == "latest" and "thickness" in style
+          else style
+        ),
       )
     self.ball = self.server.scene.add_icosphere(
       "/live/ball", radius=0.02, color=(255, 255, 255), visible=False
@@ -215,6 +321,7 @@ class Scene:
       if self.replay
       else "关闭网页不会停止机器人或录制。结束部署后，可独立回放此目录。\n\n"
     ) + f"日志：`{self.directory}`"
+    self.reset_camera()
 
   def update(self, state, now):
     import mujoco
@@ -244,11 +351,14 @@ class Scene:
       reference=state.reference["points"] if state.reference else [],
     ).items():
       line = self.lines[name]
-      line.visible = len(points) >= 2
+      line.visible = self.show_lines[name].value and len(points) >= 2
       if line.visible:
         p = np.asarray(points, dtype=np.float32) - self.offset
+        if name == "latest" and len(p) > 180:
+          p = p[np.linspace(0, len(p) - 1, 180, dtype=int)]
         line.points = np.stack([p[:-1], p[1:]], axis=1).astype(np.float32)
         # Preserve uniform RGB; changing color-array shape breaks Viser shaders.
+    self._update_bounces(state, fresh_ball)
     row = state.robot
     goals_valid = (
       valid
@@ -270,11 +380,31 @@ class Scene:
     age = "—" if state.robot_time is None else f"{now - state.robot_time:.3f}s"
     ball_age = "—" if state.ball_time is None else f"{now - state.ball_time:.3f}s"
     pos = state.robot.get("root_pos")
-    self.status.content = (
-      f"状态：**{state.robot.get('state', '等待')}** · {state.robot.get('phase', '')}\n\n"
-      f"机器人：{'有效' if valid else '缺失/过期，已隐藏'} · 帧延迟 {age}\n\n"
-      f"骨盆（球台坐标，m）：{pos}\n\n球观测延迟：{ball_age}"
+    import html
+
+    status = (
+      f"状态：{state.robot.get('state', '等待')} · {state.robot.get('phase', '')}\n"
+      f"机器人：{'有效' if valid else '缺失/过期，已隐藏'} · 帧延迟 {age}\n"
+      f"骨盆（球台坐标，m）：{np.round(pos, 3).tolist() if finite_vector(pos, 3) else '—'}\n"
+      f"球观测延迟：{ball_age}"
     )
+    self.status.content = (
+      '<pre style="white-space:pre-wrap;font-size:12px">'
+      + html.escape(status)
+      + "</pre>"
+    )
+    if self.first_display_time is None:
+      self.first_display_time = now
+    self.clock_display.value = (
+      self.progress.value if self.replay else now - self.first_display_time
+    )
+    self.pause_button.label = "播放" if self.paused.value else "暂停"
+    if valid and self.track_camera.value:
+      target = np.asarray(state.robot["root_pos"]) - self.offset
+      for client in self.server.get_clients().values():
+        delta = target - np.asarray(client.camera.look_at)
+        client.camera.position = np.asarray(client.camera.position) + delta
+        client.camera.look_at = target
     self.joints.content = (
       "|关节|实测 °|\n|---|---:|\n"
       + "\n".join(
@@ -284,6 +414,35 @@ class Scene:
       if valid and self.show_joints.value
       else ""
     )
+
+  def _update_bounces(self, state, fresh_ball):
+    import trimesh
+
+    bounces = (
+      (state.prediction or {}).get("bounces", [])
+      if fresh_ball and self.show_bounces.value
+      else []
+    )
+    points = [b["position"] for b in bounces if finite_vector(b.get("position"), 3)][:8]
+    for i, point in enumerate(points):
+      if i == len(self.bounce_markers):
+        mesh = trimesh.creation.icosphere(subdivisions=2, radius=1)
+        mesh.vertices *= [0.065, 0.065, 0.008]
+        self.bounce_markers.append(
+          self.server.scene.add_mesh_simple(
+            f"/prediction/landing_{i}",
+            mesh.vertices,
+            mesh.faces,
+            color=(255, 140, 13),
+            opacity=0.85,
+          )
+        )
+      position = np.array(point, dtype=float)
+      position[2] = 0.008  # Recorded coordinates put the tabletop at Z=0.
+      self.bounce_markers[i].position = position - self.offset
+      self.bounce_markers[i].visible = True
+    for marker in self.bounce_markers[len(points) :]:
+      marker.visible = False
 
   def close(self):
     self.server.stop()
@@ -498,20 +657,22 @@ def replay(
   selection = None
   refresh = False
   if recordings is not None:
-    selection = scene.server.gui.add_dropdown(
-      "运行记录（最新在前）",
-      options=list(recordings),
-      initial_value=selected,
-      order=-10,
-    )
+    scene.recordings_folder.visible = True
+    with scene.recordings_folder:
+      selection = scene.server.gui.add_dropdown(
+        "运行记录（最新在前）",
+        options=list(recordings),
+        initial_value=selected,
+        order=-10,
+      )
 
-    def request_refresh(_):
-      nonlocal refresh
-      refresh = True
+      def request_refresh(_):
+        nonlocal refresh
+        refresh = True
 
-    scene.server.gui.add_button("刷新记录列表 / 重新读取当前日志", order=-9).on_click(
-      request_refresh
-    )
+      scene.server.gui.add_button("刷新记录列表 / 重新读取当前日志", order=-9).on_click(
+        request_refresh
+      )
 
   def reset_timeline():
     scene.progress.max = max(0.01, log.duration)
@@ -570,7 +731,7 @@ def replay(
           scene.paused.value = True
       previous = now
       scene.progress.value = log.position
-      scene.timeline.content = f"**{log.position:.2f} / {log.duration:.2f} 秒** · 拖动进度条后暂停，取消暂停继续播放。"
+      scene.timeline.content = f"**{log.position:.2f} / {log.duration:.2f} 秒** · 拖动进度条后暂停，点击“播放”继续。"
       scene.update(log.state, log.now)
       time.sleep(1 / 30)
   finally:

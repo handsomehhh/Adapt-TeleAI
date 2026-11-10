@@ -230,6 +230,34 @@ def test_process_records_predictions_and_measured_robot_for_exact_replay(tmp_pat
     assert scene.data.time == 0  # No mj_step, no simulation clock.
     assert np.asarray(scene.lines["latest"].colors).shape == (3,)
     assert scene.lines["latest"].visible
+    # Display toggles must not change recorded observations or robot kinematics.
+    scene.show_lines["measured"].value = False
+    scene.show_lines["reference"].value = False
+    state.prediction["bounces"] = [{"position": [1.2, -0.7, 0.02]}]
+    scene.update(state, state.now)
+    assert scene.lines["latest"].visible
+    assert not scene.lines["measured"].visible
+    assert not scene.lines["reference"].visible
+    np.testing.assert_array_equal(scene.lines["latest"].colors, [26, 217, 255])
+    marker = scene.bounce_markers[0]
+    assert marker.visible
+    np.testing.assert_allclose(marker.position, [1.2, -0.7, 0.008] - scene.offset)
+    assert state.prediction["bounces"][0]["position"] == [1.2, -0.7, 0.02]
+    scene.show_bounces.value = False
+    scene.update(state, state.now)
+    assert not marker.visible
+    scene.show_bounces.value = True
+    scene.update(state, state.now)
+    assert marker.visible
+    # The fixed 1v0 camera is expressed in the saved scene coordinate frame.
+    camera = SimpleNamespace()
+    scene.reset_camera(SimpleNamespace(camera=camera))
+    np.testing.assert_allclose(
+      camera.look_at,
+      np.array([0.65, -0.76, 0.9 - scene.meta["physics"]["table"]["height"]])
+      - scene.offset,
+    )
+    assert np.linalg.norm(camera.position - camera.look_at) == pytest.approx(4.8)
     qpos = scene.data.qpos.copy()
     for group, handles in scene.ghosts.handles.items():
       assert handles
@@ -265,6 +293,7 @@ def test_process_records_predictions_and_measured_robot_for_exact_replay(tmp_pat
     scene.show_targets.value = True
     scene.update(state, state.now + 1)
     assert not scene.ball.visible
+    assert not marker.visible
     assert not any(
       h.visible for group in scene.ghosts.handles.values() for h in group.values()
     )
@@ -276,7 +305,10 @@ def test_process_records_predictions_and_measured_robot_for_exact_replay(tmp_pat
     meta["world_translation"] = [0, 0, 0]
     (other / "metadata.json").write_text(json.dumps(meta))
     server = scene.server
+    old_controls = list(scene.model_controls)
     scene.load_recording(other)
+    assert all(folder._impl.removed for folder in old_controls)
+    assert len(scene.model_controls) == 2
     scene.update(state, state.now)
     assert scene.server is server
     np.testing.assert_allclose(
