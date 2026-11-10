@@ -100,6 +100,9 @@ class Scene:
 
     self.replay = replay
     self.server = viser.ViserServer(host=host, port=port, label="实机观测与回放")
+    from deploy.tools.viser_keyboard import protect_horizontal_arrow_keys
+
+    protect_horizontal_arrow_keys(self.server)
     if self.server.get_port() != port:
       self.server.stop()
       raise RuntimeError(f"Port {port} is occupied")

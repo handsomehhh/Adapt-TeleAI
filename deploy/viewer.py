@@ -125,6 +125,9 @@ class WebMujocoViewer:
     self.cam.azimuth, self.cam.elevation = 125, -20
     self.opt = mujoco.MjvOption()
     self.server = viser.ViserServer(host=host, port=port, label="乒乓球测试平台")
+    from deploy.tools.viser_keyboard import protect_horizontal_arrow_keys
+
+    protect_horizontal_arrow_keys(self.server)
     try:
       self.server.gui.configure_theme(control_width="large", show_share_button=False)
       if hasattr(self.server.gui, "main_panel"):
