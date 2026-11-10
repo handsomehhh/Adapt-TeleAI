@@ -322,6 +322,13 @@ class WebMujocoViewer:
           initial_value=owner.position,
         )
         self._published_seek = owner.position
+        from deploy.tools.ball_visibility import BallGapShading, gaps_from_samples
+
+        self._ball_gaps = BallGapShading(self.server, self._seek)
+        self._ball_gaps.update(
+          gaps_from_samples(getattr(owner.recording, "ball_times", []), duration),
+          duration,
+        )
 
         @self._seek.on_update
         def seek(event):

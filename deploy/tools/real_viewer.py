@@ -16,6 +16,7 @@ from pathlib import Path
 import numpy as np
 
 from deploy.io.diagnostics import json_default
+from deploy.tools.ball_visibility import BALL_MAX_AGE, BallGapShading, BallVisibility
 from deploy.tools.command_ghosts import CommandGhosts
 
 
@@ -136,6 +137,7 @@ class Scene:
       self.progress = self.server.gui.add_slider(
         "回放进度（秒）", min=0.0, max=1.0, step=0.01, initial_value=0.0
       )
+      self.ball_gaps = BallGapShading(self.server, self.progress)
       self.timeline = self.server.gui.add_markdown("正在读取日志…")
       self.load_error = self.server.gui.add_markdown("")
 
@@ -230,7 +232,9 @@ class Scene:
       self.data.qpos[self.root : self.root + 3] = [0, 0, -100]
     mujoco.mj_kinematics(self.model, self.data)
     self.geometry.update_from_mjdata(self.data)
-    fresh_ball = state.ball_time is not None and 0 <= now - state.ball_time <= 0.1
+    fresh_ball = (
+      state.ball_time is not None and 0 <= now - state.ball_time <= BALL_MAX_AGE
+    )
     self.ball.visible = fresh_ball
     if fresh_ball:
       self.ball.position = np.asarray(state.ball) - self.offset
@@ -390,6 +394,7 @@ class ReplayLog:
     self.checkpoints, self.times = [], []
     self.start = self.end = None
     state = DisplayState()
+    visibility = BallVisibility()
     with path.open("rb") as stream:
       while (event := self._read(stream)) is not None:
         t = float(event["time"])
@@ -400,7 +405,13 @@ class ReplayLog:
           self.times.append(t)
           self.checkpoints.append((0, DisplayState()))
         # Retain recorded order, including occasional late sensor events.
+        previous_end = self.end
         self.end = max(self.end, t)
+        if state.ball_time is not None:
+          visibility.add(
+            max(previous_end, state.ball_time),
+            min(self.end, state.ball_time + BALL_MAX_AGE),
+          )
         state.apply(event)
         if self.end - self.times[-1] >= checkpoint_seconds:
           self.times.append(self.end)
@@ -408,6 +419,7 @@ class ReplayLog:
     if self.start is None:
       raise ValueError(f"No complete events in {path}")
     self.duration = self.end - self.start
+    self.ball_gaps = visibility.gaps(self.start, self.end)
     self.stream = path.open("rb")
     self.seek(0)
 
@@ -507,6 +519,7 @@ def replay(
     scene.progress.disabled = log.duration == 0
     scene.seek_to = None
     scene.restart = False
+    scene.ball_gaps.update(log.ball_gaps, log.duration)
 
   reset_timeline()
   started = previous = time.monotonic()
