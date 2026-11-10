@@ -23,13 +23,26 @@ from deploy.tools.real_viewer import (
 
 def deployment():
   bodies = "".join(
-    f'<body pos="0 0 .03"><joint name="robot/j{i}" type="hinge"/>'
+    (
+      '<body pos="0 0 .03" name="robot/right_wrist_yaw_link">'
+      if i == 28
+      else '<body pos="0 0 .03">'
+    )
+    + f'<joint name="robot/j{i}" type="hinge"/>'
     '<geom type="sphere" size=".02" mass=".1"/>'
     for i in range(29)
   )
+  bodies += (
+    '<site name="robot/right_racket_surface" pos=".242 .003 0"/>'
+    '<geom name="robot/right_racket_link_1_visual" type="ellipsoid" '
+    'pos=".242 .003 0" size=".075 .006 .075" contype="0" conaffinity="0"/>'
+    '<geom name="robot/right_racket_link_0_collision" type="box" '
+    'pos=".12 0 0" size=".04 .01 .01"/>'
+  )
   model = mujoco.MjModel.from_xml_string(
     '<mujoco><worldbody><geom name="table" type="box" size="1 .5 .02"/>'
-    '<body name="robot/pelvis"><freejoint/><geom type="sphere" size=".1" mass="1"/>'
+    '<body name="robot/pelvis"><freejoint/><geom name="robot/pelvis_visual" '
+    'type="sphere" size=".1" mass="1" contype="0" conaffinity="0"/>'
     + bodies
     + "</body>" * 30
     + "</worldbody></mujoco>"
@@ -57,11 +70,14 @@ def robot_row(t):
   return dict(
     time=t,
     state="EXECUTE",
+    policy="pingpong",
     q=[0.1] * 29,
     root_pos=[-0.65, -0.7625, 0.1],
     root_quat=[1, 0, 0, 0],
     root_age=0.01,
     dds_state_age=0.005,
+    goal_base_xy=[-0.65, -1.05],
+    goal_position=[-0.1, -0.5, 0.4],
   )
 
 
@@ -184,6 +200,8 @@ def test_process_records_predictions_and_measured_robot_for_exact_replay(tmp_pat
   for row in events:
     state.apply(row)
   assert state.robot["q"] == [0.1] * 29
+  assert state.robot["goal_base_xy"] == [-0.65, -1.05]
+  assert state.robot["goal_position"] == [-0.1, -0.5, 0.4]
   assert state.command["position"] == [-0.1, -0.7, 0.2]
   assert state.prediction["points"] == predictions[-1]["data"]["points"]
   assert state.reference["points"] == predictions[0]["data"]["points"]
@@ -197,6 +215,8 @@ def test_process_records_predictions_and_measured_robot_for_exact_replay(tmp_pat
     port = sock.getsockname()[1]
   scene = Scene(directory, host="127.0.0.1", port=port, replay=True)
   try:
+    assert scene.meta["version"] == 2
+    assert scene.ghosts.available
     state.robot_time = state.now
     scene.update(state, state.now)
     assert np.allclose(scene.data.qpos[scene.root : scene.root + 3], [0, 0, 0.86])
@@ -204,8 +224,44 @@ def test_process_records_predictions_and_measured_robot_for_exact_replay(tmp_pat
     assert scene.data.time == 0  # No mj_step, no simulation clock.
     assert np.asarray(scene.lines["latest"].colors).shape == (3,)
     assert scene.lines["latest"].visible
+    qpos = scene.data.qpos.copy()
+    for group, handles in scene.ghosts.handles.items():
+      assert handles
+      anchor = (
+        scene.data.xpos[scene.ghosts.pelvis]
+        if group == "pelvis"
+        else scene.data.site_xpos[scene.ghosts.site]
+      )
+      goal = (
+        np.r_[np.asarray(state.robot["goal_base_xy"]) - scene.offset[:2], anchor[2]]
+        if group == "pelvis"
+        else np.asarray(state.robot["goal_position"]) - scene.offset
+      )
+      for geom, handle in handles.items():
+        assert handle.visible
+        np.testing.assert_allclose(
+          handle.position - scene.data.geom_xpos[geom] + anchor, goal
+        )
+        from viser.transforms import SO3
+
+        np.testing.assert_allclose(
+          SO3(handle.wxyz).as_matrix(),
+          scene.data.geom_xmat[geom].reshape(3, 3),
+          atol=1e-7,
+        )
+        assert handle.opacity == (0.35 if group == "pelvis" else 0.45)
+    scene.show_targets.value = False
+    scene.update(state, state.now)
+    assert not any(
+      h.visible for group in scene.ghosts.handles.values() for h in group.values()
+    )
+    np.testing.assert_array_equal(scene.data.qpos, qpos)
+    scene.show_targets.value = True
     scene.update(state, state.now + 1)
-    assert not scene.ball.visible and not scene.command.visible
+    assert not scene.ball.visible
+    assert not any(
+      h.visible for group in scene.ghosts.handles.values() for h in group.values()
+    )
     assert scene.data.qpos[scene.root + 2] == -100
     # A different run replaces the saved model/coordinates on the same server.
     other = tmp_path / "other/visualization"
@@ -221,6 +277,12 @@ def test_process_records_predictions_and_measured_robot_for_exact_replay(tmp_pat
       scene.data.qpos[scene.root : scene.root + 3], state.robot["root_pos"]
     )
     assert scene.data.time == 0
+    # Raw incoming ROS commands cannot substitute for missing controller goals.
+    del state.robot["goal_base_xy"]
+    scene.update(state, state.now)
+    assert not any(
+      h.visible for group in scene.ghosts.handles.values() for h in group.values()
+    )
   finally:
     scene.close()
 

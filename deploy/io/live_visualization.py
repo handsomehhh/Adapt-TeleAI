@@ -13,6 +13,7 @@ STATE_KEYS = (
   "wall_time",
   "state",
   "phase",
+  "policy",
   "q",
   "dq",
   "root_pos",
@@ -25,6 +26,8 @@ STATE_KEYS = (
   "target_q",
   "raw_racket_command",
   "goal_position",
+  "goal_base_xy",
+  "swing_active",
   "goal_velocity",
   "goal_normal",
   "time_to_strike",
@@ -39,6 +42,8 @@ class LiveVisualization:
   def __init__(self, deployment, options, output, *, host, port, headless=False):
     import mujoco
 
+    from deploy.tools.command_ghosts import command_geometry
+
     destination = Path(output)
     if destination.suffix == ".jsonl":
       destination = destination.parent / (destination.stem + "_diagnostics")
@@ -50,7 +55,8 @@ class LiveVisualization:
     if profile["runtime_mode"] == "real":
       shutil.copyfile(profile["source"], self.directory / "calibration.yaml")
     metadata = dict(
-      version=1,
+      version=2,
+      command_ghosts=command_geometry(deployment.model),
       world_frame="hope_table",
       physics=profile,
       checkpoint=str(deployment.checkpoint),

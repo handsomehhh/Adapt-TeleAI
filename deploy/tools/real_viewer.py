@@ -16,6 +16,7 @@ from pathlib import Path
 import numpy as np
 
 from deploy.io.diagnostics import json_default
+from deploy.tools.command_ghosts import CommandGhosts
 
 
 def finite_vector(value, length):
@@ -107,7 +108,8 @@ class Scene:
       "**实机观测回放**" if replay else "**实机只读观测 · 后台记录**"
     )
     self.server.gui.add_markdown(
-      "绿色：动捕轨迹 · 橙色：辅助预测 · 蓝色：本段首次预测 · 紫色：收到的规划目标。\n\n"
+      "绿色：动捕轨迹 · 橙色：辅助预测 · 蓝色：本段首次预测。\n\n"
+      "绿色虚影：骨盆目标 · 金黄色虚影：球拍目标；均为控制器当前执行的目标位置。\n\n"
       "辅助预测复用 planner 物理模型，不包含球拍/球网碰撞；不是控制器指令。"
     )
     self.status = self.server.gui.add_markdown("等待状态…")
@@ -115,6 +117,10 @@ class Scene:
     self.show_joints = self.server.gui.add_checkbox(
       "显示实测关节角（度）", initial_value=False
     )
+    self.show_targets = self.server.gui.add_checkbox(
+      "显示骨盆 / 球拍目标虚影", initial_value=True
+    )
+    self.target_status = self.server.gui.add_markdown("")
     self.paused = self.server.gui.add_checkbox(
       "暂停回放", initial_value=True, visible=replay
     )
@@ -198,9 +204,7 @@ class Scene:
     self.ball = self.server.scene.add_icosphere(
       "/live/ball", radius=0.02, color=(255, 255, 255), visible=False
     )
-    self.command = self.server.scene.add_icosphere(
-      "/live/command", radius=0.035, color=(220, 50, 230), visible=False
-    )
+    self.ghosts = CommandGhosts(self.server, model, meta.get("command_ghosts"))
     self.log_path.content = (
       "只读日志回放，不连接机器人。\n\n"
       if self.replay
@@ -238,16 +242,24 @@ class Scene:
         p = np.asarray(points, dtype=np.float32) - self.offset
         line.points = np.stack([p[:-1], p[1:]], axis=1).astype(np.float32)
         # Preserve uniform RGB; changing color-array shape breaks Viser shaders.
-    cmd = state.command
-    self.command.visible = bool(
-      cmd
-      and cmd.get("valid")
-      and state.command_time is not None
-      and 0 <= now - state.command_time <= 0.15
-      and finite_vector(cmd.get("position"), 3)
+    row = state.robot
+    goals_valid = (
+      valid
+      and row.get("policy") == "pingpong"
+      and finite_vector(row.get("goal_base_xy"), 2)
+      and finite_vector(row.get("goal_position"), 3)
     )
-    if self.command.visible:
-      self.command.position = np.asarray(cmd["position"]) - self.offset
+    self.ghosts.update(
+      self.data,
+      row,
+      self.offset,
+      visible=bool(self.show_targets.value and goals_valid and self.ghosts.available),
+    )
+    self.target_status.content = (
+      "虚影仅表示目标位置；姿态沿用实测姿态，骨盆高度沿用实测高度。"
+      if self.ghosts.available and goals_valid
+      else "当前帧无有效控制目标或缺少目标记录，虚影已隐藏。"
+    )
     age = "—" if state.robot_time is None else f"{now - state.robot_time:.3f}s"
     ball_age = "—" if state.ball_time is None else f"{now - state.ball_time:.3f}s"
     pos = state.robot.get("root_pos")
