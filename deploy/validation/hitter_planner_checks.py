@@ -99,12 +99,12 @@ def test_actor_accepts_both_sides_and_holds_follow(hitter, side):
   np.testing.assert_array_equal(hitter.station, packet["station"])
   hitter.step(state, None, 100.6 + hitter.geometry.follow[side] + 0.02)
   assert hitter.shot is None and hitter.lifecycle.state == "ARMED"
+  assert hitter.geometry.follow[side] == 0.5
+  assert hitter.recovered == 1  # Measured state was already at the anchor.
   for delay in (0.1, 0.5, 2.0):
-    before = hitter.station.copy()
     hitter.step(state, None, 100.6 + hitter.geometry.follow[side] + delay)
-    assert hitter.station[1] < before[1]
-    assert hitter.station[1] - before[1] == pytest.approx(-0.006)
-    np.testing.assert_array_equal(hitter.planner_state()["station"], hitter.station)
+    np.testing.assert_array_equal(hitter.station, hitter.return_anchor[:2])
+    assert hitter.recovered == 1
     np.testing.assert_array_equal(
       hitter.controller.debug["goal_base_xy"], hitter.station
     )
@@ -136,42 +136,114 @@ def test_reject_bad_new_command(hitter, override, reason):
   assert hitter.external_planner_error == reason
 
 
-def test_previous_session_is_ignored_and_idle_station_returns_home(hitter):
+def test_previous_session_is_ignored_and_anchor_survives_down_up(hitter):
+  anchor = np.array([-0.71, -0.83, 0.12])
+  hitter.capture_return_anchor(anchor, 99.0, source="up_button")
   old = packet_for(hitter)
-  hitter.reset_state()
+  hitter.reset_manual_policy(100.0)
+  hitter.capture_return_anchor([-0.6, -0.5, 0.15], 100.1)
+  hitter.lifecycle.state = "STABLE"
+  hitter.start_policy(hitter.controller.default, 100.2)
   hitter.update_external_planner_command(old, 100.01)
   assert hitter.external_planner_command is None
-  hitter.lifecycle.state = "ARMED"
-  hitter.station[1] -= 0.2
-  before = hitter.station.copy()
-  hitter.step(robot_state(hitter), None, 101.0)
-  assert hitter.station[1] - before[1] == pytest.approx(0.006)
-  hitter.reset_state()
-  np.testing.assert_array_equal(hitter.station, [-0.65, -0.7625])
-  assert hitter.side == 0
+  state = robot_state(hitter)
+  state.root_pos += [0.1, 0.2, 0.05]
+  hitter.step(state, None, 101.0)
+  np.testing.assert_array_equal(hitter.return_anchor, anchor)
+  np.testing.assert_array_equal(hitter.station, anchor[:2])
+  np.testing.assert_allclose(
+    hitter.planner_state()["station"], [-0.65, state.root_pos[1]]
+  )
+  assert hitter.phase == "RETURN"
+  assert len([e for e in hitter.events if e["event"] == "return_anchor_captured"]) == 1
 
 
 @pytest.mark.parametrize("mode", ["sim", "real"])
-def test_home_return_stops_at_home_and_new_ball_interrupts(deployment, mode):
+def test_anchor_return_arrival_and_new_ball_interrupts(deployment, mode):
   model, runtime, options = deployment
   options = dict(
-    options, runtime_mode=mode,
+    options,
+    runtime_mode=mode,
     planner_transport="embedded" if mode == "sim" else "ros",
   )
   hitter = HitterController(model, runtime, options)
   hitter.lifecycle.state = "ARMED"
-  hitter.station += [0.013, -0.031]
+  anchor = np.array([-0.71, -0.8, 0.12])
+  hitter.capture_return_anchor(anchor, 99.0, source="up_button")
   state = robot_state(hitter)
-  for tick in range(20):
-    hitter.step(state, None, 100.0 + tick * hitter.cfg["control_dt"])
-  np.testing.assert_allclose(hitter.station, hitter.geometry.home_station, atol=1e-12)
-  hitter.station[1] -= 0.2
+  state.root_pos[1] = -1.1
+  hitter.step(state, None, 100.0)
+  hitter.return_pending = True
+  hitter.step(state, None, 100.2)
+  assert hitter.phase == "RETURN" and hitter.recovered == 0
+  np.testing.assert_array_equal(hitter.station, anchor[:2])
+  np.testing.assert_allclose(
+    hitter.controller.debug["goal_position"],
+    hitter.geometry.centre(hitter.side, anchor[:2]),
+  )
+  assert (
+    hitter.controller.debug["time_to_strike"] == hitter.geometry.windup[hitter.side]
+  )
+  state.root_pos = anchor + [0.02, 0.02, 0.2]
+  hitter.step(state, None, 100.3)
+  assert hitter.phase == "IDLE" and hitter.recovered == 1
+  hitter.step(state, None, 100.32)
+  assert hitter.recovered == 1
+  state.root_pos[1] = -1.1
+  hitter.return_pending = True
   hitter.step(state, None, 100.4)
   packet = packet_for(hitter)
+  # Reachable from measured Y (-1.1), but not from the anchor Y (-0.8).
+  packet["station"] = [-0.65, -1.2]
+  packet["position"] = hitter.geometry.centre(0, packet["station"]).tolist()
   hitter.update_external_planner_command(packet, 100.4)
   hitter.step(state, None, 100.42)
   assert hitter.lifecycle.state == "EXECUTE"
+  assert not hitter.return_pending and hitter.recovered == 1
+  assert any(e["event"] == "return_interrupted_by_command" for e in hitter.events)
   np.testing.assert_array_equal(hitter.station, packet["station"])
+
+
+def test_reject_command_reachable_only_from_anchor(hitter):
+  hitter.lifecycle.state = "ARMED"
+  state = robot_state(hitter)
+  hitter.capture_return_anchor(state.root_pos, 99.0)
+  packet = packet_for(hitter)
+  packet["station"][1] = -0.45
+  packet["position"] = hitter.geometry.centre(0, packet["station"]).tolist()
+  state.root_pos[1] = -1.0
+  hitter.update_external_planner_command(packet, 100.02)
+  hitter.step(state, None, 100.03)
+  assert hitter.shot is None
+  assert (
+    hitter.debug["decision"]["attempts"][0]["reason"]
+    == "station_too_far_from_measured_y"
+  )
+
+
+def test_embedded_planning_uses_measured_y_and_fixed_x(deployment):
+  model, runtime, options = deployment
+  hitter = HitterController(
+    model, runtime, dict(options, planner_transport="embedded", runtime_mode="sim")
+  )
+  calls = []
+  hitter.embedded_observer = SimpleNamespace(
+    update=lambda now, station, side: calls.append(station.copy())
+  )
+  hitter.lifecycle.state = "ARMED"
+  hitter.capture_return_anchor([-0.8, -0.9, 0.1], 99.0)
+  state = robot_state(hitter)
+  state.root_pos[:2] = [-0.7, -0.6]
+  hitter.step(state, None, 100.0)
+  np.testing.assert_allclose(calls[0], [-0.65, -0.6])
+  np.testing.assert_array_equal(calls[0], hitter.planner_state()["station"])
+
+
+@pytest.mark.parametrize("position", [None, [0, 0], [0, float("nan"), 0]])
+def test_anchor_rejects_invalid_first_measurement(hitter, position):
+  with pytest.raises(ValueError, match="valid measured base XYZ"):
+    hitter.capture_return_anchor(position, 100.0, source="up_button")
+  assert hitter.return_anchor is None
 
 
 @pytest.mark.parametrize(

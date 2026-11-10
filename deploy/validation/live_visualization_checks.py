@@ -78,6 +78,9 @@ def robot_row(t):
     dds_state_age=0.005,
     goal_base_xy=[-0.65, -1.05],
     goal_position=[-0.1, -0.5, 0.4],
+    return_anchor_world=[-0.65, -0.8, 0.1],
+    return_anchor_error_m=0.0375,
+    returning_to_anchor=False,
   )
 
 
@@ -202,6 +205,9 @@ def test_process_records_predictions_and_measured_robot_for_exact_replay(tmp_pat
   assert state.robot["q"] == [0.1] * 29
   assert state.robot["goal_base_xy"] == [-0.65, -1.05]
   assert state.robot["goal_position"] == [-0.1, -0.5, 0.4]
+  assert state.robot["return_anchor_world"] == [-0.65, -0.8, 0.1]
+  assert state.robot["return_anchor_error_m"] == 0.0375
+  assert state.robot["returning_to_anchor"] is False
   assert state.command["position"] == [-0.1, -0.7, 0.2]
   assert state.prediction["points"] == predictions[-1]["data"]["points"]
   assert state.reference["points"] == predictions[0]["data"]["points"]
