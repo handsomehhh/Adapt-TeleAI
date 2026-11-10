@@ -36,6 +36,11 @@ from deploy.io.diagnostics import (
 from deploy.io.transport import UDPMocap, build_mocap
 
 
+def finished_episodes(engine):
+  """Continuous hitters finish at follow-through; legacy engines must recover."""
+  return getattr(engine, "finished_episodes", engine.recovered)
+
+
 class SimulatedMocap(UDPMocap):
   """Use the real normalized-packet decoder/estimators without opening a socket."""
 
@@ -688,7 +693,7 @@ class MujocoRuntime:
       self.state_since = now
     self.last_recorded_state = state
     if (
-      self.engine.recovered >= self.episodes
+      finished_episodes(self.engine) >= self.episodes
       and not self.standing_only
       and self.finished_since is None
     ):
@@ -1184,7 +1189,11 @@ def _run_attempt(
     and reached
     and not result.get("physical_limit_observation_counts")
     and session.physics_validation["first_loss_of_standing_time"] is None
-    and (standing_only or controls == "manual" or session.engine.recovered >= episodes)
+    and (
+      standing_only
+      or controls == "manual"
+      or finished_episodes(session.engine) >= episodes
+    )
   )
   hit_rate = session.hits / session.served if session.served else 0.0
   ball_returns = [ball.return_report() for ball in session.served_balls]
