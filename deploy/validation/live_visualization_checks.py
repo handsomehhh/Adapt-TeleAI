@@ -2,6 +2,7 @@
 
 import json
 import queue
+import shutil
 import socket
 import time
 from pathlib import Path
@@ -11,7 +12,13 @@ import mujoco
 import numpy as np
 import pytest
 from deploy.io.live_visualization import LiveVisualization
-from deploy.tools.real_viewer import DisplayState, Scene, read_events
+from deploy.tools.real_viewer import (
+  DisplayState,
+  ReplayLog,
+  Scene,
+  find_recordings,
+  read_events,
+)
 
 
 def deployment():
@@ -200,6 +207,20 @@ def test_process_records_predictions_and_measured_robot_for_exact_replay(tmp_pat
     scene.update(state, state.now + 1)
     assert not scene.ball.visible and not scene.command.visible
     assert scene.data.qpos[scene.root + 2] == -100
+    # A different run replaces the saved model/coordinates on the same server.
+    other = tmp_path / "other/visualization"
+    shutil.copytree(directory, other)
+    meta = json.loads((other / "metadata.json").read_text())
+    meta["world_translation"] = [0, 0, 0]
+    (other / "metadata.json").write_text(json.dumps(meta))
+    server = scene.server
+    scene.load_recording(other)
+    scene.update(state, state.now)
+    assert scene.server is server
+    np.testing.assert_allclose(
+      scene.data.qpos[scene.root : scene.root + 3], state.robot["root_pos"]
+    )
+    assert scene.data.time == 0
   finally:
     scene.close()
 
@@ -208,3 +229,94 @@ def test_truncated_final_event_is_ignored(tmp_path):
   path = tmp_path / "events.jsonl"
   path.write_text('{"kind": "state"}\n{"kind":')
   assert list(read_events(path)) == [{"kind": "state"}]
+
+
+def test_seeks_match_sequential_replay_including_old_reference_and_resets(tmp_path):
+  events = []
+  for i in range(120):
+    t = 100 + i * 0.1
+    events.append(dict(time=t, kind="state", data=robot_row(t)))
+    events.append(
+      dict(
+        time=t,
+        kind="mocap",
+        data=dict(
+          kind="ball",
+          frame="hope_table",
+          stamp=t,
+          sample_monotonic=t,
+          position=[i, 0, 1],
+        ),
+      )
+    )
+    if i % 10 == 0:
+      events.append(
+        dict(
+          time=t,
+          kind="prediction",
+          data=dict(
+            segment=i // 60,
+            points=[[i, 0, 1], [i + 1, 0, 1]],
+          ),
+        )
+      )
+    if i == 60:
+      events.append(dict(time=t, kind="prediction_reset", data=dict(type="reset")))
+    if i == 80:
+      events.append(
+        dict(
+          time=t - 0.02,
+          kind="mocap",
+          data=dict(
+            kind="racket_command",
+            frame="hope_table",
+            valid=True,
+            position=[1, 2, 3],
+          ),
+        )
+      )
+  path = tmp_path / "events.jsonl"
+  path.write_text("".join(json.dumps(e) + "\n" for e in events) + '{"kind":')
+  log = ReplayLog(tmp_path, checkpoint_seconds=1)
+  try:
+    assert len(log.checkpoints) > 5
+    for seconds in (11.9, 3.75, 0, 8.1, 6, 10.3, 2, 11.9):
+      expected = DisplayState()
+      for event in events:
+        if event["time"] > 100 + seconds:
+          break
+        expected.apply(event)
+      log.advance(seconds)
+      assert vars(log.state) == vars(expected)
+      assert log.position == pytest.approx(seconds)
+    log.seek(-10)
+    assert log.position == 0
+    log.seek(1000)
+    assert log.position == pytest.approx(11.9)
+  finally:
+    log.close()
+
+
+def test_recording_list_excludes_incomplete_runs_and_refreshes(tmp_path):
+  for name in ("real_20261109_211714", "real_20261110_090000"):
+    directory = tmp_path / name / "visualization"
+    directory.mkdir(parents=True)
+    for filename in ("events.jsonl", "metadata.json", "scene.mjb"):
+      (directory / filename).touch()
+  (tmp_path / "real_20261111_090000/visualization").mkdir(parents=True)
+  assert list(find_recordings(tmp_path)) == [
+    "real_20261110_090000",
+    "real_20261109_211714",
+  ]
+  shutil.rmtree(tmp_path / "real_20261110_090000")
+  assert list(find_recordings(tmp_path)) == ["real_20261109_211714"]
+
+
+def test_replay_rejects_corrupt_middle_record_and_empty_log(tmp_path):
+  path = tmp_path / "events.jsonl"
+  path.write_text("")
+  with pytest.raises(ValueError, match="No complete events"):
+    ReplayLog(tmp_path)
+  path.write_text('{broken}\n{"time": 1}\n')
+  with pytest.raises(json.JSONDecodeError):
+    ReplayLog(tmp_path)

@@ -71,7 +71,26 @@ cd /home/lxz/Adapt-Deploy
   --web-host 0.0.0.0 --web-port 8081
 ```
 
+也可以传入所有实机记录的父目录，在浏览器的“运行记录（最新在前）”下拉列表中选择一行：
+
+```bash
+cd /home/lxz/Adapt-Deploy
+.venv/bin/python -m deploy.tools.real_viewer \
+  --replay-dir /home/lxz/Adapt-Deploy/deploy/recordings/hope_g1_hitter \
+  --web-host 127.0.0.1 --web-port 8081
+```
+
+目录模式扫描直接子目录中的 `visualization/`，列出同时包含 `metadata.json`、
+`scene.mjb`、`events.jsonl` 的记录，默认打开名称排序最新的一条。
+“刷新记录列表 / 重新读取当前日志”可发现新记录，也可重新读取仍在录制的日志；
+每次读取时固定文件长度，播放期间进度条不会随源文件增长。
+`--replay` 和 `--replay-dir` 二选一，原来的单目录命令仍然支持。
+
 回放默认暂停，取消“暂停回放”后播放；支持调速、从头播放，结束后保留最后画面。
+“回放进度（秒）”可拖动或输入秒数，前进或后退后自动暂停；机器人、动捕轨迹、
+当时预测和规划目标一起恢复到选定时刻，取消暂停继续播放。
+切换记录会加载该记录自身的模型和坐标配置，时间归零并暂停，浏览器地址不变。
+回放启动时建立每 5 秒的状态检查点，不需要把全部事件常驻内存，也不重新预测轨迹。
 `--autoplay` 自动播放，Ctrl-C 关闭回放。回放不连接 ROS、机器人，不加载 policy，
 不需要 planner 包，不重新计算预测，不修改源日志。复制整个 `visualization/` 即可搬移；
 二进制场景建议使用 `metadata.json` 中记录的同版本 MuJoCo 打开。

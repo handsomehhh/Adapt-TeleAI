@@ -1,6 +1,8 @@
 """Live real-robot telemetry and exact recorded-event replay; never sends commands."""
 
 import argparse
+import bisect
+import copy
 import hashlib
 import inspect
 import json
@@ -93,33 +95,14 @@ class DisplayState:
 
 class Scene:
   def __init__(self, directory, *, host, port, replay=False):
-    import mujoco
     import viser
-    from mjviser import ViserMujocoScene
 
-    self.directory = Path(directory)
-    self.meta = json.loads((self.directory / "metadata.json").read_text())
-    model_path = self.directory / "scene.mjb"
-    if hashlib.sha256(model_path.read_bytes()).hexdigest() != self.meta["model_sha256"]:
-      raise ValueError("Recorded scene checksum mismatch")
-    self.model = mujoco.MjModel.from_binary_path(str(model_path))
-    self.data = mujoco.MjData(self.model)
-    self.offset = np.asarray(self.meta["world_translation"])
-    self.addresses = [
-      self.model.jnt_qposadr[self.model.joint("robot/" + n).id]
-      for n in self.meta["joint_names"]
-    ]
-    free = np.flatnonzero(self.model.jnt_type == mujoco.mjtJoint.mjJNT_FREE)
-    if len(free) != 1:
-      raise ValueError("Expected exactly one robot free joint")
-    self.root = self.model.jnt_qposadr[free[0]]
+    self.replay = replay
     self.server = viser.ViserServer(host=host, port=port, label="实机观测与回放")
     if self.server.get_port() != port:
       self.server.stop()
       raise RuntimeError(f"Port {port} is occupied")
     self.server.scene.set_up_direction("+z")
-    self.geometry = ViserMujocoScene(self.server, self.model, num_envs=1)
-    self.geometry.camera_tracking_enabled = False
     self.server.gui.add_markdown(
       "**实机观测回放**" if replay else "**实机只读观测 · 后台记录**"
     )
@@ -139,10 +122,62 @@ class Scene:
       "回放倍速", min=0.1, max=4, step=0.1, initial_value=1, visible=replay
     )
     self.restart = False
+    self.seek_to = None
     if replay:
+      self.progress = self.server.gui.add_slider(
+        "回放进度（秒）", min=0.0, max=1.0, step=0.01, initial_value=0.0
+      )
+      self.timeline = self.server.gui.add_markdown("正在读取日志…")
+      self.load_error = self.server.gui.add_markdown("")
+
+      @self.progress.on_update
+      def seek(event):
+        # Server-side progress updates must not become user seek requests.
+        if event.client is not None:
+          self.seek_to = float(event.target.value)
+          self.paused.value = True
+
       self.server.gui.add_button("从头回放").on_click(
         lambda _: setattr(self, "restart", True)
       )
+    self.log_path = self.server.gui.add_markdown("")
+    try:
+      self.load_recording(directory)
+    except Exception:
+      self.server.stop()
+      raise
+
+    @self.server.on_client_connect
+    def connect(client):
+      client.camera.position = np.array([-2.5, -4, 2.5]) - self.offset
+      client.camera.look_at = np.array([0.7, -0.76, 0.25]) - self.offset
+      client.camera.up_direction = (0, 0, 1)
+
+  def load_recording(self, directory):
+    """Switch models without restarting the web server or its GUI controls."""
+    import mujoco
+    from mjviser import ViserMujocoScene
+
+    directory = Path(directory)
+    meta = json.loads((directory / "metadata.json").read_text())
+    model_path = directory / "scene.mjb"
+    if hashlib.sha256(model_path.read_bytes()).hexdigest() != meta["model_sha256"]:
+      raise ValueError("Recorded scene checksum mismatch")
+    model = mujoco.MjModel.from_binary_path(str(model_path))
+    data = mujoco.MjData(model)
+    addresses = [
+      model.jnt_qposadr[model.joint("robot/" + n).id] for n in meta["joint_names"]
+    ]
+    free = np.flatnonzero(model.jnt_type == mujoco.mjtJoint.mjJNT_FREE)
+    if len(free) != 1:
+      raise ValueError("Expected exactly one robot free joint")
+    self.server.scene.reset()
+    self.directory, self.meta, self.model, self.data = directory, meta, model, data
+    self.addresses = addresses
+    self.offset = np.asarray(meta["world_translation"])
+    self.root = model.jnt_qposadr[free[0]]
+    self.geometry = ViserMujocoScene(self.server, model, num_envs=1)
+    self.geometry.camera_tracking_enabled = False
     self.lines = {}
     style = (
       {"thickness": 3.0, "thickness_units": "screen"}
@@ -166,16 +201,11 @@ class Scene:
     self.command = self.server.scene.add_icosphere(
       "/live/command", radius=0.035, color=(220, 50, 230), visible=False
     )
-    self.server.gui.add_markdown(
-      "关闭网页不会停止机器人或录制。结束部署后，可独立回放此目录。\n\n"
-      f"日志：`{self.directory}`"
-    )
-
-    @self.server.on_client_connect
-    def connect(client):
-      client.camera.position = np.array([-2.5, -4, 2.5]) - self.offset
-      client.camera.look_at = np.array([0.7, -0.76, 0.25]) - self.offset
-      client.camera.up_direction = (0, 0, 1)
+    self.log_path.content = (
+      "只读日志回放，不连接机器人。\n\n"
+      if self.replay
+      else "关闭网页不会停止机器人或录制。结束部署后，可独立回放此目录。\n\n"
+    ) + f"日志：`{self.directory}`"
 
   def update(self, state, now):
     import mujoco
@@ -332,43 +362,202 @@ def read_events(path):
         return
 
 
-def replay(directory, *, host, port, autoplay=False, duration=None):
-  """Stream stored events, including stored predictions; no estimator/physics."""
-  directory = Path(directory)
-  scene = Scene(directory, host=host, port=port, replay=True)
+class ReplayLog:
+  """Sparse state checkpoints for causal seeks without keeping every event in RAM.
+
+  Each open snapshots the file size. An actively growing recording can be
+  reopened to include newer events, without moving the timeline while dragging.
+  """
+
+  def __init__(self, directory, checkpoint_seconds=5.0):
+    path = Path(directory) / "events.jsonl"
+    self.end_offset = path.stat().st_size
+    self.checkpoints, self.times = [], []
+    self.start = self.end = None
+    state = DisplayState()
+    with path.open("rb") as stream:
+      while (event := self._read(stream)) is not None:
+        t = float(event["time"])
+        if not np.isfinite(t):
+          raise ValueError("Nonfinite event timestamp")
+        if self.start is None:
+          self.start = self.end = t
+          self.times.append(t)
+          self.checkpoints.append((0, DisplayState()))
+        # Retain recorded order, including occasional late sensor events.
+        self.end = max(self.end, t)
+        state.apply(event)
+        if self.end - self.times[-1] >= checkpoint_seconds:
+          self.times.append(self.end)
+          self.checkpoints.append((stream.tell(), copy.deepcopy(state)))
+    if self.start is None:
+      raise ValueError(f"No complete events in {path}")
+    self.duration = self.end - self.start
+    self.stream = path.open("rb")
+    self.seek(0)
+
+  def _read(self, stream):
+    remaining = self.end_offset - stream.tell()
+    if remaining <= 0:
+      return None
+    line = stream.readline(remaining)
+    try:
+      return json.loads(line)
+    except json.JSONDecodeError:
+      if stream.read(max(0, self.end_offset - stream.tell())).strip():
+        raise
+      return None  # Ignore an incomplete final line, as read_events does.
+
+  def seek(self, seconds):
+    self.position = float(np.clip(seconds, 0, self.duration))
+    index = bisect.bisect_right(self.times, self.start + self.position) - 1
+    offset, state = self.checkpoints[index]
+    self.state = copy.deepcopy(state)
+    self.stream.seek(offset)
+    self.pending = self._read(self.stream)
+    self.advance(self.position)
+
+  def advance(self, seconds):
+    seconds = float(np.clip(seconds, 0, self.duration))
+    if seconds < self.position:
+      self.seek(seconds)
+      return
+    self.position = seconds
+    while self.pending is not None and self.pending["time"] <= self.now:
+      self.state.apply(self.pending)
+      self.pending = self._read(self.stream)
+
+  @property
+  def now(self):
+    return self.start + self.position
+
+  def close(self):
+    self.stream.close()
+
+
+def find_recordings(root):
+  """One selectable row per run containing a complete visualization bundle."""
+  root = Path(root).expanduser().resolve()
+  if not root.is_dir():
+    raise ValueError(f"Recording root is not a directory: {root}")
+  recordings = {}
+  for run in sorted(root.iterdir(), reverse=True):
+    directory = run / "visualization"
+    if all(
+      (directory / name).is_file()
+      for name in ("events.jsonl", "metadata.json", "scene.mjb")
+    ):
+      recordings[run.name] = directory
+  return recordings
+
+
+def replay(
+  directory=None, *, replay_dir=None, host, port, autoplay=False, duration=None
+):
+  """Recorded playback with seeks and optional run selection; no robot IO."""
+  recordings = find_recordings(replay_dir) if replay_dir is not None else None
+  if recordings is not None:
+    if not recordings:
+      raise ValueError(f"No visualization recordings found under {replay_dir}")
+    selected = next(iter(recordings))
+    directory = recordings[selected]
+  log = ReplayLog(Path(directory).expanduser())
+  try:
+    scene = Scene(directory, host=host, port=port, replay=True)
+  except Exception:
+    log.close()
+    raise
   scene.paused.value = not autoplay
-  state = DisplayState()
-  rows = read_events(directory / "events.jsonl")
-  pending = next(rows, None)
-  position = pending["time"] if pending else 0.0
+  selection = None
+  refresh = False
+  if recordings is not None:
+    selection = scene.server.gui.add_dropdown(
+      "运行记录（最新在前）",
+      options=list(recordings),
+      initial_value=selected,
+      order=-10,
+    )
+
+    def request_refresh(_):
+      nonlocal refresh
+      refresh = True
+
+    scene.server.gui.add_button("刷新记录列表 / 重新读取当前日志", order=-9).on_click(
+      request_refresh
+    )
+
+  def reset_timeline():
+    scene.progress.max = max(0.01, log.duration)
+    scene.progress.value = 0.0
+    scene.progress.disabled = log.duration == 0
+    scene.seek_to = None
+    scene.restart = False
+
+  reset_timeline()
   started = previous = time.monotonic()
   try:
     while duration is None or time.monotonic() - started < duration:
       now = time.monotonic()
+      if selection is not None and (refresh or selection.value != selected):
+        requested = selection.value
+        try:
+          if refresh:
+            found = find_recordings(replay_dir)
+            if not found:
+              raise ValueError("没有可用的 visualization 记录")
+            recordings = found
+            selection.options = list(recordings)
+            requested = requested if requested in recordings else next(iter(recordings))
+          new_log = ReplayLog(recordings[requested])
+          try:
+            scene.load_recording(recordings[requested])
+          except Exception:
+            new_log.close()
+            raise
+          log.close()
+          log = new_log
+          selected = requested
+          selection.value = selected
+          scene.paused.value = True
+          scene.load_error.content = ""
+          reset_timeline()
+          previous = time.monotonic()
+        except Exception as exc:
+          scene.load_error.content = f"读取记录失败：{exc}"
+          if selected not in selection.options:
+            selection.options = [selected, *selection.options]
+          selection.value = selected
+          scene.paused.value = True
+        refresh = False
+        now = time.monotonic()
       if scene.restart:
-        rows.close()
-        rows = read_events(directory / "events.jsonl")
-        pending = next(rows, None)
-        position = pending["time"] if pending else 0.0
-        state = DisplayState()
+        log.seek(0)
         scene.restart = False
-      if not scene.paused.value and pending is not None:
-        position += (now - previous) * float(scene.speed.value)
+      if scene.seek_to is not None:
+        seconds, scene.seek_to = scene.seek_to, None
+        log.seek(seconds)
+      if not scene.paused.value:
+        log.advance(log.position + (now - previous) * float(scene.speed.value))
+        if log.position >= log.duration:
+          scene.paused.value = True
       previous = now
-      while pending is not None and pending["time"] <= position:
-        state.apply(pending)
-        pending = next(rows, None)
-      scene.update(state, position)
+      scene.progress.value = log.position
+      scene.timeline.content = f"**{log.position:.2f} / {log.duration:.2f} 秒** · 拖动进度条后暂停，取消暂停继续播放。"
+      scene.update(log.state, log.now)
       time.sleep(1 / 30)
   finally:
-    rows.close()
+    log.close()
     scene.close()
 
 
 def main():
   parser = argparse.ArgumentParser(description=__doc__)
-  parser.add_argument(
-    "--replay", type=Path, required=True, help="Recorded visualization directory"
+  source = parser.add_mutually_exclusive_group(required=True)
+  source.add_argument("--replay", type=Path, help="Recorded visualization directory")
+  source.add_argument(
+    "--replay-dir",
+    type=Path,
+    help="Parent recording directory; choose a run in the web viewer",
   )
   parser.add_argument("--web-host", default="127.0.0.1")
   parser.add_argument("--web-port", type=int, default=8081)
@@ -382,6 +571,7 @@ def main():
   try:
     replay(
       args.replay,
+      replay_dir=args.replay_dir,
       host=args.web_host,
       port=args.web_port,
       autoplay=args.autoplay,
