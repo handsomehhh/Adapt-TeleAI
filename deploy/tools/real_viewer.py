@@ -146,11 +146,15 @@ class Scene:
           lambda _: setattr(self.paused, "value", not self.paused.value)
         )
 
-        def step(_):
+        def step(delta):
           self.paused.value = True
-          self.seek_to = float(self.progress.value) + 0.02
+          position = self.progress.value if self.seek_to is None else self.seek_to
+          self.seek_to = float(
+            np.clip(position + delta, self.progress.min, self.progress.max)
+          )
 
-        self.server.gui.add_button("前进一帧").on_click(step)
+        self.server.gui.add_button("后退一帧").on_click(lambda _: step(-0.02))
+        self.server.gui.add_button("前进一帧").on_click(lambda _: step(0.02))
         self.server.gui.add_button("从头回放").on_click(
           lambda _: setattr(self, "restart", True)
         )
