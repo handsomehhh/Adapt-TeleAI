@@ -1,4 +1,4 @@
-"""Compare deployment against the repository's actual G1 1v1 implementation.
+"""Compare deployment with G1 planning with only lateral rejection disabled.
 
 Requires the sibling PingPong and g1_planner_ros2 repositories (or set PINGPONG_REPO
 and G1_PLANNER_PACKAGE). Run with the Adapt-TeleAI Python environment.
@@ -53,7 +53,10 @@ def upstream(physics):
   p.controller = SimpleNamespace(
     boxes=np.asarray(CONTRACT["racket_pos_range_per_clip"]),
     velocity_boxes=np.asarray(CONTRACT["racket_vel_range_per_clip"]),
-    cfg=SimpleNamespace(unrestricted_planner=False, own_half_bounces_only=False),
+    cfg=SimpleNamespace(
+      unrestricted_planner=False, own_half_bounces_only=False, command_profile=None,
+      planner_limits=SimpleNamespace(enabled=lambda name: name != "lateral"),
+    ),
     station=np.array([-0.65, -0.45]),
     side=0,
   )
@@ -66,7 +69,7 @@ def upstream(physics):
 
 
 @pytest.mark.parametrize("calibrated", [False, True])
-def test_multiseed_planner_matches_original_1v1(calibrated):
+def test_multiseed_planner_matches_only_lateral_relaxed(calibrated):
   physics = (
     BallPhysics(k=0.096, C_h=0.816019, C_v=0.862769) if calibrated else BallPhysics()
   )

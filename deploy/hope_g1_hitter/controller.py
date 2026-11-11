@@ -103,8 +103,6 @@ class HitterGeometry:
       raise ValueError("Expected forehand then backhand hitter clips")
     self.windup = np.array([c["strike_frame"] * dt for c in clips])
     self.follow = np.array([(c["frames"] - 1 - c["strike_frame"]) * dt for c in clips])
-    self.station_y = (-1.25, -0.35)
-    self.max_station_step = 0.35
 
   def plane_x(self, side):
     return float(self.home_station[0] + self.boxes[side, 0].mean())
@@ -128,26 +126,16 @@ class HitterGeometry:
       reason = "time_window"
     elif not box[2, 0] <= target[2] - self.floor_z <= box[2, 1]:
       reason = "height_outside_training_box"
-    if (
-      reason is None
-      and not self.station_y[0] <= requested_station[1] <= self.station_y[1]
-    ):
-      reason = "station_outside_workspace"
-    if (
-      reason is None
-      and abs(requested_station[1] - station[1]) > self.max_station_step + 1e-7
-    ):
-      reason = "station_too_far_from_target_y"
     bounds = self.velocity_boxes[side]
     velocity = np.asarray(command.velocity)
     if reason is None and (
       np.any(velocity < bounds[:, 0] - 1e-7) or np.any(velocity > bounds[:, 1] + 1e-7)
     ):
       reason = "velocity_outside_training_box"
-    relative_xy = target[:2] - requested_station
-    if reason is None and (
-      np.any(relative_xy < box[:2, 0] - 1e-7) or np.any(relative_xy > box[:2, 1] + 1e-7)
-    ):
+    # The planner clamps its station but may intentionally hand over a target
+    # outside the trained lateral reach. Preserve that Y target for the actor.
+    relative_x = target[0] - requested_station[0]
+    if reason is None and not box[0, 0] - 1e-7 <= relative_x <= box[0, 1] + 1e-7:
       reason = "position_outside_training_box"
     normal = velocity / max(np.linalg.norm(velocity), 1e-9)
     if reason is None and not np.allclose(command.normal, normal, atol=1e-6):
@@ -295,7 +283,7 @@ class HitterController:
       f"[hope_g1_hitter] task={self.cfg['task']}; actor=104->29; "
       f"mode={self.runtime_mode}; physics={self.physics_profile.paddle_model}; "
       f"station={g.home_station.tolist()}; "
-      f"between_hits=hold_last_target; reachability=target_station; "
+      f"between_hits=hold_last_target; lateral_rejection=off; station=clamped_by_planner; "
       f"planes FH={g.plane_x(0):.3f} BH={g.plane_x(1):.3f}; "
       f"windup={g.windup.tolist()}; follow={g.follow.tolist()}"
     )
