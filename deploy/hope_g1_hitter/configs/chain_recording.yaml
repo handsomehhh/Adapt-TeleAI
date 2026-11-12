@@ -1,0 +1,15 @@
+# Read-only capture, automatically started for --env real.
+raw_ball_topic: /vrpn_mocap/MCAvatar/pose30310
+ball_topic: /poses
+command_topic: /g1/racket/command
+feedback_topic: /g1/planner/state
+ros_setup: /opt/ros/humble/setup.bash
+ros_domain_id: 23
+vrpn_tap:
+  enabled: true
+  # Reuse the existing installed client; never edit its code/config or restart it.
+  executable: ~/HOPE/hope_ws/install/vrpn_mocap/lib/vrpn_mocap/client_node
+  server: 192.168.1.101
+  port: 3883
+  tracker: MCAvatar
+  sensor: 30310

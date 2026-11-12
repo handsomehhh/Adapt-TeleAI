@@ -24,6 +24,9 @@ def main():
   parser.add_argument("--artifact-dir", type=Path)
   parser.add_argument("--real-config", type=Path, default=CONFIG_DIR / "real.yaml")
   parser.add_argument("--mocap-config", type=Path, default=CONFIG_DIR / "mocap.yaml")
+  parser.add_argument("--chain-record-config", type=Path, default=CONFIG_DIR / "chain_recording.yaml")
+  parser.add_argument("--no-chain-record", action="store_true",
+                      help="Disable the real-mode ROS/VRPN diagnostic recorder")
   parser.add_argument(
     "--rally-config",
     type=Path,
@@ -196,7 +199,12 @@ def main():
         port=args.web_port,
         headless=args.live_record_only,
       )
+    chain_recording = None
     try:
+      if not args.no_chain_record:
+        from deploy.tools.record_mocap_chain import ChainRecording
+
+        chain_recording = ChainRecording(output, args.chain_record_config, args.mocap_config)
       run_control_loop(
         deployment,
         runtime,
@@ -206,6 +214,8 @@ def main():
         **common,
       )
     finally:
+      if chain_recording is not None:
+        chain_recording.close()
       if visualization is not None:
         visualization.close()
 

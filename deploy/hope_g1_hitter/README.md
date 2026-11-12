@@ -229,3 +229,38 @@ X=-0.22、Y=[-1.45,-0.5]、Z=[-0.1,0.39] 的网格；没有用 policy/planner �
 这些脚本调用相同启动入口和 F 按钮回调，以无渲染方式自动执行 START/放下/A/UP，
 关闭连续发球后每 4 s 按 F，不更改采样、planner 或 policy 目标。
 历史 36 球实验使用更新前的实机空气/桌面参数；当前模式自动切换后的成功率不能沿用该结果。
+
+## 实机链路诊断记录
+
+实机 `deploy.hope_g1_hitter.deploy_agent --env real ...` 默认自动开启独立 ROS 记录进程，
+不需要 `--live-view`，原有动捕、转换、planner 和桥接启动命令保持不变。
+配置为 `configs/chain_recording.yaml`；`--chain-record-config` 可覆盖配置，
+`--no-chain-record` 可关闭。系统 ROS Python 与策略虚拟环境隔离；仅子进程 source
+`/opt/ros/humble/setup.bash` 和并列 `g1_planner_ros2/install/setup.bash`。
+ROS_DOMAIN_ID 优先沿用当前终端，未设置时使用配置中的 23。
+
+每次运行目录新增 `ros_chain/`：
+
+- `events.jsonl`：原始 VRPN 球话题、`/poses`、planner 指令、控制器反馈，保留重复数据、
+  整数 ROS 时间戳、发布者 GID、DDS 时间戳和接收时间。
+- `metadata.json` / `config.yaml`：话题及采集配置；`process.log` / `vrpn_tap.log`：进程日志。
+- `coverage.json`：各话题数量、缺失话题及是否真正收到 VRPN 原始时间。
+- `summary.json`：写盘错误、队列丢弃和未写完数量；这些计数不代表能检测到所有 DDS 丢包。
+
+独立 VRPN tap 默认复用 `~/HOPE/hope_ws/install/vrpn_mocap/lib/vrpn_mocap/client_node`，
+连接配置中的服务器，在独立命名空间记录原始 `msg_time` 和本机接收时间，不发布 `/poses`，
+不改动或重启原动捕进程。它是一条额外的 VRPN 连接，不能等同于原客户端实际收到的序列。
+缺少该程序时仍记录四类主话题，但明确标记 tap 不可用；没有 ROS 环境而导致记录器启动
+失败时，部署入口在进入控制循环前报错，可修复环境或显式用 `--no-chain-record`。
+
+仅记录、不加载策略或连接电机的检查命令：
+
+```bash
+cd /home/lxz/Adapt-Deploy
+.venv/bin/python -m deploy.tools.record_mocap_chain \
+  --output deploy/recordings/mocap_chain_check --duration 30
+```
+
+每次使用新的输出目录。planner 自身还在 `~/.ros/g1_planner_audit/` 记录实际消费的消息、
+估计窗口和指令，以 `session_id`、`command_id`、整数源时间戳关联本次日志。
+须重启更新后的 planner 才有这一部分记录；独立订阅日志不能替代它。
