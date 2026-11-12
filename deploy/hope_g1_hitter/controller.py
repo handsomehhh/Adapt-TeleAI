@@ -132,10 +132,17 @@ class HitterGeometry:
       np.any(velocity < bounds[:, 0] - 1e-7) or np.any(velocity > bounds[:, 1] + 1e-7)
     ):
       reason = "velocity_outside_training_box"
-    # The planner clamps its station but may intentionally hand over a target
-    # outside the trained lateral reach. Preserve that Y target for the actor.
-    relative_x = target[0] - requested_station[0]
-    if reason is None and not box[0, 0] - 1e-7 <= relative_x <= box[0, 1] + 1e-7:
+    # Use the current target station, never measured pelvis Y, for reachability.
+    if reason is None and (
+      not -1.25 - 1e-7 <= requested_station[1] <= -0.35 + 1e-7
+      or abs(requested_station[1] - station[1]) > 0.35 + 1e-7
+    ):
+      reason = "station_outside_workspace"
+    relative_xy = target[:2] - requested_station[:2]
+    if reason is None and (
+      np.any(relative_xy < box[:2, 0] - 1e-7)
+      or np.any(relative_xy > box[:2, 1] + 1e-7)
+    ):
       reason = "position_outside_training_box"
     normal = velocity / max(np.linalg.norm(velocity), 1e-9)
     if reason is None and not np.allclose(command.normal, normal, atol=1e-6):
@@ -283,7 +290,7 @@ class HitterController:
       f"[hope_g1_hitter] task={self.cfg['task']}; actor=104->29; "
       f"mode={self.runtime_mode}; physics={self.physics_profile.paddle_model}; "
       f"station={g.home_station.tolist()}; "
-      f"between_hits=hold_last_target; lateral_rejection=off; station=clamped_by_planner; "
+      f"between_hits=hold_last_target; lateral_rejection=on; station=bounded_by_planner; "
       f"planes FH={g.plane_x(0):.3f} BH={g.plane_x(1):.3f}; "
       f"windup={g.windup.tolist()}; follow={g.follow.tolist()}"
     )

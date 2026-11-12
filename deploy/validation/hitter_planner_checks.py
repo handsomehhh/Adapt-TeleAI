@@ -219,7 +219,7 @@ def test_next_ball_can_replace_target_without_waiting_for_arrival(
   )
 
 
-def test_accept_command_beyond_previous_station_step(hitter):
+def test_reject_command_beyond_current_target_station_step(hitter):
   hitter.lifecycle.state = "ARMED"
   state = robot_state(hitter)
   packet = packet_for(hitter)
@@ -228,21 +228,31 @@ def test_accept_command_beyond_previous_station_step(hitter):
   state.root_pos[1] = -1.1
   hitter.update_external_planner_command(packet, 100.02)
   hitter.step(state, None, 100.03)
-  assert hitter.shot is not None
-  np.testing.assert_array_equal(hitter.station, packet["station"])
+  assert hitter.shot is None
+  assert hitter.debug["decision"]["attempts"][0]["reason"] == "station_outside_workspace"
+  # The measured pelvis is close to the request; the target station is not.
+  assert hitter.station[1] == pytest.approx(-.7625)
 
 
 @pytest.mark.parametrize("target_y", [-1.8, 0.2])
 @pytest.mark.parametrize("side", [0, 1])
-def test_accept_lateral_target_outside_training_box(hitter, target_y, side):
+def test_reject_lateral_target_outside_training_box(hitter, target_y, side):
   packet = packet_for(hitter, side)
   packet["position"][1] = target_y
   hitter.update_external_planner_command(packet, 100.02)
   shot, diagnostics = hitter.select(100.03)
-  assert shot is not None and diagnostics[0]["reason"] == "accepted"
-  np.testing.assert_array_equal(shot.position, packet["position"])
-  np.testing.assert_array_equal(shot.station, packet["station"])
-  np.testing.assert_array_equal(shot.velocity, packet["velocity"])
+  assert shot is None and diagnostics[0]["reason"] == "position_outside_training_box"
+
+
+@pytest.mark.parametrize("station_y", [-1.2501, -.3499])
+def test_reject_station_outside_global_bounds(hitter, station_y):
+  hitter.station[1] = -1.1 if station_y < -1 else -.5
+  packet = packet_for(hitter)
+  packet["station"][1] = station_y
+  packet["position"] = hitter.geometry.centre(0, packet["station"]).tolist()
+  hitter.update_external_planner_command(packet, 100.02)
+  shot, diagnostics = hitter.select(100.03)
+  assert shot is None and diagnostics[0]["reason"] == "station_outside_workspace"
 
 
 def test_embedded_planning_and_ros_feedback_use_current_target(deployment):
