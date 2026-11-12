@@ -245,7 +245,11 @@ ROS_DOMAIN_ID 优先沿用当前终端，未设置时使用配置中的 23。
   整数 ROS 时间戳、发布者 GID、DDS 时间戳和接收时间。
 - `metadata.json` / `config.yaml`：话题及采集配置；`process.log` / `vrpn_tap.log`：进程日志。
 - `coverage.json`：各话题数量、缺失话题及是否真正收到 VRPN 原始时间。
+- `launcher_summary.json`：记录进程退出码及是否被强制结束。
 - `summary.json`：写盘错误、队列丢弃和未写完数量；这些计数不代表能检测到所有 DDS 丢包。
+
+lxz 的 Humble Python 不提供逐消息 publisher GID，记录为 `null`；发布者列表和 endpoint
+GID 会定期从 ROS 图保存。其他环境若提供逐消息 GID，则直接保留。
 
 独立 VRPN tap 默认复用 `~/HOPE/hope_ws/install/vrpn_mocap/lib/vrpn_mocap/client_node`，
 连接配置中的服务器，在独立命名空间记录原始 `msg_time` 和本机接收时间，不发布 `/poses`，

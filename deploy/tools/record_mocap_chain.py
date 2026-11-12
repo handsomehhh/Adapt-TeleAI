@@ -22,6 +22,7 @@ class ChainRecording:
     self.directory = output / "ros_chain"
     self.directory.mkdir(parents=True, exist_ok=False)
     self.process = self.log = None
+    self.closed = False
     cfg = yaml.safe_load(Path(config).read_text())
     if mocap_config:
       mocap = yaml.safe_load(Path(mocap_config).read_text())
@@ -63,16 +64,28 @@ class ChainRecording:
     print(f"ROS chain log: {self.directory}; VRPN tap={meta['vrpn_tap']}", flush=True)
 
   def close(self):
+    if self.closed:
+      return
+    self.closed = True
+    forced = False
     if self.process is not None and self.process.poll() is None:
       self.process.terminate()
       try:
         self.process.wait(timeout=8)
       except subprocess.TimeoutExpired:
+        forced = True
         # This is our private session, containing only the recorder and its tap.
         os.killpg(self.process.pid, signal.SIGKILL)
         self.process.wait(timeout=2)
     if self.log is not None:
       self.log.close()
+    code = self.process.returncode if self.process is not None else None
+    (self.directory / "launcher_summary.json").write_text(json.dumps(
+      dict(exitcode=code, forced_stop=forced), indent=2,
+    ))
+    if code != 0 or forced:
+      print(f"ROS chain recording did not finish cleanly: {self.directory / 'process.log'}",
+            flush=True)
 
 
 def main():
