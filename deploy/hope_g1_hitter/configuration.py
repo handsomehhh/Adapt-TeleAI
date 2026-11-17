@@ -39,6 +39,20 @@ MjlabYamlLoader.add_multi_constructor(
 )
 
 
+def _read_serialized_callable(loader, suffix, node):
+  """Read saved config data without constructing or executing Python objects."""
+  if isinstance(node, yaml.MappingNode):
+    return loader.construct_mapping(node, deep=True)
+  return loader.construct_sequence(node, deep=True)
+
+
+# functools.partial (used for checkpoint-specific self contacts) is serialized
+# as a mapping; the older loader only handled sequence-form object/apply tags.
+MjlabYamlLoader.add_multi_constructor(
+  "tag:yaml.org,2002:python/object/apply:", _read_serialized_callable
+)
+
+
 def read_yaml(path):
   return yaml.load(Path(path).read_text(), Loader=MjlabYamlLoader)
 
@@ -192,6 +206,19 @@ def load_deployment(artifact_dir, *, ball_config, world_config, station=(-0.65, 
     for geom in spec.geoms:
       if geom.group == 3:
         geom.contype, geom.conaffinity = 1, 4
+    contact = contract.get("robot_self_collision")
+    if contact:
+      if contact.get("schema") != 1:
+        raise ValueError("Unsupported hitter self-contact schema")
+      seen = set()
+      for i, pair in enumerate(contact["pairs"]):
+        if len(pair) != 2 or pair[0] == pair[1] or tuple(sorted(pair)) in seen:
+          raise ValueError("Invalid or duplicate hitter self-contact pair")
+        seen.add(tuple(sorted(pair)))
+        if any(spec.geom(n) is None or spec.geom(n).group != 3 for n in pair):
+          raise ValueError("Hitter self-contact pair must name collision proxies")
+        spec.add_pair(name=f"recorded_self_{i:02d}", geomname1=pair[0], geomname2=pair[1],
+                      **contact["parameters"])
     return spec
 
   robot.spec_fn = training_spec

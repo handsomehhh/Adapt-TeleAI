@@ -3,6 +3,7 @@
 Run: .venv/bin/python -m pytest deploy/validation/hitter_planner_checks.py
 """
 
+import copy
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -10,10 +11,29 @@ import numpy as np
 import pytest
 import torch
 import yaml
-from deploy.hope_g1_hitter.configuration import load_deployment
-from deploy.hope_g1_hitter.controller import HitterController
+from deploy.hope_g1_hitter.configuration import load_deployment, read_yaml
+from deploy.hope_g1_hitter.controller import HitterController, HitterGeometry
 from deploy.io.g1_planner import command_packet
 from deploy.racket_command import decode_g1_planner_command
+
+
+def test_saved_self_contact_factory_is_read_as_inert_configuration(tmp_path):
+  path = tmp_path / "env.yaml"
+  path.write_text("""scene:
+  spec_fn: !!python/object/apply:functools.partial
+    args:
+    - !!python/name:hope_mjlab.g1_robot.robot_spec ''
+    state: !!python/tuple
+    - !!python/name:hope_mjlab.g1_robot.robot_spec ''
+    - !!python/tuple []
+    - self_collision:
+        schema: 1
+        pairs: [[racket, torso]]
+    - null
+""")
+  factory = read_yaml(path)["scene"]["spec_fn"]
+  assert factory["args"] == ["hope_mjlab.g1_robot.robot_spec"]
+  assert factory["state"][2]["self_collision"]["pairs"] == [["racket", "torso"]]
 
 
 @pytest.fixture(scope="module")
@@ -68,6 +88,50 @@ def robot_state(hitter):
     root_pos=np.r_[hitter.station, 0.0],
     root_quat=np.array([1.0, 0, 0, 0]),
   )
+
+
+def test_new_policy_lateral_command_uses_exported_workspace(hitter, deployment):
+  cfg = copy.deepcopy(deployment[0].settings)
+  for box, lateral in zip(cfg["hitter"]["racket_pos_range_per_clip"], ((-.55, -.15), (-.15, .25)), strict=True):
+    box[0], box[1] = [.44, .44], list(lateral)
+  cfg["hitter"]["planner_workspace"] = {
+    "frame": "hope_table", "station_y_range": [-1.25, -.35], "max_station_step_y": .35,
+  }
+  hitter.geometry = HitterGeometry(cfg, deployment[2]["hitter"])
+  hitter.station[1] = -.516
+  packet = packet_for(hitter, 1)
+  packet["station"][1] = -.388
+  packet["position"][1] = -.138
+  decoded, error = decode_g1_planner_command(
+    packet, 100.04, contract_hash=hitter.contract_hash, session_id=hitter.session_id
+  )
+  assert not error
+  shot, diagnostic = hitter.geometry.evaluate(1, decoded, hitter.station, 100.04)
+  assert shot is not None and diagnostic["velocity_clip_mps"] == 0
+  np.testing.assert_allclose(shot.position, packet["position"])
+  cfg["hitter"]["planner_workspace"]["max_station_step_y"] = .1
+  tighter = HitterGeometry(cfg, deployment[2]["hitter"])
+  assert tighter.evaluate(1, decoded, hitter.station, 100.04)[1]["reason"] == "station_outside_workspace"
+
+
+@pytest.mark.parametrize("side", [0, 1])
+def test_fixed_plane_command_reaches_actor_without_x_widening(hitter, side):
+  hitter.geometry.boxes[:, 0] = [0.44, 0.44]
+  hitter.lifecycle.state = "STABLE"
+  hitter.start_policy(hitter.controller.default, 100.0)
+  packet = packet_for(hitter, side)
+  hitter.update_external_planner_command(packet, 100.02)
+  hitter.step(robot_state(hitter), None, 100.03)
+  assert hitter.shot is not None
+  assert hitter.controller.debug["goal_position"][0] - hitter.station[0] == pytest.approx(0.44)
+  packet["command_id"] = 2
+  packet["position"][0] += 0.001
+  decoded, error = decode_g1_planner_command(
+    packet, 100.04, contract_hash=hitter.contract_hash, session_id=hitter.session_id
+  )
+  assert not error
+  shot, diagnostic = hitter.geometry.evaluate(side, decoded, hitter.station, 100.04)
+  assert shot is None and diagnostic["reason"] == "position_outside_training_box"
 
 
 @pytest.mark.parametrize("side", [0, 1])

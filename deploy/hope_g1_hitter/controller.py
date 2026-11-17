@@ -98,6 +98,16 @@ class HitterGeometry:
     self.floor_z = float(cfg["simulation_world_translation"][2])
     self.boxes = np.asarray(contract["racket_pos_range_per_clip"], dtype=float)
     self.velocity_boxes = np.asarray(contract["racket_vel_range_per_clip"], dtype=float)
+    workspace = contract.get("planner_workspace", {
+      "frame": "hope_table", "station_y_range": [-1.25, -0.35],
+      "max_station_step_y": 0.35,
+    })
+    self.station_y_range = np.asarray(workspace["station_y_range"], dtype=float)
+    self.max_station_step_y = float(workspace["max_station_step_y"])
+    if (workspace.get("frame") != "hope_table" or self.station_y_range.shape != (2,)
+        or not np.isfinite(np.r_[self.station_y_range, self.max_station_step_y]).all()
+        or self.station_y_range[0] >= self.station_y_range[1] or self.max_station_step_y <= 0):
+      raise ValueError("Invalid hitter planner workspace")
     clips = contract["clips"]
     if [c["side"] for c in clips] != list(SIDES) or self.boxes.shape != (2, 3, 2):
       raise ValueError("Expected forehand then backhand hitter clips")
@@ -134,8 +144,8 @@ class HitterGeometry:
       reason = "velocity_outside_training_box"
     # Use the current target station, never measured pelvis Y, for reachability.
     if reason is None and (
-      not -1.25 - 1e-7 <= requested_station[1] <= -0.35 + 1e-7
-      or abs(requested_station[1] - station[1]) > 0.35 + 1e-7
+      not self.station_y_range[0] - 1e-7 <= requested_station[1] <= self.station_y_range[1] + 1e-7
+      or abs(requested_station[1] - station[1]) > self.max_station_step_y + 1e-7
     ):
       reason = "station_outside_workspace"
     relative_xy = target[:2] - requested_station[:2]

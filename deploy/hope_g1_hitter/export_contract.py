@@ -36,8 +36,8 @@ def main():
 
   profile = TrainingPlayProfile(raw)
   command = profile.command
-  rows = g1_robot.reference_metadata()
-  motions = [Path(p) for p in g1_robot.motion_files()]
+  motions = [Path(p) for p in profile.reference_files]
+  rows = g1_robot.reference_metadata(profile.reference_files)
   for source in motions:
     copied = args.artifact_dir / "motions" / source.name
     if sha256(source) != sha256(copied):
@@ -70,6 +70,8 @@ def main():
     racket_mount_quat=list(command["mount_quat"]),
     robot_xml="robot/g1.xml",
     robot_xml_sha256=sha256(args.artifact_dir / "robot/g1.xml"),
+    robot_self_collision=profile.self_collision,
+    planner_workspace=profile.planner_workspace,
     base_target_y_range=list(command["base_target_y_range"]),
     clips=[
       dict(
