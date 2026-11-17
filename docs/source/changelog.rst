@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added isolated P1/P2 UDP inputs for dual G1 play, with robot identity checks,
+  a cache of the shared host ball estimate, and complete-process namespace guards.
 - Added ten pelvis-mounted mocap marker links to the G1 23-DoF calibration
   URDF, with individually symmetric front/back layouts, physical edge alignment
   datums, nominal pelvis offsets, and annotated mounting previews.

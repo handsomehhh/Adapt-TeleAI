@@ -20,7 +20,7 @@ import yaml
 
 from deploy.backends.mujoco import MujocoBackend
 from deploy.backends.runtime import SimulationIO, SimulationReset
-from deploy.backends.sdk import require_sdk
+from deploy.backends.sdk import initialize_channel_factory, require_sdk
 from deploy.g1_pingpong.commands import CommandGuard, policy_pd_settings
 from deploy.g1_pingpong.core import quaternion_multiply, rotation
 from deploy.g1_pingpong.oscillation import OscillationGuard
@@ -145,8 +145,8 @@ def root_orientation(mocap_quat, imu_quat, cfg):
 class DDSBackend:
   def __init__(self, manifest, cfg, enable_motors=False):
     require_sdk()
+    from unitree_sdk2py.core import channel as sdk_channel
     from unitree_sdk2py.core.channel import (
-      ChannelFactoryInitialize,
       ChannelPublisher,
       ChannelSubscriber,
     )
@@ -174,7 +174,9 @@ class DDSBackend:
     self.command_sequence = self.write_sequence = 0
     self.crc = CRC()
     self.low_cmd = unitree_hg_msg_dds__LowCmd_()
-    ChannelFactoryInitialize(cfg["domain_id"], cfg["network_interface"])
+    trace = initialize_channel_factory(sdk_channel, cfg)
+    if trace is not None:
+      self.io_diagnostics["dds_trace_file"] = trace
     if cfg.get("diagnostic_output_dir") and cfg.get("record_lowstate_hz", 0) > 0:
       self.lowstate_recorder = LowStateRecorder(
         Path(cfg["diagnostic_output_dir"]) / "lowstate",
@@ -782,6 +784,8 @@ def run_control_loop(
   home_posture = None
   entry_ready = False
   real_cfg = real_cfg.copy()
+  if simulation_io is None and mocap_cfg.get("robot_id") is not None:
+    real_cfg["robot_id"] = mocap_cfg["robot_id"]
   if output and (
     real_cfg.get("record_lowstate_hz", 0) > 0
     or real_cfg.get("record_command_writes", False)

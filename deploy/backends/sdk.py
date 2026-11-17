@@ -1,7 +1,43 @@
 """Check SDK imports and HG message serialization without opening DDS channels."""
 
 import importlib
+import os
+import re
 from pathlib import Path
+from xml.sax.saxutils import escape
+
+
+def initialize_channel_factory(channel, cfg):
+  """Initialize the SDK with a process-specific trace only for dual actors.
+
+  SDK templates are restored immediately after initialization. Domain, selected
+  interface, discovery, channel names and SDK files remain untouched.
+  """
+  robot_id = cfg.get("robot_id")
+  if robot_id is None:
+    channel.ChannelFactoryInitialize(cfg["domain_id"], cfg["network_interface"])
+    return None
+  if robot_id not in ("P1", "P2"):
+    raise ValueError("Dual DDS trace requires P1 or P2")
+  directory = Path(cfg.get("diagnostic_output_dir", "/tmp")).resolve()
+  directory.mkdir(parents=True, exist_ok=True)
+  trace = directory / f"cdds-g1_{robot_id.lower()}-{os.getpid()}.LOG"
+  original = channel.ChannelConfigHasInterface
+  scoped, count = re.subn(
+    r"(<OutputFile>)[^<]*(</OutputFile>)",
+    lambda match: match[1] + escape(str(trace)) + match[2],
+    original,
+  )
+  if count != 1:
+    raise ValueError(
+      "Expected exactly one SDK DDS trace OutputFile in the pinned template"
+    )
+  channel.ChannelConfigHasInterface = scoped
+  try:
+    channel.ChannelFactoryInitialize(cfg["domain_id"], cfg["network_interface"])
+  finally:
+    channel.ChannelConfigHasInterface = original
+  return str(trace)
 
 
 def sdk_status():

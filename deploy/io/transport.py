@@ -16,6 +16,7 @@ from deploy.g1_pingpong.perception import (
   sample_received_time,
 )
 from deploy.io.diagnostics import BufferedWriter, json_default
+from deploy.io.shared_ball import SharedBallCache
 
 
 class UDPMocap:
@@ -23,7 +24,19 @@ class UDPMocap:
     self.cfg = config
     self.observer = observer
     self.recorder = None
-    self.ball = BallEstimator(**config["estimator"])
+    robot_id = config.get("robot_id")
+    if robot_id is not None and robot_id not in ("P1", "P2"):
+      raise ValueError("robot_id must be P1 or P2")
+    ball_source = config.get("ball_source", "raw")
+    if ball_source not in ("raw", "shared"):
+      raise ValueError("ball_source must be raw or shared")
+    if ball_source == "shared" and robot_id is None:
+      raise ValueError("Shared ball input requires an explicit robot_id")
+    self.ball = (
+      SharedBallCache(config)
+      if ball_source == "shared"
+      else BallEstimator(**config["estimator"])
+    )
     self.root = RootPoseCache(
       config["root_marker_to_pelvis"],
       config["root_stale_timeout"],
@@ -61,13 +74,26 @@ class UDPMocap:
       )
     if message["frame"] != self.cfg["world_frame"]:
       raise ValueError("Mocap frame differs from deployment world")
-    stamp = float(message["stamp"])
-    if message["kind"] == "ball":
+    robot_id = self.cfg.get("robot_id")
+    if robot_id is not None and message.get("robot_id") != robot_id:
+      raise ValueError(f"Mocap robot_id differs from deployment {robot_id}")
+    if message["kind"] == "ball_estimate":
+      if not isinstance(self.ball, SharedBallCache):
+        raise ValueError("Shared ball estimate requires ball_source: shared")
+      if not self.ball.accept(
+        message, wall_time=wall_time, monotonic_time=monotonic_time
+      ):
+        return
+    elif message["kind"] == "ball":
+      if isinstance(self.ball, SharedBallCache):
+        raise ValueError("Raw ball input is disabled when using the shared estimator")
+      stamp = float(message["stamp"])
       received = sample_received_time(
         stamp, self.cfg, wall_time=wall_time, monotonic_time=monotonic_time
       )
       self.ball.update(message["position"], stamp, received=received)
     elif message["kind"] == "root":
+      stamp = float(message["stamp"])
       received = sample_received_time(
         stamp, self.cfg, wall_time=wall_time, monotonic_time=monotonic_time
       )
@@ -75,6 +101,7 @@ class UDPMocap:
         message["position"], message["quaternion_wxyz"], stamp, received=received
       )
     elif message["kind"] == "racket_command":
+      stamp = float(message["stamp"])
       vectors = [
         np.asarray(message[key], dtype=float)
         for key in ("position", "velocity", "normal")
@@ -93,6 +120,13 @@ class UDPMocap:
       observed = dict(message)
       if message["kind"] in ("ball", "root"):
         observed["sample_monotonic"] = received
+      elif message["kind"] == "ball_estimate" and message["valid"]:
+        observed["sample_monotonic"] = sample_received_time(
+          float(message["stamp"]),
+          self.cfg,
+          wall_time=wall_time,
+          monotonic_time=monotonic_time,
+        )
       self.observer.publish("mocap", observed, received=monotonic_time)
     self.accepted += 1
 
@@ -108,6 +142,8 @@ class UDPMocap:
     if options is None:
       return
     payload = {**packet, "generated_monotonic": time.monotonic()}
+    if self.cfg.get("robot_id") is not None:
+      payload["robot_id"] = self.cfg["robot_id"]
     self.socket.sendto(
       json.dumps(payload, allow_nan=False).encode(), (options["host"], options["port"])
     )
@@ -151,6 +187,10 @@ class UDPMocap:
         planner_packet.get("position") if planner_packet else None
       ),
     }
+    if isinstance(self.ball, SharedBallCache):
+      result.update(
+        self.ball.diagnostics(), robot_id=self.cfg["robot_id"], ball_source="shared"
+      )
     recorder = getattr(self, "recorder", None)
     if recorder is not None:
       result["recording"] = recorder.diagnostics()

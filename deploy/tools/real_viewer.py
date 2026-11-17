@@ -48,7 +48,11 @@ class DisplayState:
     elif kind == "mocap":
       if data.get("frame") != "hope_table":
         return
-      if data.get("kind") == "ball" and finite_vector(data.get("position"), 3):
+      ball_kind = data.get("kind") in ("ball", "ball_estimate")
+      if data.get("kind") == "ball_estimate" and not data.get("valid"):
+        self.ball = self.ball_time = self.prediction = self.reference = None
+        self.trail.clear()
+      elif ball_kind and finite_vector(data.get("position"), 3):
         stamp = data.get("stamp")
         if stamp == self.last_source_stamp:
           return

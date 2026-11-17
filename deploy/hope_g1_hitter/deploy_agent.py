@@ -24,9 +24,14 @@ def main():
   parser.add_argument("--artifact-dir", type=Path)
   parser.add_argument("--real-config", type=Path, default=CONFIG_DIR / "real.yaml")
   parser.add_argument("--mocap-config", type=Path, default=CONFIG_DIR / "mocap.yaml")
-  parser.add_argument("--chain-record-config", type=Path, default=CONFIG_DIR / "chain_recording.yaml")
-  parser.add_argument("--no-chain-record", action="store_true",
-                      help="Disable the real-mode ROS/VRPN diagnostic recorder")
+  parser.add_argument(
+    "--chain-record-config", type=Path, default=CONFIG_DIR / "chain_recording.yaml"
+  )
+  parser.add_argument(
+    "--no-chain-record",
+    action="store_true",
+    help="Disable the real-mode ROS/VRPN diagnostic recorder",
+  )
   parser.add_argument(
     "--rally-config",
     type=Path,
@@ -90,8 +95,28 @@ def main():
   options["hitter"]["planner_config"] = str(
     Path(options["hitter"]["planner_config"]).resolve()
   )
-  if yaml.safe_load(args.mocap_config.read_text()).get("world_frame") != "hope_table":
+  mocap_config = yaml.safe_load(args.mocap_config.read_text())
+  if mocap_config.get("world_frame") != "hope_table":
     parser.error("HOPE G1 mocap must publish normalized packets in hope_table world")
+  robot_id = mocap_config.get("robot_id")
+  if robot_id is not None:
+    if robot_id not in ("P1", "P2") or mocap_config.get("ball_source") != "shared":
+      parser.error("Dual G1 deployment requires P1/P2 and ball_source: shared")
+    if options.get("planner_transport") != "ros2":
+      parser.error("Dual G1 deployment requires the shared external ROS planner")
+    if args.env == "mujoco":
+      parser.error(
+        "Dual network configs are for check/real, not the single-robot simulator"
+      )
+    if args.env == "real":
+      if not args.no_chain_record:
+        parser.error("Dual G1 uses the host recorder; pass --no-chain-record")
+      namespace = Path("/run/netns") / f"g1_{robot_id.lower()}"
+      if (
+        not namespace.exists()
+        or namespace.stat().st_ino != Path("/proc/self/ns/net").stat().st_ino
+      ):
+        parser.error(f"Start the complete {robot_id} strategy inside {namespace.name}")
   if args.env == "real" and options.get("physics_profile") != "real_g1":
     parser.error("Real G1 hitter requires the real_g1 profile (configs/rally.yaml)")
   options = resolve_physics(options, "sim" if args.env == "mujoco" else "real")
@@ -110,6 +135,8 @@ def main():
     planner_config=options["hitter"]["planner_config"],
     planner_source=options["planner_source"],
   )
+  if robot_id is not None:
+    report.update(robot_id=robot_id, ball_source="shared")
   if "embedded_planner_source" in options:
     report["embedded_planner_source"] = options["embedded_planner_source"]
   print(json.dumps(report, indent=2))
@@ -119,7 +146,7 @@ def main():
   output = (
     args.output
     or Path("deploy/recordings/hope_g1_hitter")
-    / f"{args.env}_{datetime.now():%Y%m%d_%H%M%S}"
+    / f"{args.env}_{robot_id + '_' if robot_id else ''}{datetime.now():%Y%m%d_%H%M%S}"
   )
   resolved_rally = (
     output.with_suffix(".rally.yaml")
@@ -204,7 +231,9 @@ def main():
       if not args.no_chain_record:
         from deploy.tools.record_mocap_chain import ChainRecording
 
-        chain_recording = ChainRecording(output, args.chain_record_config, args.mocap_config)
+        chain_recording = ChainRecording(
+          output, args.chain_record_config, args.mocap_config
+        )
       run_control_loop(
         deployment,
         runtime,
