@@ -1,0 +1,609 @@
+{
+  "actor_obs_contract": "g1_hitter_pure_v1",
+  "action_contract": "default_pose_plus_scaled_action_soft_clamp_v1",
+  "checkpoint_sha256": "4dd2f91a0e1ae04f8887bbd83a73e2b3e52a536324262cac6f0a0fa09342398b",
+  "iteration": 11100,
+  "task_identity": {
+    "name": "HOPE-Mjlab-HitterPingPong-UnitreeG1-Extended",
+    "revision": 2,
+    "description": "Common 0.44 m plane, observed self contacts, wider lateral and height curricula"
+  },
+  "control_dt": 0.02,
+  "joint_names": [
+    "left_hip_pitch_joint",
+    "left_hip_roll_joint",
+    "left_hip_yaw_joint",
+    "left_knee_joint",
+    "left_ankle_pitch_joint",
+    "left_ankle_roll_joint",
+    "right_hip_pitch_joint",
+    "right_hip_roll_joint",
+    "right_hip_yaw_joint",
+    "right_knee_joint",
+    "right_ankle_pitch_joint",
+    "right_ankle_roll_joint",
+    "waist_yaw_joint",
+    "waist_roll_joint",
+    "waist_pitch_joint",
+    "left_shoulder_pitch_joint",
+    "left_shoulder_roll_joint",
+    "left_shoulder_yaw_joint",
+    "left_elbow_joint",
+    "left_wrist_roll_joint",
+    "left_wrist_pitch_joint",
+    "left_wrist_yaw_joint",
+    "right_shoulder_pitch_joint",
+    "right_shoulder_roll_joint",
+    "right_shoulder_yaw_joint",
+    "right_elbow_joint",
+    "right_wrist_roll_joint",
+    "right_wrist_pitch_joint",
+    "right_wrist_yaw_joint"
+  ],
+  "default_q": [
+    -0.26627346873283386,
+    -0.008456025272607803,
+    0.03978554159402847,
+    0.3246534466743469,
+    -0.1727469563484192,
+    0.07679489254951477,
+    -0.3072592616081238,
+    -0.01261189579963684,
+    -0.06012388691306114,
+    0.40413734316825867,
+    -0.21945057809352875,
+    0.010280129499733448,
+    -0.013877958990633488,
+    0.03523106873035431,
+    0.003941831644624472,
+    -0.21579155325889587,
+    0.29408764839172363,
+    0.01611216552555561,
+    1.064056158065796,
+    -0.2502524256706238,
+    -0.8381441831588745,
+    0.05271771922707558,
+    -0.1936240941286087,
+    -0.3158307373523712,
+    0.2378113865852356,
+    1.1800273656845093,
+    0.5537855625152588,
+    -1.3523467779159546,
+    0.27179452776908875
+  ],
+  "action_scale": [
+    0.5475464463233948,
+    0.3506614565849304,
+    0.5475464463233948,
+    0.3506614565849304,
+    0.4385773241519928,
+    0.4385773241519928,
+    0.5475464463233948,
+    0.3506614565849304,
+    0.5475464463233948,
+    0.3506614565849304,
+    0.4385773241519928,
+    0.4385773241519928,
+    0.5475464463233948,
+    0.4385773241519928,
+    0.4385773241519928,
+    0.4385773241519928,
+    0.4385773241519928,
+    0.4385773241519928,
+    0.4385773241519928,
+    0.4385773241519928,
+    0.07450087368488312,
+    0.07450087368488312,
+    0.4385773241519928,
+    0.4385773241519928,
+    0.4385773241519928,
+    0.4385773241519928,
+    0.4385773241519928,
+    0.07450087368488312,
+    0.07450087368488312
+  ],
+  "kp": [
+    40.179237365722656,
+    99.09842681884766,
+    40.179237365722656,
+    99.09842681884766,
+    28.501245498657227,
+    28.501245498657227,
+    40.179237365722656,
+    99.09842681884766,
+    40.179237365722656,
+    99.09842681884766,
+    28.501245498657227,
+    28.501245498657227,
+    40.179237365722656,
+    28.501245498657227,
+    28.501245498657227,
+    14.250622749328613,
+    14.250622749328613,
+    14.250622749328613,
+    14.250622749328613,
+    14.250622749328613,
+    16.77832794189453,
+    16.77832794189453,
+    14.250622749328613,
+    14.250622749328613,
+    14.250622749328613,
+    14.250622749328613,
+    14.250622749328613,
+    16.77832794189453,
+    16.77832794189453
+  ],
+  "kd": [
+    2.557889699935913,
+    6.308801651000977,
+    2.557889699935913,
+    6.308801651000977,
+    1.8144457340240479,
+    1.8144457340240479,
+    2.557889699935913,
+    6.308801651000977,
+    2.557889699935913,
+    6.308801651000977,
+    1.8144457340240479,
+    1.8144457340240479,
+    2.557889699935913,
+    1.8144457340240479,
+    1.8144457340240479,
+    0.9072228670120239,
+    0.9072228670120239,
+    0.9072228670120239,
+    0.9072228670120239,
+    0.9072228670120239,
+    1.0681414604187012,
+    1.0681414604187012,
+    0.9072228670120239,
+    0.9072228670120239,
+    0.9072228670120239,
+    0.9072228670120239,
+    0.9072228670120239,
+    1.0681414604187012,
+    1.0681414604187012
+  ],
+  "effort": [
+    88.0,
+    139.0,
+    88.0,
+    139.0,
+    50.0,
+    50.0,
+    88.0,
+    139.0,
+    88.0,
+    139.0,
+    50.0,
+    50.0,
+    88.0,
+    50.0,
+    50.0,
+    25.0,
+    25.0,
+    25.0,
+    25.0,
+    25.0,
+    5.0,
+    5.0,
+    25.0,
+    25.0,
+    25.0,
+    25.0,
+    25.0,
+    5.0,
+    5.0
+  ],
+  "hard_lower": [
+    -2.5306999683380127,
+    -0.5235999822616577,
+    -2.7576000690460205,
+    -0.08726699650287628,
+    -0.8726699948310852,
+    -0.26179999113082886,
+    -2.5306999683380127,
+    -2.967099905014038,
+    -2.7576000690460205,
+    -0.08726699650287628,
+    -0.8726699948310852,
+    -0.26179999113082886,
+    -2.618000030517578,
+    -0.5199999809265137,
+    -0.5199999809265137,
+    -3.089200019836426,
+    -1.5881999731063843,
+    -2.618000030517578,
+    -1.0471999645233154,
+    -1.972222089767456,
+    -1.6144295930862427,
+    -1.6144295930862427,
+    -3.089200019836426,
+    -2.251499891281128,
+    -2.618000030517578,
+    -1.0471999645233154,
+    -1.972222089767456,
+    -1.6144295930862427,
+    -1.6144295930862427
+  ],
+  "hard_upper": [
+    2.8798000812530518,
+    2.967099905014038,
+    2.7576000690460205,
+    2.8798000812530518,
+    0.5235999822616577,
+    0.26179999113082886,
+    2.8798000812530518,
+    0.5235999822616577,
+    2.7576000690460205,
+    2.8798000812530518,
+    0.5235999822616577,
+    0.26179999113082886,
+    2.618000030517578,
+    0.5199999809265137,
+    0.5199999809265137,
+    2.6703999042510986,
+    2.251499891281128,
+    2.618000030517578,
+    2.094399929046631,
+    1.972222089767456,
+    1.6144295930862427,
+    1.6144295930862427,
+    2.6703999042510986,
+    1.5881999731063843,
+    2.618000030517578,
+    2.094399929046631,
+    1.972222089767456,
+    1.6144295930862427,
+    1.6144295930862427
+  ],
+  "soft_limit_factor": 0.9,
+  "ready_height": 0.7891133264243038,
+  "racket_pos_range_per_clip": [
+    [
+      [
+        0.44,
+        0.44
+      ],
+      [
+        -0.55,
+        -0.15
+      ],
+      [
+        0.6443166799569598,
+        1.15
+      ]
+    ],
+    [
+      [
+        0.44,
+        0.44
+      ],
+      [
+        -0.15,
+        0.25
+      ],
+      [
+        0.69534877476761,
+        1.15
+      ]
+    ]
+  ],
+  "racket_vel_range_per_clip": [
+    [
+      [
+        0.8894617838044453,
+        2.5
+      ],
+      [
+        -0.35,
+        0.6
+      ],
+      [
+        0.6,
+        2.083339957737151
+      ]
+    ],
+    [
+      [
+        1.4,
+        2.7
+      ],
+      [
+        -0.5826954127101405,
+        0.3
+      ],
+      [
+        -1.075760553635035,
+        1.6
+      ]
+    ]
+  ],
+  "position_curriculum_progress": 1.0,
+  "windup": [
+    0.8200000000000001,
+    0.96
+  ],
+  "follow": [
+    1.3,
+    1.2
+  ],
+  "racket_mount_offset": [
+    0.24200000000000002,
+    0.003,
+    0.0
+  ],
+  "racket_mount_quat": [
+    1.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "robot_xml": "robot/g1.xml",
+  "robot_xml_sha256": "dae5e40f2c5c736726786ffce2850a57b7d266edd4aece0a665fcdbefdb07b12",
+  "robot_self_collision": {
+    "schema": 1,
+    "evidence": "assets/g1_pingpong/self_collision_recorded_20261113.json",
+    "parameters": {
+      "condim": 3,
+      "friction": [
+        1.0,
+        1.0,
+        0.005,
+        0.0001,
+        0.0001
+      ],
+      "solref": [
+        0.01,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "margin": 0.0,
+      "gap": 0.0
+    },
+    "pairs": [
+      [
+        "head_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "left_ankle_roll_link_0_collision",
+        "right_ankle_roll_link_0_collision"
+      ],
+      [
+        "left_elbow_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "left_elbow_link_0_collision",
+        "torso_link_0_collision"
+      ],
+      [
+        "left_elbow_link_0_collision",
+        "torso_link_1_collision"
+      ],
+      [
+        "left_hip_pitch_link_0_collision",
+        "left_wrist_pitch_link_0_collision"
+      ],
+      [
+        "left_hip_pitch_link_0_collision",
+        "left_wrist_roll_link_0_collision"
+      ],
+      [
+        "left_hip_pitch_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "left_hip_roll_link_0_collision",
+        "left_wrist_yaw_link_0_collision"
+      ],
+      [
+        "left_hip_roll_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "left_hip_yaw_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "left_knee_link_0_collision",
+        "right_knee_link_0_collision"
+      ],
+      [
+        "left_shoulder_pitch_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "left_shoulder_yaw_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "left_shoulder_yaw_link_1_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "left_wrist_pitch_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "left_wrist_pitch_link_0_collision",
+        "right_racket_link_2_collision"
+      ],
+      [
+        "left_wrist_roll_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "left_wrist_yaw_link_0_collision",
+        "right_racket_link_0_collision"
+      ],
+      [
+        "left_wrist_yaw_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "left_wrist_yaw_link_0_collision",
+        "right_racket_link_2_collision"
+      ],
+      [
+        "pelvis_0_collision",
+        "right_racket_link_0_collision"
+      ],
+      [
+        "pelvis_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "pelvis_0_collision",
+        "right_racket_link_2_collision"
+      ],
+      [
+        "pelvis_0_collision",
+        "right_racket_mount_link_0_collision"
+      ],
+      [
+        "pelvis_0_collision",
+        "right_wrist_roll_link_0_collision"
+      ],
+      [
+        "right_elbow_link_0_collision",
+        "torso_link_0_collision"
+      ],
+      [
+        "right_elbow_link_0_collision",
+        "torso_link_1_collision"
+      ],
+      [
+        "right_elbow_link_0_collision",
+        "waist_yaw_link_0_collision"
+      ],
+      [
+        "right_hip_pitch_link_0_collision",
+        "right_racket_link_0_collision"
+      ],
+      [
+        "right_hip_pitch_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "right_hip_pitch_link_0_collision",
+        "right_racket_link_2_collision"
+      ],
+      [
+        "right_hip_pitch_link_0_collision",
+        "right_racket_mount_link_0_collision"
+      ],
+      [
+        "right_hip_roll_link_0_collision",
+        "right_racket_link_0_collision"
+      ],
+      [
+        "right_hip_roll_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "right_hip_roll_link_0_collision",
+        "right_racket_link_2_collision"
+      ],
+      [
+        "right_hip_roll_link_0_collision",
+        "right_racket_mount_link_0_collision"
+      ],
+      [
+        "right_hip_yaw_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      [
+        "right_racket_link_0_collision",
+        "torso_link_0_collision"
+      ],
+      [
+        "right_racket_link_0_collision",
+        "torso_link_1_collision"
+      ],
+      [
+        "right_racket_link_1_collision",
+        "torso_link_0_collision"
+      ],
+      [
+        "right_racket_link_1_collision",
+        "torso_link_1_collision"
+      ],
+      [
+        "right_racket_link_1_collision",
+        "waist_yaw_link_0_collision"
+      ],
+      [
+        "right_racket_link_2_collision",
+        "torso_link_0_collision"
+      ],
+      [
+        "right_racket_link_2_collision",
+        "torso_link_1_collision"
+      ],
+      [
+        "right_racket_mount_link_0_collision",
+        "torso_link_0_collision"
+      ],
+      [
+        "right_racket_mount_link_0_collision",
+        "torso_link_1_collision"
+      ]
+    ]
+  },
+  "planner_workspace": {
+    "frame": "hope_table",
+    "station_y_range": [
+      -1.25,
+      -0.35
+    ],
+    "max_station_step_y": 0.35
+  },
+  "base_target_y_range": [
+    -0.35,
+    0.35
+  ],
+  "clips": [
+    {
+      "side": "forehand",
+      "file": "hope_forehand_g1.npz",
+      "sha256": "2fc6995e5792df304fbaf6d9900b6f8746b8063a3bf819b6dc57b0949c3d6c52",
+      "frames": 107,
+      "strike_frame": 41,
+      "strike_position": [
+        0.440000034713654,
+        -0.36387368707967493,
+        0.7243166799569598
+      ],
+      "strike_velocity": [
+        1.4894617838044453,
+        0.14693713971803413,
+        1.4833399577371509
+      ]
+    },
+    {
+      "side": "backhand",
+      "file": "hope_backhand_g1.npz",
+      "sha256": "1abb424aaeace28add37c544b101cc62b5805f310be4a84a40fdf1f6754d5e4f",
+      "frames": 109,
+      "strike_frame": 48,
+      "strike_position": [
+        0.4400000033368089,
+        -0.06291942872155235,
+        0.77534877476761
+      ],
+      "strike_velocity": [
+        2.0516235126396873,
+        -0.18269541271014045,
+        -0.4757605536350351
+      ]
+    }
+  ]
+}

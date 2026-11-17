@@ -3,7 +3,8 @@
 Run with the PingPong mjlab interpreter, which can import ``hope_mjlab``:
 
   ~/TeleHuman/PingPong/hope_training/mjlab_training/.venv/bin/python \
-    deploy/hope_g1_hitter/export_contract.py deploy/hope_g1_hitter/artifacts/<run>
+    deploy/hope_g1_hitter/export_contract.py deploy/hope_g1_hitter/artifacts/<run> \
+    --checkpoint /path/to/training/run/model_11100.pt
 
 The deploy side then reads only this JSON, the checkpoint and the NPZ clips.
 """
@@ -11,6 +12,7 @@ The deploy side then reads only this JSON, the checkpoint and the NPZ clips.
 import argparse
 import hashlib
 import json
+import shutil
 from pathlib import Path
 
 import torch
@@ -23,8 +25,40 @@ def sha256(path):
 def main():
   parser = argparse.ArgumentParser(description=__doc__)
   parser.add_argument("artifact_dir", type=Path)
+  parser.add_argument("--checkpoint", type=Path,
+                      help="Create a new complete bundle from a training checkpoint")
   args = parser.parse_args()
   from hope_mjlab import g1_robot
+  from hope_mjlab.training_play import TrainingPlayProfile
+
+  if args.checkpoint:
+    source = args.checkpoint.resolve()
+    raw = torch.load(source, map_location="cpu", weights_only=False)
+    profile = TrainingPlayProfile(raw)  # Includes reference hash validation.
+    params = source.parent / "params"
+    for name in ("env.yaml", "agent.yaml"):
+      if not (params / name).is_file():
+        raise FileNotFoundError(params / name)
+    # Never overwrite an existing deployment release.
+    args.artifact_dir.mkdir(parents=True, exist_ok=False)
+    shutil.copy2(source, args.artifact_dir / source.name)
+    shutil.copytree(params, args.artifact_dir / "params")
+    motions = args.artifact_dir / "motions"
+    motions.mkdir()
+    for path in profile.reference_files:
+      shutil.copy2(path, motions / Path(path).name)
+    robot = args.artifact_dir / "robot"
+    robot.mkdir()
+    for path in g1_robot.ASSETS.iterdir():
+      if path.is_file() and path.suffix in (".xml", ".json"):
+        shutil.copy2(path, robot / path.name)
+    for name in ("meshes", "source"):
+      shutil.copytree(g1_robot.ASSETS / name, robot / name)
+    # Keep the checkpoint's exact recipe for provenance; deployment uses only
+    # bundled paths from contract.json, not the original absolute asset paths.
+    (args.artifact_dir / "training_recipe.json").write_text(
+      json.dumps(raw["infos"]["hope_recipe"], indent=2) + "\n"
+    )
 
   arrays = g1_robot.nominal_arrays()
   checkpoints = list(args.artifact_dir.glob("model_*.pt"))
@@ -32,8 +66,6 @@ def main():
     raise ValueError("Expected exactly one model_*.pt in artifact_dir")
   checkpoint = checkpoints[0]
   raw = torch.load(checkpoint, map_location="cpu", weights_only=False)
-  from hope_mjlab.training_play import TrainingPlayProfile
-
   profile = TrainingPlayProfile(raw)
   command = profile.command
   motions = [Path(p) for p in profile.reference_files]

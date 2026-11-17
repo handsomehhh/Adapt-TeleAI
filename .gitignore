@@ -11,6 +11,7 @@ motions/
 artifacts/
 # Exception: allow hitter deployment artifacts
 !deploy/hope_g1_hitter/artifacts/
+!deploy/hope_g1_hitter/artifacts/hitter_extended_20261116_11100/motions/
 .venv/
 render_robots.py
 benchmark_results/

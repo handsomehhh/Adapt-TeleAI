@@ -1,1 +1,2 @@
 deploy/hope_g1_hitter/artifacts/hitter_extended_20261103_10700/model_10700.pt filter=lfs diff=lfs merge=lfs -text
+deploy/hope_g1_hitter/artifacts/hitter_extended_20261116_11100/model_11100.pt filter=lfs diff=lfs merge=lfs -text

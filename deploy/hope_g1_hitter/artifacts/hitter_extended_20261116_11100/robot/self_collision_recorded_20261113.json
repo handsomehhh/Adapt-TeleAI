@@ -1,0 +1,1231 @@
+{
+  "schema": 1,
+  "source": "2026-11-13 19:11:29, 43 release-verified serves, strict command replay and autonomous real-xml",
+  "source_audit_sha256": "30b00501256569fbd25d092e474ec6ec881afa237cf51715a3efd11012d53655",
+  "selection": "Observed proxy negative distance >1mm; distinct welded bodies and joint-tree distance >=4. Real-FK-overlapping torso/elbow/left-arm/feet pairs explicitly approved; geometry unchanged. This is a proxy-contact policy, not exact visual-mesh penetration.",
+  "contact_parameters_source": "Existing g1.xml collision class; no fitted self-contact friction claim",
+  "parameters": {
+    "condim": 3,
+    "friction": [
+      1.0,
+      1.0,
+      0.005,
+      0.0001,
+      0.0001
+    ],
+    "solref": [
+      0.01,
+      1.0
+    ],
+    "solimp": [
+      0.9,
+      0.95,
+      0.001,
+      0.5,
+      2.0
+    ],
+    "margin": 0.0,
+    "gap": 0.0
+  },
+  "pairs": [
+    {
+      "geoms": [
+        "head_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.028027093037962914,
+          "worst_trial": 21,
+          "worst_clip_time_s": 0.4800041159905959,
+          "trials_below_1mm": [
+            21,
+            22
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.008607936091721058,
+          "worst_trial": 21,
+          "worst_clip_time_s": 0.48,
+          "trials_below_1mm": [
+            21
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_ankle_roll_link_0_collision",
+        "right_ankle_roll_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.021015217527747154,
+          "worst_trial": 25,
+          "worst_clip_time_s": 0.25998370299930684,
+          "trials_below_1mm": [
+            6,
+            12,
+            25,
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.029239462688565254,
+          "worst_trial": 40,
+          "worst_clip_time_s": 1.06,
+          "trials_below_1mm": [
+            3,
+            6,
+            25,
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_elbow_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.02637210115790367,
+          "worst_trial": 31,
+          "worst_clip_time_s": 0.4799967139988439,
+          "trials_below_1mm": [
+            24,
+            31
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.023493878543376923,
+          "worst_trial": 31,
+          "worst_clip_time_s": 0.48,
+          "trials_below_1mm": [
+            24,
+            31
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_elbow_link_0_collision",
+        "torso_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.001366864307783544,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.6400155169976642,
+          "trials_below_1mm": [
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_elbow_link_0_collision",
+        "torso_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.003459169762209058,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.5400002929964103,
+          "trials_below_1mm": [
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.0036070027854293585,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.52,
+          "trials_below_1mm": [
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_hip_pitch_link_0_collision",
+        "left_wrist_pitch_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.015644583851099014,
+          "worst_trial": 1,
+          "worst_clip_time_s": 0.6199996250070399,
+          "trials_below_1mm": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_hip_pitch_link_0_collision",
+        "left_wrist_roll_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.009313739836215973,
+          "worst_trial": 1,
+          "worst_clip_time_s": 0.5799995260022115,
+          "trials_below_1mm": [
+            1
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.009205911308526993,
+          "worst_trial": 1,
+          "worst_clip_time_s": 0.62,
+          "trials_below_1mm": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_hip_pitch_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.01606021821498871,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.48007226499612443,
+          "trials_below_1mm": [
+            29,
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.00493891816586256,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.46,
+          "trials_below_1mm": [
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_hip_roll_link_0_collision",
+        "left_wrist_yaw_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.007585256826132536,
+          "worst_trial": 38,
+          "worst_clip_time_s": 0.6199964719999116,
+          "trials_below_1mm": [
+            1,
+            38
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_hip_roll_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.055543214082717896,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.4200095069973031,
+          "trials_below_1mm": [
+            16,
+            29,
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.05905187875032425,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.42,
+          "trials_below_1mm": [
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_hip_yaw_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.014809752814471722,
+          "worst_trial": 29,
+          "worst_clip_time_s": 2.800084449001588,
+          "trials_below_1mm": [
+            29,
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_knee_link_0_collision",
+        "right_knee_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.07130669802427292,
+          "worst_trial": 40,
+          "worst_clip_time_s": 1.0400135969975963,
+          "trials_below_1mm": [
+            12,
+            25,
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.06214209645986557,
+          "worst_trial": 40,
+          "worst_clip_time_s": 1.06,
+          "trials_below_1mm": [
+            3,
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_shoulder_pitch_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.009244797751307487,
+          "worst_trial": 21,
+          "worst_clip_time_s": 0.4399893059890019,
+          "trials_below_1mm": [
+            21
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.004011820536106825,
+          "worst_trial": 26,
+          "worst_clip_time_s": 0.4,
+          "trials_below_1mm": [
+            26
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_shoulder_yaw_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.03654288873076439,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.4799752850085497,
+          "trials_below_1mm": [
+            24,
+            31
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.03678227216005325,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.48,
+          "trials_below_1mm": [
+            24
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_shoulder_yaw_link_1_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.04217013344168663,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.49997612299921457,
+          "trials_below_1mm": [
+            24,
+            31
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.04163706675171852,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.5,
+          "trials_below_1mm": [
+            24,
+            31
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_wrist_pitch_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.02763078175485134,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.5600005789892748,
+          "trials_below_1mm": [
+            31,
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.043141912668943405,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.54,
+          "trials_below_1mm": [
+            6,
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_wrist_pitch_link_0_collision",
+        "right_racket_link_2_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.011380386538803577,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.5600005789892748,
+          "trials_below_1mm": [
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.00814154651015997,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.54,
+          "trials_below_1mm": [
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_wrist_roll_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.03514467552304268,
+          "worst_trial": 31,
+          "worst_clip_time_s": 0.43999683900619857,
+          "trials_below_1mm": [
+            31,
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.02004256471991539,
+          "worst_trial": 31,
+          "worst_clip_time_s": 0.46,
+          "trials_below_1mm": [
+            6,
+            31,
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_wrist_yaw_link_0_collision",
+        "right_racket_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.006945471744984388,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.5999815799877979,
+          "trials_below_1mm": [
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_wrist_yaw_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.04698105901479721,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.5999815799877979,
+          "trials_below_1mm": [
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.03967643529176712,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.56,
+          "trials_below_1mm": [
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "left_wrist_yaw_link_0_collision",
+        "right_racket_link_2_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.019070999696850777,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.5999815799877979,
+          "trials_below_1mm": [
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "pelvis_0_collision",
+        "right_racket_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.045083243399858475,
+          "worst_trial": 29,
+          "worst_clip_time_s": 2.780016087999684,
+          "trials_below_1mm": [
+            13,
+            16,
+            29,
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.01868443191051483,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.46,
+          "trials_below_1mm": [
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "pelvis_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.03002740815281868,
+          "worst_trial": 29,
+          "worst_clip_time_s": 2.780016087999684,
+          "trials_below_1mm": [
+            7,
+            13,
+            16,
+            20,
+            29,
+            30,
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.06907465308904648,
+          "worst_trial": 16,
+          "worst_clip_time_s": 1.16,
+          "trials_below_1mm": [
+            10,
+            16,
+            20,
+            30,
+            35,
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "pelvis_0_collision",
+        "right_racket_link_2_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.026176730170845985,
+          "worst_trial": 13,
+          "worst_clip_time_s": 0.7799992349901004,
+          "trials_below_1mm": [
+            13,
+            16,
+            29,
+            30,
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.01625164970755577,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.46,
+          "trials_below_1mm": [
+            16,
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "pelvis_0_collision",
+        "right_racket_mount_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.03561018407344818,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.48007226499612443,
+          "trials_below_1mm": [
+            16,
+            29,
+            40
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.02631346695125103,
+          "worst_trial": 40,
+          "worst_clip_time_s": 0.46,
+          "trials_below_1mm": [
+            40
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "pelvis_0_collision",
+        "right_wrist_roll_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.016019700095057487,
+          "worst_trial": 12,
+          "worst_clip_time_s": 0.619994926993968,
+          "trials_below_1mm": [
+            12,
+            14
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.012069474905729294,
+          "worst_trial": 12,
+          "worst_clip_time_s": 0.62,
+          "trials_below_1mm": [
+            12
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_elbow_link_0_collision",
+        "torso_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.05934225022792816,
+          "worst_trial": 12,
+          "worst_clip_time_s": 0.7200004379992606,
+          "trials_below_1mm": [
+            1,
+            3,
+            10,
+            12,
+            14,
+            27,
+            34,
+            35,
+            37
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.05422960966825485,
+          "worst_trial": 12,
+          "worst_clip_time_s": 0.7000000000000001,
+          "trials_below_1mm": [
+            1,
+            3,
+            12,
+            14,
+            22,
+            37
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_elbow_link_0_collision",
+        "torso_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.052015069872140884,
+          "worst_trial": 12,
+          "worst_clip_time_s": 0.6999969439930283,
+          "trials_below_1mm": [
+            1,
+            3,
+            10,
+            12,
+            14,
+            25,
+            27,
+            34,
+            35,
+            37
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.04379954934120178,
+          "worst_trial": 12,
+          "worst_clip_time_s": 0.68,
+          "trials_below_1mm": [
+            1,
+            3,
+            12,
+            14,
+            22,
+            27,
+            37
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_elbow_link_0_collision",
+        "waist_yaw_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.007752249948680401,
+          "worst_trial": 12,
+          "worst_clip_time_s": 0.6399986399919726,
+          "trials_below_1mm": [
+            12,
+            14
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.007129252422600985,
+          "worst_trial": 12,
+          "worst_clip_time_s": 0.62,
+          "trials_below_1mm": [
+            12
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_hip_pitch_link_0_collision",
+        "right_racket_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.03322891145944595,
+          "worst_trial": 29,
+          "worst_clip_time_s": 2.7199991469969973,
+          "trials_below_1mm": [
+            7,
+            29
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_hip_pitch_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "autonomous": {
+          "min_distance_m": -0.015599760226905346,
+          "worst_trial": 16,
+          "worst_clip_time_s": 1.1400000000000001,
+          "trials_below_1mm": [
+            16,
+            35
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_hip_pitch_link_0_collision",
+        "right_racket_link_2_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.004235069267451763,
+          "worst_trial": 7,
+          "worst_clip_time_s": 0.820005923989811,
+          "trials_below_1mm": [
+            7
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.0028585847467184067,
+          "worst_trial": 16,
+          "worst_clip_time_s": 1.1400000000000001,
+          "trials_below_1mm": [
+            16
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_hip_pitch_link_0_collision",
+        "right_racket_mount_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.04003990814089775,
+          "worst_trial": 29,
+          "worst_clip_time_s": 2.7199991469969973,
+          "trials_below_1mm": [
+            7,
+            13,
+            29
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_hip_roll_link_0_collision",
+        "right_racket_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.024526888504624367,
+          "worst_trial": 29,
+          "worst_clip_time_s": 2.660001562006073,
+          "trials_below_1mm": [
+            7,
+            10,
+            29
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_hip_roll_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.048091787844896317,
+          "worst_trial": 7,
+          "worst_clip_time_s": 0.7600018109951634,
+          "trials_below_1mm": [
+            7,
+            20,
+            29
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.04508018493652344,
+          "worst_trial": 23,
+          "worst_clip_time_s": 0.76,
+          "trials_below_1mm": [
+            16,
+            23,
+            35
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_hip_roll_link_0_collision",
+        "right_racket_link_2_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.03238392248749733,
+          "worst_trial": 7,
+          "worst_clip_time_s": 0.7600018109951634,
+          "trials_below_1mm": [
+            7
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_hip_roll_link_0_collision",
+        "right_racket_mount_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.02308403141796589,
+          "worst_trial": 29,
+          "worst_clip_time_s": 2.660001562006073,
+          "trials_below_1mm": [
+            10,
+            16,
+            29
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_hip_yaw_link_0_collision",
+        "right_racket_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.05255329981446266,
+          "worst_trial": 7,
+          "worst_clip_time_s": 0.7600018109951634,
+          "trials_below_1mm": [
+            7,
+            16,
+            29
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_racket_link_0_collision",
+        "torso_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.03784710168838501,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.4799752850085497,
+          "trials_below_1mm": [
+            13,
+            21,
+            22,
+            24,
+            26,
+            31
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.03780713677406311,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.48,
+          "trials_below_1mm": [
+            13,
+            21,
+            24,
+            26,
+            31
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_racket_link_0_collision",
+        "torso_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.019847100600600243,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.4799752850085497,
+          "trials_below_1mm": [
+            13,
+            21,
+            22,
+            24
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.019807137548923492,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.48,
+          "trials_below_1mm": [
+            13,
+            21,
+            24
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_racket_link_1_collision",
+        "torso_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.10564772039651871,
+          "worst_trial": 4,
+          "worst_clip_time_s": 0.7200002120080171,
+          "trials_below_1mm": [
+            4,
+            10,
+            13,
+            18,
+            20,
+            21,
+            22,
+            24,
+            26,
+            29,
+            31
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.11298385262489319,
+          "worst_trial": 4,
+          "worst_clip_time_s": 0.7000000000000001,
+          "trials_below_1mm": [
+            4,
+            7,
+            10,
+            13,
+            18,
+            20,
+            21,
+            24,
+            26,
+            29,
+            31,
+            34
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_racket_link_1_collision",
+        "torso_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.09506470710039139,
+          "worst_trial": 4,
+          "worst_clip_time_s": 0.7200002120080171,
+          "trials_below_1mm": [
+            4,
+            10,
+            13,
+            18,
+            21,
+            22,
+            24,
+            26,
+            29,
+            31
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.09850717335939407,
+          "worst_trial": 4,
+          "worst_clip_time_s": 0.7000000000000001,
+          "trials_below_1mm": [
+            4,
+            7,
+            10,
+            13,
+            18,
+            20,
+            21,
+            24,
+            26,
+            29,
+            31,
+            34
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_racket_link_1_collision",
+        "waist_yaw_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.020187919959425926,
+          "worst_trial": 13,
+          "worst_clip_time_s": 2.9799965379934292,
+          "trials_below_1mm": [
+            10,
+            13,
+            18
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.020800581201910973,
+          "worst_trial": 16,
+          "worst_clip_time_s": 1.2,
+          "trials_below_1mm": [
+            10,
+            16,
+            18,
+            20,
+            35
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_racket_link_2_collision",
+        "torso_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.03689385578036308,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.4799752850085497,
+          "trials_below_1mm": [
+            13,
+            21,
+            22,
+            24,
+            26,
+            31
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.036853913217782974,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.48,
+          "trials_below_1mm": [
+            13,
+            21,
+            24,
+            26,
+            31
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_racket_link_2_collision",
+        "torso_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.018893854692578316,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.4799752850085497,
+          "trials_below_1mm": [
+            13,
+            21,
+            22,
+            24
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.018853913992643356,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.48,
+          "trials_below_1mm": [
+            13,
+            24
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_racket_mount_link_0_collision",
+        "torso_link_0_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.0411490760743618,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.4799752850085497,
+          "trials_below_1mm": [
+            21,
+            22,
+            24,
+            26,
+            31
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.04111024737358093,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.48,
+          "trials_below_1mm": [
+            21,
+            24,
+            26,
+            31
+          ]
+        }
+      }
+    },
+    {
+      "geoms": [
+        "right_racket_mount_link_0_collision",
+        "torso_link_1_collision"
+      ],
+      "observations": {
+        "strict": {
+          "min_distance_m": -0.023149076849222183,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.4799752850085497,
+          "trials_below_1mm": [
+            21,
+            22,
+            24,
+            31
+          ]
+        },
+        "autonomous": {
+          "min_distance_m": -0.023110248148441315,
+          "worst_trial": 24,
+          "worst_clip_time_s": 0.48,
+          "trials_below_1mm": [
+            24,
+            26
+          ]
+        }
+      }
+    }
+  ]
+}

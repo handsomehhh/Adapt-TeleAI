@@ -1,0 +1,16 @@
+{
+  "checkpoint_sha256": "4dd2f91a0e1ae04f8887bbd83a73e2b3e52a536324262cac6f0a0fa09342398b",
+  "contract_sha256": "8fe4e5a221a4e87f03ce1a692231a4ed71baa71b24cc6bfc122b462c34657317",
+  "iteration": 11100,
+  "manifest_files_verified": 57,
+  "original_checkpoint_and_params_byte_equal": true,
+  "reference_hashes_and_common_plane_verified": true,
+  "ros_default_contract_byte_equal": true,
+  "relocated_bundle_load_and_controller_init": "passed",
+  "requires_training_python_package": false,
+  "compiled_self_contact_pairs": 47,
+  "actor_random_observations": 100,
+  "actor_max_abs_error": 0,
+  "planner_standalone_tests": "45 passed",
+  "hardware_execution_tested": false
+}

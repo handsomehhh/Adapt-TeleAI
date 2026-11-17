@@ -197,9 +197,12 @@ policy 接口保持一致；当前部署启用横向越界拒绝。当前仿真�
 实机采用 A30808 标定，因此实机规划数值可能与仿真不同。
 有界求解可能有残差；请求的落点是目标，不等于保证过网或上台。
 
-模型与 XML/mesh/动作元数据集中在 `artifacts/hitter_extended_20261103_10700/`，
+默认模型与 XML/mesh/动作元数据集中在 `artifacts/hitter_extended_20261116_11100/`，
 `manifest.json` 记录文件 SHA256。planner 和部署使用相同 `contract.json`，更换模型时
 需要重新导出并同步 `hope_planner_g1/config/policy_contract.json`。
+本版本使用 11100 checkpoint、0.44 m 统一击球平面、扩展横向范围及 47 对自碰撞。
+完整导出、校验和 lxz 同步步骤见
+[部署包说明](artifacts/hitter_extended_20261116_11100/README.md)。
 
 ## “发一球”与拒接
 
