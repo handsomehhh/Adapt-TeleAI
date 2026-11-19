@@ -113,8 +113,9 @@ class RecordedRobot:
       mesh_id = self.model.geom_dataid[geom]
       mesh_name = (self.model.mesh(mesh_id).name or ""
                    if self.model.geom_type[geom] == mujoco.mjtGeom.mjGEOM_MESH else "")
+      mesh_name = mesh_name.rsplit("/", 1)[-1]
       # Head and logo share torso_link's body, so select the torso mesh itself.
-      if mesh_name.rsplit("/", 1)[-1] == "torso_link":
+      if mesh_name == "torso_link" or mesh_name.startswith("torso_link_rev_"):
         self.handles[geom] = server.scene.add_mesh_simple(
           f"/duel/{side}/geom_{geom}", mesh.vertices, mesh.faces,
           color=color, visible=False,
