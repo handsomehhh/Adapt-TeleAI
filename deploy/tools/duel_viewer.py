@@ -100,10 +100,10 @@ class RecordedRobot:
     self.handles = {}
     color = (80, 160, 245) if side == "P1" else (245, 150, 60)
     for geom in range(self.model.ngeom):
-      name = self.model.geom(geom).name or ""
+      # Collision proxies overlap the visible racket faces; drawing both causes
+      # gray occlusion / z-fighting. Keep all collision geometry out of the view.
       visual = self.model.geom_contype[geom] == 0 and self.model.geom_conaffinity[geom] == 0
-      racket = "racket" in name
-      if self.model.geom_bodyid[geom] not in bodies or not (visual or racket):
+      if self.model.geom_bodyid[geom] not in bodies or not visual:
         continue
       if self.model.geom_rgba[geom, 3] <= 0:
         continue
