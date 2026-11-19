@@ -110,10 +110,20 @@ class RecordedRobot:
       mesh = (mujoco_mesh_to_trimesh(self.model, geom)
               if self.model.geom_type[geom] == mujoco.mjtGeom.mjGEOM_MESH
               else create_primitive_mesh(self.model, geom))
-      self.handles[geom] = server.scene.add_mesh_simple(
-        f"/duel/{side}/geom_{geom}", mesh.vertices, mesh.faces,
-        color=color, visible=False,
-      )
+      mesh_id = self.model.geom_dataid[geom]
+      mesh_name = (self.model.mesh(mesh_id).name or ""
+                   if self.model.geom_type[geom] == mujoco.mjtGeom.mjGEOM_MESH else "")
+      # Head and logo share torso_link's body, so select the torso mesh itself.
+      if mesh_name.rsplit("/", 1)[-1] == "torso_link":
+        self.handles[geom] = server.scene.add_mesh_simple(
+          f"/duel/{side}/geom_{geom}", mesh.vertices, mesh.faces,
+          color=color, visible=False,
+        )
+      else:
+        # The conversion preserves XML material/geom RGBA and textures.
+        self.handles[geom] = server.scene.add_mesh_trimesh(
+          f"/duel/{side}/geom_{geom}", mesh, visible=False,
+        )
     self.label = server.scene.add_label(f"/duel/{side}/label", side, visible=False)
 
   def update(self, state, now):
@@ -161,6 +171,10 @@ class DuelScene:
     self.sources = {}
     self.retry_at = {"P1": 0., "P2": 0.}
     self.server.scene.set_up_direction("+z")
+    self.server.scene.add_grid(
+      "/ground", infinite_grid=True, fade_distance=50.0,
+      shadow_opacity=0.2, plane_opacity=0.4, position=(0, 0, -.76),
+    )
     self.server.scene.add_box("/table/top", dimensions=(length, width, .05),
                              position=(length / 2, -width / 2, -.025), color=(28, 86, 125))
     self.server.scene.add_box("/table/net", dimensions=(.008, width, .1525),
@@ -174,7 +188,8 @@ class DuelScene:
                                                color=(255, 255, 255), visible=False)
     self.status = self.server.gui.add_markdown("等待 P1/P2 实时数据…")
     self.server.gui.add_markdown(
-      "P1 蓝色 · P2 橙色。球台顶面 Z=0，统一使用 P1 桌面坐标。\n\n"
+      "Torso：P1 蓝色 · P2 橙色，其余部位保留模型原色。"
+      "球台顶面 Z=0，地面 Z=-0.76，统一使用 P1 桌面坐标。\n\n"
       "机器人显示实测关节和控制器采用的 pelvis 位姿；超过 0.2 秒的数据隐藏。\n\n"
       "此页面只读，关闭它不会停止机器人。")
 
