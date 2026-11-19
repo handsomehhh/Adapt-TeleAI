@@ -4,6 +4,29 @@
 `unitree_g1_hitter_pingpong_extended_mjlab`。部署入口仍是
 `python -m deploy.hope_g1_hitter.deploy_agent`。
 
+## 双机统一实时画面（feat/dual-g1-duel）
+
+双机运行时使用 `mocap_duel/scripts/run.py viewer`，一个网页显示一张球台、一个球和
+P1/P2 两台机器人。具体的终端 A/B/C/D 操作见相邻仓库
+[mocap_duel README](../../../mocap_duel/README.md)。在 lxz 的新终端执行：
+
+```bash
+cd /home/lxz/g1_duel/mocap_duel || exit 1
+/usr/bin/python3 scripts/run.py viewer --config config/site.yaml \
+  --run-id duel_001 --web-host 127.0.0.1 --web-port 8082
+```
+
+`duel_001` 必须对应已启动的双机 host/actors。本版本双机 actor 的后台记录进程
+会导出 `latest_state.json`，包含原 DDS 实测的 `q` 和控制器采用的 pelvis 位姿。
+控制循环只沿用原有非阻塞队列，不在控制线程渲染或写快照。查看器从文件读取状态，
+球从主机 canonical `/duel/ball` 取一份，不额外连接机器人 DDS，也不重复拟合球轨迹。
+P2 整体位姿变回 P1 公共桌面坐标，关节角不变。过期的一侧独立隐藏。
+
+两侧 actor 不需要各自的 `--live-view`；双机 launcher 自动开启 `--live-record-only`。
+原单机实时查看和回放入口保留。部署分支和 mocap_duel 都需更新，本功能无需修改网络配置。
+
+## 模型文件
+
 默认 checkpoint 使用 Git LFS 存储。新电脑克隆后先安装 Git LFS，并在仓库中执行：
 
 ```bash

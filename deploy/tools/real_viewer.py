@@ -498,6 +498,8 @@ def live_worker(directory, events, stop, ready, host, port, headless):
         scene = Scene(directory, host=host, port=port)
       ready.set()
       last_draw = 0.0
+      last_snapshot = 0.0
+      snapshots_enabled = meta.get("robot_id") in ("P1", "P2")
       while True:
         try:
           event = events.get(timeout=0.01)
@@ -518,6 +520,20 @@ def live_worker(directory, events, stop, ready, host, port, headless):
               + (event_time - data.get("sample_monotonic", event_time)),
             )
         now = time.monotonic()
+        if snapshots_enabled and state.robot_time is not None and now - last_snapshot >= 1 / 30:
+          # File IPC crosses network namespaces without new sockets or DDS.
+          # Keep the original sample time: refreshing a file never refreshes data.
+          from deploy.io.viewer_snapshot import write_snapshot
+
+          try:
+            write_snapshot(directory / "latest_state.json", dict(
+              schema="dual_robot_view_v1", robot_id=meta["robot_id"],
+              boot_id=meta["boot_id"], time=state.robot_time, data=state.robot,
+            ))
+          except (OSError, ValueError, TypeError):
+            snapshots_enabled = False
+            (directory / "snapshot_error.txt").write_text(traceback.format_exc())
+          last_snapshot = now
         if scene is not None and now - last_draw >= 1 / 30:
           try:
             scene.update(state, now)

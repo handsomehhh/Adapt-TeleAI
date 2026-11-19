@@ -42,7 +42,8 @@ STATE_KEYS = (
 class LiveVisualization:
   """No rendering, prediction, JSON encoding or disk IO in publish()."""
 
-  def __init__(self, deployment, options, output, *, host, port, headless=False):
+  def __init__(self, deployment, options, output, *, host, port, headless=False,
+               robot_id=None):
     import mujoco
 
     from deploy.tools.command_ghosts import command_geometry
@@ -70,6 +71,12 @@ class LiveVisualization:
       clock="local monotonic receive time; original source stamps retained",
       prediction_semantics="auxiliary ball-only forecast, not the planner command",
     )
+    if robot_id is not None:
+      if robot_id not in ("P1", "P2"):
+        raise ValueError("Viewer robot_id must be P1 or P2")
+      from deploy.io.viewer_snapshot import boot_id
+
+      metadata.update(robot_id=robot_id, boot_id=boot_id())
     (self.directory / "metadata.json").write_text(json.dumps(metadata, indent=2))
     ctx = mp.get_context("spawn")
     self.events = ctx.Queue(maxsize=2048)

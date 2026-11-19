@@ -225,6 +225,7 @@ def main():
         host=args.web_host,
         port=args.web_port,
         headless=args.live_record_only,
+        robot_id=yaml.safe_load(args.mocap_config.read_text()).get("robot_id"),
       )
     chain_recording = None
     try:
