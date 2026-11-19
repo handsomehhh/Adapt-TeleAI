@@ -131,3 +131,42 @@ def test_worker_exports_measured_state_without_own_web_server(tmp_path):
     assert value['boot_id'] == boot_id()
   finally:
     sink.close()
+
+
+def test_viewer_follows_independent_actor_restart_without_restart_or_matching_ids(tmp_path):
+  runtime = tmp_path / 'runtime'
+  now = time.monotonic()
+  with socket.socket() as probe:
+    probe.bind(('127.0.0.1', 0))
+    port = probe.getsockname()[1]
+  scene = DuelScene(runtime, tmp_path / 'no-ball-yet.json', port=port)
+  try:
+    scene.update(now)  # Viewer can start even before the runtime directory exists.
+    assert not scene.robots
+    runtime.mkdir()
+    first = recording(tmp_path / 'old', 'P1', now)
+    other = recording(tmp_path / 'independent', 'P2', now)
+    (runtime / 'P1').symlink_to(first.parent.parent)
+    (runtime / 'P2').symlink_to(other.parent.parent)
+    scene.update(now + .01)
+    old_robot, p2 = scene.robots['P1'], scene.robots['P2']
+    assert old_robot.label.visible and p2.label.visible
+    # P1 restarts too quickly to observe a gap; replace the fixed link atomically.
+    newer = recording(tmp_path / 'new', 'P1', now + .02)
+    new_packet = packet('P1', now + .02)
+    new_packet['data']['root_pos'][0] += .5
+    write_snapshot(newer / 'latest_state.json', new_packet)
+    (runtime / 'next-P1').symlink_to(newer.parent.parent)
+    (runtime / 'next-P1').replace(runtime / 'P1')
+    scene.update(now + .03)
+    assert scene.robots['P1'] is not old_robot
+    assert scene.robots['P1'].directory == newer
+    assert scene.robots['P2'] is p2 and p2.label.visible
+    np.testing.assert_allclose(scene.robots['P1'].label.position,
+                               np.array(new_packet['data']['root_pos']) + [0, 0, .65])
+    (runtime / 'P1').unlink()
+    scene.update(now + .04)
+    assert 'P1' not in scene.robots and scene.robots['P2'] is p2
+    assert first.exists() and newer.exists()  # History is never removed.
+  finally:
+    scene.close()

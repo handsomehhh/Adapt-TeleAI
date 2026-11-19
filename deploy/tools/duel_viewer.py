@@ -140,9 +140,14 @@ class RecordedRobot:
     self.label.position = canonical_position(
       row["root_pos"], self.side, self.length, self.width) + [0, 0, 0.65]
 
+  def remove(self):
+    for handle in self.handles.values():
+      handle.remove()
+    self.label.remove()
+
 
 class DuelScene:
-  def __init__(self, run_dir, ball_snapshot, *, host="127.0.0.1", port=8082,
+  def __init__(self, runtime_dir, ball_snapshot, *, host="127.0.0.1", port=8082,
                length=2.74, width=1.525):
     import viser
 
@@ -150,9 +155,10 @@ class DuelScene:
     if self.server.get_port() != port:
       self.server.stop()
       raise RuntimeError(f"Port {port} is occupied; choose another --web-port")
-    self.run_dir, self.ball_snapshot = Path(run_dir), Path(ball_snapshot)
+    self.runtime_dir, self.ball_snapshot = Path(runtime_dir), Path(ball_snapshot)
     self.boot, self.length, self.width = boot_id(), length, width
     self.robots, self.errors = {}, {}
+    self.sources = {}
     self.retry_at = {"P1": 0., "P2": 0.}
     self.server.scene.set_up_direction("+z")
     self.server.scene.add_box("/table/top", dimensions=(length, width, .05),
@@ -166,7 +172,7 @@ class DuelScene:
                                position=(x, y, -.405), color=(100, 100, 100))
     self.ball = self.server.scene.add_icosphere("/ball", radius=.02,
                                                color=(255, 255, 255), visible=False)
-    self.status = self.server.gui.add_markdown("等待当前 run-id 的双机数据…")
+    self.status = self.server.gui.add_markdown("等待 P1/P2 实时数据…")
     self.server.gui.add_markdown(
       "P1 蓝色 · P2 橙色。球台顶面 Z=0，统一使用 P1 桌面坐标。\n\n"
       "机器人显示实测关节和控制器采用的 pelvis 位姿；超过 0.2 秒的数据隐藏。\n\n"
@@ -181,7 +187,15 @@ class DuelScene:
   def update(self, now):
     status = []
     for side in ("P1", "P2"):
-      directory = self.run_dir / side / "policy/visualization"
+      # Resolve once per update so model and state always come from the same
+      # actor. Each role can restart independently while this viewer stays open.
+      directory = (self.runtime_dir / side / "policy/visualization").resolve()
+      if self.sources.get(side) != directory:
+        if side in self.robots:
+          self.robots.pop(side).remove()
+        self.sources[side] = directory
+        self.errors.pop(side, None)
+        self.retry_at[side] = 0.
       if side not in self.robots and now >= self.retry_at[side]:
         self.retry_at[side] = now + 1.
         try:
@@ -210,16 +224,16 @@ class DuelScene:
 
 def main():
   parser = argparse.ArgumentParser(description=__doc__)
-  parser.add_argument("--run-dir", type=Path, required=True)
+  parser.add_argument("--runtime-dir", type=Path, required=True)
   parser.add_argument("--ball-snapshot", type=Path, required=True)
   parser.add_argument("--web-host", default="127.0.0.1")
   parser.add_argument("--web-port", type=int, default=8082)
   parser.add_argument("--table-length", type=float, default=2.74)
   parser.add_argument("--table-width", type=float, default=1.525)
   args = parser.parse_args()
-  if not args.run_dir.is_dir() or not 1 <= args.web_port <= 65535:
-    parser.error("Existing run directory and valid web port required")
-  scene = DuelScene(args.run_dir, args.ball_snapshot, host=args.web_host, port=args.web_port,
+  if not 1 <= args.web_port <= 65535:
+    parser.error("Valid web port required")
+  scene = DuelScene(args.runtime_dir, args.ball_snapshot, host=args.web_host, port=args.web_port,
                     length=args.table_length, width=args.table_width)
   try:
     while True:

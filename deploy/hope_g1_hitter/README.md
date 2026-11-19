@@ -13,10 +13,11 @@ P1/P2 两台机器人。具体的终端 A/B/C/D 操作见相邻仓库
 ```bash
 cd /home/lxz/g1_duel/mocap_duel || exit 1
 /usr/bin/python3 scripts/run.py viewer --config config/site.yaml \
-  --run-id duel_001 --web-host 127.0.0.1 --web-port 8082
+  --web-host 127.0.0.1 --web-port 8082
 ```
 
-`duel_001` 必须对应已启动的双机 host/actors。本版本双机 actor 的后台记录进程
+无需填写运行编号；查看器自动跟随当前 P1/P2，某一侧策略重启后也无需重启查看器。
+本版本双机 actor 的后台记录进程
 会导出 `latest_state.json`，包含原 DDS 实测的 `q` 和控制器采用的 pelvis 位姿。
 控制循环只沿用原有非阻塞队列，不在控制线程渲染或写快照。查看器从文件读取状态，
 球从主机 canonical `/duel/ball` 取一份，不额外连接机器人 DDS，也不重复拟合球轨迹。
