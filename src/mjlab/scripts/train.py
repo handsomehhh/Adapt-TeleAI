@@ -28,8 +28,6 @@ class TrainConfig:
   agent: RslRlBaseRunnerCfg
   registry_name: str | None = None
   video: bool = False
-  no_logs: bool = False
-  """Train without experiment logs, config snapshots, videos, or checkpoints."""
   video_length: int = 200
   video_interval: int = 2000
   enable_nan_guard: bool = False
@@ -52,8 +50,6 @@ class TrainConfig:
 
 
 def run_train(task_id: str, cfg: TrainConfig, log_dir: Path) -> None:
-  if cfg.no_logs and cfg.video:
-    raise ValueError("--no-logs cannot be combined with video recording")
   cuda_visible = os.environ.get("CUDA_VISIBLE_DEVICES", "")
   if cuda_visible == "":
     device = "cpu"
@@ -107,12 +103,12 @@ def run_train(task_id: str, cfg: TrainConfig, log_dir: Path) -> None:
       md = Path(motion_cmd.motion_directory).expanduser().resolve()
       if not md.is_dir():
         raise ValueError(f"motion_directory is not a directory: {md}")
-      first_npz = next((p for p in md.rglob("*.npz") if p.is_file()), None)
-      if first_npz is None:
+      nzs = sorted(p for p in md.glob("*.npz") if p.is_file())
+      if not nzs:
         raise ValueError(f"No .npz files under motion_directory: {md}")
       print(
-        f"[INFO] Using recursive motion_directory {md}; "
-        "MotionCommand resolves the configured clip subset per worker."
+        f"[INFO] Using motion_directory {md} ({len(nzs)} clip(s)); "
+        "MotionCommand loads all for per-env sampling."
       )
     elif cfg.registry_name:
       # Download from WandB registry.
@@ -138,7 +134,7 @@ def run_train(task_id: str, cfg: TrainConfig, log_dir: Path) -> None:
     cfg.env.sim.nan_guard.enabled = True
     print(f"[INFO] NaN guard enabled, output dir: {cfg.env.sim.nan_guard.output_dir}")
 
-  if rank == 0 and not cfg.no_logs:
+  if rank == 0:
     print(f"[INFO] Logging experiment in directory: {log_dir}")
 
   if cfg.motion_warmup_steps is not None:
@@ -200,13 +196,11 @@ def run_train(task_id: str, cfg: TrainConfig, log_dir: Path) -> None:
 
   # Write config files before runner creation, since the runner mutates agent_cfg
   # in-place (e.g., injecting non-serializable objects).
-  if rank == 0 and not cfg.no_logs:
+  if rank == 0:
     dump_yaml(log_dir / "params" / "env.yaml", env_cfg)
     dump_yaml(log_dir / "params" / "agent.yaml", agent_cfg)
 
-  runner = runner_cls(
-    env, agent_cfg, None if cfg.no_logs else str(log_dir), device, **runner_kwargs
-  )
+  runner = runner_cls(env, agent_cfg, str(log_dir), device, **runner_kwargs)
 
   add_wandb_tags(cfg.agent.wandb_tags)
   runner.add_git_repo_to_log(__file__)

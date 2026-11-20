@@ -1,0 +1,8 @@
+{
+  "run": "logs/g1_adapt_full/2026-11-03_23-21-34_extended27mm_gpu0_round2",
+  "mode": "tracker",
+  "viewer": "web",
+  "host": "127.0.0.1",
+  "port": 8085,
+  "seed": 42
+}

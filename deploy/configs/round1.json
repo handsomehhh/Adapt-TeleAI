@@ -1,0 +1,11 @@
+{
+  "run": "logs/g1_adapt_full/2026-11-02_18-30-26_extended27mm_gpu0_env4096",
+  "mode": "hierarchy",
+  "viewer": "web",
+  "host": "127.0.0.1",
+  "port": 8085,
+  "scenario": "continuous",
+  "max_record_steps": 0,
+  "record_chunk_steps": 1000,
+  "seed": 42
+}

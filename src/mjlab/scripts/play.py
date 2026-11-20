@@ -3,7 +3,7 @@
 import os
 import sys
 import time as _time
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from collections.abc import Mapping
@@ -48,23 +48,10 @@ def _validate_play_motion_directory(cfg: "PlayConfig") -> tuple[Path, int] | Non
   d = Path(cfg.motion_directory).expanduser().resolve()
   if not d.is_dir():
     raise FileNotFoundError(f"motion_directory is not a directory: {d}")
-  nzs = sorted(x for x in d.rglob("*.npz") if x.is_file())
+  nzs = sorted(x for x in d.glob("*.npz") if x.is_file())
   if not nzs:
     raise FileNotFoundError(f"No .npz files under {d}")
   return d, len(nzs)
-
-
-def _has_configured_play_motion(cfg: "PlayConfig", motion_cmd) -> bool:
-  """Honor a task's local dataset default unless the caller overrides it."""
-  if cfg.motion_file is not None or cfg.motion_directory is not None or cfg.registry_name:
-    return False
-  if motion_cmd.motion_files:
-    return all(Path(p).expanduser().is_file() for p in motion_cmd.motion_files)
-  if motion_cmd.motion_file:
-    return Path(motion_cmd.motion_file).expanduser().is_file()
-  if motion_cmd.motion_directory:
-    return any(Path(motion_cmd.motion_directory).expanduser().rglob("*.npz"))
-  return False
 
 
 @dataclass(frozen=True)
@@ -75,8 +62,6 @@ class PlayConfig:
   wandb_checkpoint_name: str | None = None
   """Optional checkpoint name within the W&B run to load (e.g. 'model_4000.pt')."""
   checkpoint_file: str | None = None
-  tracker_file: str | None = None
-  """Frozen Stage-1 JIT tracker for hierarchical tasks; defaults to checkpoint sibling tracker.pt."""
   onnx_file: str | None = None
   """Optional ONNX policy path. If set, inference uses ONNXRuntime (no .pt runner load)."""
   motion_file: str | None = None
@@ -109,15 +94,6 @@ class PlayConfig:
   """Disable all termination conditions (useful for viewing motions with dummy agents)."""
   explore_jit: bool = False
   """If True, export `modeljit_xxx.pt` from loaded checkpoint during play."""
-  standing_cycle: bool = False
-  """Continuous home -> swing -> home validation; --viewer native opens a live window."""
-  cycle_home: int = 19
-  cycle_motions: str = "all"
-  """Comma-separated library indices, or all; one independent environment per clip."""
-  cycle_output: str = "logs/play_standing_cycle"
-  cycle_seed: int = 42
-  cycle_repeats: int = 1
-  """Independent complete trials per motion; seeds increment from cycle_seed."""
 
   # Internal flag used by demo script.
   _demo_mode: tyro.conf.Suppress[bool] = False
@@ -531,7 +507,7 @@ def _run_motion_directory_collection(task_id: str, env, policy, cfg: PlayConfig)
       "Per-clip collection requires --motion-directory with at least one .npz file."
     )
   motion_dir, _ = dir_info
-  clip_paths = sorted(motion_dir.rglob("*.npz"))
+  clip_paths = sorted(motion_dir.glob("*.npz"))
 
   run_dir = _collect_run_dir(cfg, task_id)
   uw = env.unwrapped
@@ -704,19 +680,6 @@ def run_play(task_id: str, cfg: PlayConfig):
   env_cfg = load_env_cfg(task_id, play=True)
   agent_cfg = load_rl_cfg(task_id)
 
-  joint_action_cfg = env_cfg.actions.get("joint_pos")
-  if joint_action_cfg is not None and hasattr(joint_action_cfg, "tracker_file"):
-    bundled_tracker = (
-      Path(cfg.checkpoint_file).expanduser().parent / "tracker.pt"
-      if cfg.checkpoint_file else None
-    )
-    if cfg.tracker_file:
-      joint_action_cfg.tracker_file = cfg.tracker_file
-    elif bundled_tracker is not None and bundled_tracker.is_file():
-      joint_action_cfg.tracker_file = str(bundled_tracker)
-  elif cfg.tracker_file is not None:
-    raise ValueError("--tracker-file requires a task with a frozen tracker action.")
-
   if cfg.racket_hand is not None:
     from mjlab.tasks.adapt_tennis.config.g1.env_cfgs import apply_racket_hand
 
@@ -780,8 +743,6 @@ def run_play(task_id: str, cfg: PlayConfig):
         f"[INFO]: Using motion_directory ({n_clips} clips); "
         "MotionCommand will resample across clips when each ends."
       )
-    elif _has_configured_play_motion(cfg, motion_cmd):
-      print("[INFO]: Using the task's configured local motion dataset.")
     elif DUMMY_MODE:
       if not cfg.registry_name:
         raise ValueError(
@@ -860,10 +821,6 @@ def run_play(task_id: str, cfg: PlayConfig):
 
   if cfg.num_envs is not None:
     env_cfg.scene.num_envs = cfg.num_envs
-  if cfg.standing_cycle:
-    from mjlab.scripts.standing_cycle import configure_cycle
-
-    configure_cycle(env_cfg, cfg)
   if cfg.video_height is not None:
     env_cfg.viewer.height = cfg.video_height
   if cfg.video_width is not None:
@@ -1043,10 +1000,7 @@ def run_play(task_id: str, cfg: PlayConfig):
       runner_cls = load_runner_cls(task_id) or MjlabOnPolicyRunner
       runner = runner_cls(env, asdict(agent_cfg), device=device)
       runner.load(
-        str(resume_path),
-        load_cfg={"actor": True, "iteration": cfg.standing_cycle},
-        strict=True,
-        map_location=device,
+        str(resume_path), load_cfg={"actor": True}, strict=True, map_location=device
       )
       if cfg.explore_jit:
         if resume_path is None:
@@ -1059,41 +1013,6 @@ def run_play(task_id: str, cfg: PlayConfig):
         jit_model.save(str(jit_path))
         print(f"[INFO]: Exported JIT policy to: {jit_path}")
       policy = runner.get_inference_policy(device=device)
-
-  if cfg.standing_cycle:
-    from mjlab.scripts.standing_cycle import run_cycle
-
-    if onnx_path is not None:
-      raise ValueError(
-        "standing-cycle requires a checkpoint with training iteration metadata"
-      )
-    env.unwrapped.current_learning_iteration = runner.current_learning_iteration
-    cycle_viewer = None
-    try:
-      if cfg.viewer == "native" and not cfg.video_headless:
-        cycle_viewer = NativeMujocoViewer(env, policy, enable_perturbations=False)
-        cycle_viewer.setup()
-      for trial in range(cfg.cycle_repeats):
-        trial_cfg = (
-          cfg
-          if cfg.cycle_repeats == 1
-          else replace(
-            cfg,
-            cycle_seed=cfg.cycle_seed + trial,
-            cycle_output=str(Path(cfg.cycle_output) / f"seed_{cfg.cycle_seed + trial}"),
-          )
-        )
-        run_cycle(env, policy, trial_cfg, task_id, viewer=cycle_viewer)
-        if cycle_viewer is not None and not cycle_viewer.is_running():
-          break
-    finally:
-      if cycle_viewer is not None:
-        cycle_viewer.close()
-        # launch_passive closes asynchronously. Let its render thread release
-        # the shared model/data before environment teardown and GLFW exit.
-        _time.sleep(0.5)
-      env.close()
-    return
 
   # Build checkpoint manager for hot-swapping checkpoints in the viewer.
   ckpt_manager: CheckpointManager | None = None

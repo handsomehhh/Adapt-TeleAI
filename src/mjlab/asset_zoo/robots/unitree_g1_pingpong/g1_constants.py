@@ -21,7 +21,9 @@ CollisionMode = Literal["mesh", "primitive"]
 
 ASSET_DIR = Path(__file__).resolve().parent
 G1_PINGPONG_XML = ASSET_DIR / "g1.xml"
-G1_PINGPONG_SOURCE_URDF = ASSET_DIR / "source" / "g1_29dof_pingpong.urdf"
+G1_PINGPONG_SOURCE_URDF = (
+  ASSET_DIR / "source" / "g1_29dof_pingpong_fast_extended_27mm.urdf"
+)
 G1_PINGPONG_ASSET_MANIFEST = ASSET_DIR / "asset_manifest.json"
 G1_PINGPONG_ASSET_VALIDATION = ASSET_DIR / "asset_validation.json"
 

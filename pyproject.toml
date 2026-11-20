@@ -51,7 +51,6 @@ dependencies = [
   "wandb>=0.22.3",
   "onnxruntime>=1.24.3",
   "ipdb>=0.13.13",
-  "scipy>=1.15.3",
 ]
 
 [project.urls]
@@ -165,7 +164,7 @@ stubPath = "typings"
 extra-paths = ["typings"]
 
 [tool.ty.src]
-include = ["src", "tests"]
+include = ["src", "tests", "deploy"]
 exclude = ["src/mjlab/utils/lab_api", "typings"]
 
 [tool.pytest.ini_options]

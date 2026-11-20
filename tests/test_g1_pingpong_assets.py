@@ -21,6 +21,7 @@ from mjlab.asset_zoo.robots.unitree_g1_pingpong.g1_constants import (
   get_g1_pingpong_robot_cfg,
   get_spec,
 )
+from mjlab.asset_zoo.robots.unitree_g1_pingpong.validate_urdf import validate
 from mjlab.entity import Entity
 
 
@@ -28,7 +29,7 @@ def _sha256(path):
   return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def test_g1_pingpong_frozen_asset_checksums():
+def test_g1_pingpong_asset_checksums():
   assert _sha256(G1_PINGPONG_SOURCE_URDF) == MANIFEST["source"]["sha256"]
   assert _sha256(G1_PINGPONG_XML) == MANIFEST["mjcf_sha256"]
   assert {path.name for path in (ASSET_DIR / "meshes").iterdir()} == set(
@@ -50,7 +51,9 @@ def test_g1_pingpong_mjcf_kinematic_and_racket_contract():
   )
   assert len(G1_PINGPONG_JOINT_NAMES) == 29
   assert len(G1_PINGPONG_BODY_NAMES) == 30
-  np.testing.assert_allclose(model.body_mass.sum(), 33.68916754973783, rtol=1e-12)
+  np.testing.assert_allclose(model.body_mass.sum(), 33.69842032240641, rtol=1e-12)
+  assert model.ngeom == 69
+  assert np.count_nonzero(model.geom_contype | model.geom_conaffinity) == 31
   assert model.qpos0[2] == 0.82
 
   data = mujoco.MjData(model)
@@ -59,12 +62,32 @@ def test_g1_pingpong_mjcf_kinematic_and_racket_contract():
   site = model.site(G1_PINGPONG_RACKET_SITE)
   assert site.bodyid == wrist.id
   np.testing.assert_allclose(site.pos, G1_PINGPONG_MOUNT_OFFSET, atol=1e-14)
+  np.testing.assert_allclose(site.pos, [0.242, 0.003, 0], atol=1e-14)
   wrist_rotation = data.xmat[wrist.id].reshape(3, 3)
   np.testing.assert_allclose(
     data.site_xmat[site.id].reshape(3, 3)[:, 1],
     wrist_rotation @ np.asarray(G1_PINGPONG_RACKET_NORMAL),
     atol=1e-12,
   )
+
+
+def test_extended_asset_matches_independent_native_urdf_import():
+  assert G1_PINGPONG_SOURCE_URDF.name == "g1_29dof_pingpong_fast_extended_27mm.urdf"
+  assert (
+    MANIFEST["source"]["sha256"]
+    == "ff69e37651da1f2f1ae302000e694433fca4f7ad056473dbf8f60dfabab56c7b"
+  )
+  report = validate(samples=8)
+  for name, error in report["asset"]["maximum_errors"].items():
+    assert error < report["asset"]["error_tolerances"][name]
+  model = get_spec().compile()
+  for side in ("left", "right"):
+    body = model.body(f"{side}_ankle_roll_link").id
+    ids = np.flatnonzero(
+      (model.geom_bodyid == body) & ((model.geom_contype | model.geom_conaffinity) > 0)
+    )
+    assert len(ids) == 1
+    assert model.geom_type[ids[0]] == mujoco.mjtGeom.mjGEOM_BOX
 
 
 def test_g1_pingpong_entity_actuators_and_initial_pose():

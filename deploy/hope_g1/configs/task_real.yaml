@@ -1,5 +1,0 @@
-# .200 deployment must be self-contained under deploy_g1_pingpong.
-# Sync the same migrated assets used locally; do not depend on /home/lxz/HOPE.
-task: HOPEPingPongMultiMotionG1
-checkpoint: deploy/hope_g1/artifacts/hope_20261012_18000/model_18000.pt
-motion_dir: deploy/hope_g1/artifacts/hope_20261012_18000/motions

@@ -5,68 +5,70 @@ Changelog
 Upcoming version (not yet released)
 -----------------------------------
 
+Fixed
+^^^^^
+
+- Made deployment trace and summary writes atomic, persisted metadata before
+  execution, and protected final saving from repeated SIGINT interruptions.
+
+- Corrected G1 deployment angular velocity from inertial axes to link axes,
+  aligned substep contact poses and ball observations with the training loop,
+  and restored random corrected-motion initialization for high-level policies.
+
+- Decoupled deployment rendering from the fixed 200 Hz physics and 50 Hz
+  control loop, with real-time pacing, display-only slow-motion interpolation,
+  and frame-rate diagnostics instead of refreshing once per four control steps.
+
+- Added immediate deployment startup diagnostics and unbuffered output so that
+  Python, model and browser initialization no longer appear silently stalled.
+
 Added
 ^^^^^
 
-- Added ten pelvis-mounted mocap marker links to the G1 23-DoF calibration
-  URDF, with individually symmetric front/back layouts, physical edge alignment
-  datums, nominal pelvis offsets, and annotated mounting previews.
-- Added a separate ``deploy/`` G1 ping-pong runtime with directly selectable checkpoints,
-  CPU MuJoCo validation, HOPE-compatible VRPN/ROS ball-position input, UDP handoff,
-  and an optional Unitree SDK2 DDS backend with offline contract tests.
-  Policies and shared configuration paths can be overridden without model packaging.
-  Real deployment includes SDK/native-library checks, configurable network interfaces,
-  and read-only DDS diagnostics that work before motion capture is available.
-  MuJoCo live-input validation applies the real command guards, records failures,
-  and requires recovery after the final swing; position/planner cases are reproducible.
-  A continuous MuJoCo mode verifies preparation, receiving and recovery without
-  resetting the robot between swings, and preserves the scene after a halt.
-  Preparation and recovery now use first-frame tracker feedback shared by MuJoCo
-  and real deployment; sustained measured stability is required before arming.
-  A standing-only simulation mode verifies preparation and continuous holding.
-  Full-flow simulation uses observable incoming flights with table bounces,
-  and the shared receive planner predicts bounces before triggering a swing.
-  Swing/standing handoffs retain tracker action history; swing PD targets remain
-  unchanged while measured joint feedback and stream watchdogs are checked.
-  Refactored receiving around one Python HOPE-style rally controller shared by
-  MuJoCo and DDS: trajectory-based motion selection, late-frame alignment,
-  complete follow-through, and measured recovery before accepting another ball.
-  Added legal randomized incoming flights and continuous multi-swing records;
-  removed duplicate simulation loops and obsolete exported deployment bundles.
-  Documented checkpoint-specific recovery failures alongside passing results.
-  Halt diagnostics identify the measured joint and rejected control phase,
-  retain post-halt MuJoCo physics traces without stale policy targets, and
-  report active-control and damping-phase tilt separately with the physical clock.
-  Startup logs distinguish preparation/return home from swing candidates;
-  fixed motion selection ignores the automatic whitelist. Same-ball comparisons
-  document the effect of the home posture on the motion-19 handoff.
-  Corrected swing handoff history to exclude unsent standing actions and
-  aligned start frames with each candidate's own strike time and frame rate.
-  Removed the timed Stage-2 cutoff during follow-through; recorded remaining
-  cross-motion and return failures alongside training-input parity checks.
-  Fixed frozen-frame action history after command conditioning, honored target
-  guard switches during waiting/recovery, and retained measured-state guards.
-  Use each motion's strike plane; reject below-table launch states and predict
-  future descending bounces for rising balls. Added repeatable full-library
-  swing/recovery tests with five-second final holds and per-motion reports.
-  Freeze the home reference's train-to-world transform once from the first live
-  anchor pose, following HOPE's odometry-based fixed-world home. Preserve this
-  frame through every recovery and record it for coordinate diagnostics.
-  Added reproducible long-sequence motion screening with per-case configuration
-  snapshots, actual selected/recovered motion coverage, and independent-seed
-  validation of candidate whitelists without changing runtime control or guards.
-  Aligned real deployment with the validated MuJoCo home/motion defaults and
-  live-pose home capture. Added configurable HOPE PoseArray/PoseStamped input,
-  shared ROS/UDP coordinate normalization, and real lifecycle trace summaries;
-  documented integration with the existing filtered VRPN conversion pipeline.
-  Added an offline real-entry closed-loop check using MuJoCo feedback and HOPE
-  packets, including missing-input and stop cases. Reject Stage-1 checkpoints
-  before opening real receiving IO, matching the MuJoCo receiving contract.
-- Added Agibot A3 ping-pong motion tracking and frozen-tracker residual receiving
-  tasks, named motion import, swept ball collisions, and local training validation.
-- Added an isolated 29-DoF Unitree G1 ping-pong asset, a provenance-bound 43-clip
-  motion corpus, two-stage random-speed tracking and adaptive receiving tasks,
-  and reproducible evaluation and ablation tools.
+- Made full deployment tests continuous by default, retaining post-score and
+  post-fall behavior without automatic robot resets, timeouts or record-limit
+  pauses; added bounded trace chunks, complete replay and CPU training parity
+  audits. Ball scoring keeps its original training termination criteria.
+
+- Added Space pause/resume and R reset hotkeys to the deployment viewer,
+  synchronized with its buttons and applicable to both live tests and replay.
+
+- Added complete reference-robot rendering alongside the executed G1, original
+  and corrected motion selection, safe Tracker seeking and resets, clip-end
+  pause/loop controls, and per-segment motion identity in deployment recordings.
+
+- Added an independent CPU G1 AdaPT deployment test platform under ``deploy/``:
+  browser visualization, per-module tests, pinned model dependencies, continuous
+  and independent feeds, policy diagnostics, trace recording and exact replay.
+
+- Added an explicit GPU-sharing override and recovery after a completed G1
+  tracker, allowing the remaining stages to continue without retraining it.
+
+- Added a detached two-round G1 AdaPT supervisor with final rally/standing and
+  switching audits, recorded metric-based adjustments, independent source
+  snapshots, advisory GPU locks and process monitoring. Round-two settings add
+  physical racket tracking, event-based planner rewards and longer MVAE rollouts
+  with fixed validation, periodic checkpoints and best-model selection.
+
+- Added trained G1 component validation: tracker speed/noise sweeps and strike
+  accuracy, held-out MVAE reconstruction and prior rollouts with a persistence
+  baseline, five-second generation, and generated-reference physical tracking.
+
+- Added recovery of a failed G1 AdaPT rally startup with fewer environments,
+  reusing verified source snapshots and completed tracker, correction and MVAE
+  outputs while preserving prior logs and training budgets.
+
+- Added a single-GPU full G1 AdaPT training pipeline with independent source,
+  robot and motion snapshots, stage status logs, quality gates and final export.
+
+- Added an independent AdaPT-style G1 table-tennis hierarchy: physical motion
+  correction, conditional mixture-of-experts motion VAE, latent-and-speed PPO
+  rally/standing planners, measured-position ball prediction, evaluation, and
+  dependency-pinned inference bundles. Original tennis task files are unchanged.
+
+- Added an independent G1 stage-1 random-speed tracker and its training guide.
+  Restored the original AdaPT tennis task and removed the local receiving,
+  A3, and deployment extensions. G1 tracking does not import the tennis task.
 
 - Added ``ActuatorCfg.viscous_damping`` for passive velocity proportional
   damping (``f = -b·v``), distinct from the PD derivative gain ``damping``
@@ -133,6 +135,10 @@ Added
 
 Changed
 ^^^^^^^
+
+- Updated the independent G1 ping-pong training asset to the supplied fast
+  extended-27mm URDF, including fixed-link inertias, 31 collision geoms and the
+  racket contact frame. Added conversion and independent URDF validation tools.
 
 - ``ActuatorCfg.armature`` and ``ActuatorCfg.frictionloss`` now default to
   ``None`` instead of ``0.0``. ``None`` preserves the value defined in the

@@ -1,7 +1,0 @@
-# Requires the installed Adapt-TeleAI project (mjlab, rsl_rl, tensordict).
-# ROS 2 and Unitree SDK2 are installed in their own environments.
-numpy>=1.26
-PyYAML>=6.0
-torch>=2.9,<2.10
-mujoco>=3.6.0.dev0
-onnxruntime>=1.17,<2

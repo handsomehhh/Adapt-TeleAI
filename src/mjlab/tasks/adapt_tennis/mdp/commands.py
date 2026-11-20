@@ -147,13 +147,9 @@ def _root_body_index(target_body_names: tuple[str, ...] | None, n_bodies: int) -
   return 0 if n_bodies > 0 else 0
 
 
-def _npz_float(
-  value: object, *, name: str = "value", default: float | None = None
-) -> float:
+def _npz_float(value: object, *, name: str = "value") -> float:
   """Convert npz scalars, including length-1 arrays such as ``fps`` ``(1,)``."""
   arr = np.asarray(value)
-  if arr.size == 0 and default is not None:
-    return default
   if arr.size != 1:
     raise ValueError(f"Expected a scalar {name}, got shape {arr.shape}")
   return float(arr.reshape(-1)[0])
@@ -196,35 +192,27 @@ class MotionLoader:
     *,
     target_body_names: tuple[str, ...] | None = None,
     target_joint_names: tuple[str, ...] | None = None,
-    legacy_body_names: tuple[str, ...] | None = None,
-    legacy_joint_names: tuple[str, ...] | None = None,
     align_heading_to_frame: AlignHeadingFrame = "last",
-    max_motion_frames: int = 0,
   ) -> None:
     data = np.load(motion_file, allow_pickle=True)
-    self.fps = (
-      _npz_float(data["fps"], name="fps", default=50.0)
-      if "fps" in data
-      else 30.0
-    )
-    frame_stop = max_motion_frames if max_motion_frames > 0 else None
+    self.fps = _npz_float(data["fps"], name="fps") if "fps" in data else 30.0
     self._body_pos_w = torch.tensor(
-      data["body_pos_w"][:frame_stop], dtype=torch.float32, device=device
+      data["body_pos_w"], dtype=torch.float32, device=device
     )
     self._body_quat_w = torch.tensor(
-      data["body_quat_w"][:frame_stop], dtype=torch.float32, device=device
+      data["body_quat_w"], dtype=torch.float32, device=device
     )
     self._body_lin_vel_w = torch.tensor(
-      data["body_lin_vel_w"][:frame_stop], dtype=torch.float32, device=device
+      data["body_lin_vel_w"], dtype=torch.float32, device=device
     )
     self._body_ang_vel_w = torch.tensor(
-      data["body_ang_vel_w"][:frame_stop], dtype=torch.float32, device=device
+      data["body_ang_vel_w"], dtype=torch.float32, device=device
     )
     raw_joint_pos = torch.tensor(
-      data["joint_pos"][:frame_stop], dtype=torch.float32, device=device
+      data["joint_pos"], dtype=torch.float32, device=device
     )
     raw_joint_vel = torch.tensor(
-      data["joint_vel"][:frame_stop], dtype=torch.float32, device=device
+      data["joint_vel"], dtype=torch.float32, device=device
     )
 
     npz_body_names = self._read_names(data, "body_names")
@@ -246,42 +234,22 @@ class MotionLoader:
         device=device,
       )
     else:
-      n_body_motion = int(self._body_pos_w.shape[1])
-      # A number of legacy G1 archives omit names and use the breadth-first
-      # body order from the source model rather than the runtime MJCF's
-      # depth-first order.  If the caller provides that source schema, remap
-      # by name before falling back to the historical index heuristic.
-      if (
-        legacy_body_names is not None
-        and target_body_names is not None
-        and len(legacy_body_names) == n_body_motion
-        and all(name in legacy_body_names for name in target_body_names)
-      ):
+      if target_body_names is not None and npz_body_names is None:
         print(
-          f"[MotionLoader] Remapping nameless legacy body columns by configured "
-          f"schema ({n_body_motion} bodies): {motion_file!r}"
+          f"[MotionLoader] WARNING: {motion_file!r} has no ``body_names`` "
+          "array; falling back to index-based body mapping. Regenerate the "
+          "motion via gmr_pkl_sim_to_npz / csv_to_npz to get a "
+          "self-describing npz that is robust to XML changes."
         )
-        motion_body_cols = torch.tensor(
-          [legacy_body_names.index(name) for name in target_body_names],
-          dtype=torch.long,
-          device=device,
+      bi = body_indexes.to(device=device)
+      n_body_motion = int(self._body_pos_w.shape[1])
+      if bi.numel() and int(bi.max().item()) >= n_body_motion:
+        motion_body_cols = torch.arange(
+          bi.shape[0], dtype=torch.long, device=device
         )
+        assert len(motion_body_cols) == len(body_indexes)
       else:
-        if target_body_names is not None and npz_body_names is None:
-          print(
-            f"[MotionLoader] WARNING: {motion_file!r} has no ``body_names`` "
-            "array; falling back to index-based body mapping. Regenerate the "
-            "motion via gmr_pkl_sim_to_npz / csv_to_npz to get a "
-            "self-describing npz that is robust to XML changes."
-          )
-        bi = body_indexes.to(device=device)
-        if bi.numel() and int(bi.max().item()) >= n_body_motion:
-          motion_body_cols = torch.arange(
-            bi.shape[0], dtype=torch.long, device=device
-          )
-          assert len(motion_body_cols) == len(body_indexes)
-        else:
-          motion_body_cols = bi
+        motion_body_cols = bi
     self._body_indexes = motion_body_cols
     self.body_pos_w = self._body_pos_w[:, self._body_indexes]
     self.body_quat_w = self._body_quat_w[:, self._body_indexes]
@@ -307,43 +275,23 @@ class MotionLoader:
     else:
       if target_joint_names is not None and npz_joint_names is None:
         n_target = len(target_joint_names)
-        if (
-          legacy_joint_names is not None
-          and len(legacy_joint_names) == raw_joint_pos.shape[1]
-          and all(name in legacy_joint_names for name in target_joint_names)
-        ):
-          joint_cols = torch.tensor(
-            [legacy_joint_names.index(name) for name in target_joint_names],
-            dtype=torch.long,
-            device=device,
+        if raw_joint_pos.shape[1] != n_target:
+          raise ValueError(
+            f"Motion file {motion_file!r} has no ``joint_names`` array and its "
+            f"joint_pos column count {raw_joint_pos.shape[1]} != target joint "
+            f"count {n_target}. Regenerate the motion to embed joint_names, "
+            "or fix the motion source."
           )
-          self._joint_cols = joint_cols
-          self.joint_pos = raw_joint_pos[:, joint_cols]
-          self.joint_vel = raw_joint_vel[:, joint_cols]
-        else:
-          if raw_joint_pos.shape[1] != n_target:
-            raise ValueError(
-              f"Motion file {motion_file!r} has no ``joint_names`` array and its "
-              f"joint_pos column count {raw_joint_pos.shape[1]} != target joint "
-              f"count {n_target}. Regenerate the motion to embed joint_names, "
-              "or fix the motion source."
-            )
-          print(
-            f"[MotionLoader] WARNING: {motion_file!r} has no ``joint_names`` "
-            "array; assuming joint_pos columns already follow target order. "
-            "Regenerate the motion to get a self-describing npz."
-          )
-          self._joint_cols = torch.arange(
-            raw_joint_pos.shape[1], dtype=torch.long, device=device
-          )
-          self.joint_pos = raw_joint_pos
-          self.joint_vel = raw_joint_vel
-      else:
-        self._joint_cols = torch.arange(
-          raw_joint_pos.shape[1], dtype=torch.long, device=device
+        print(
+          f"[MotionLoader] WARNING: {motion_file!r} has no ``joint_names`` "
+          "array; assuming joint_pos columns already follow target order. "
+          "Regenerate the motion to get a self-describing npz."
         )
-        self.joint_pos = raw_joint_pos
-        self.joint_vel = raw_joint_vel
+      self._joint_cols = torch.arange(
+        raw_joint_pos.shape[1], dtype=torch.long, device=device
+      )
+      self.joint_pos = raw_joint_pos
+      self.joint_vel = raw_joint_vel
 
     self.time_step_total = self.joint_pos.shape[0]
     self.heading_align_yaw_rad: float = 0.0
@@ -407,10 +355,7 @@ class MultiMotionLoader:
     *,
     target_body_names: tuple[str, ...] | None = None,
     target_joint_names: tuple[str, ...] | None = None,
-    legacy_body_names: tuple[str, ...] | None = None,
-    legacy_joint_names: tuple[str, ...] | None = None,
     align_heading_to_frame: AlignHeadingFrame = "last",
-    max_motion_frames: int = 0,
   ) -> None:
     if not motion_paths:
       raise ValueError("MultiMotionLoader requires at least one motion path.")
@@ -421,10 +366,7 @@ class MultiMotionLoader:
         device=device,
         target_body_names=target_body_names,
         target_joint_names=target_joint_names,
-        legacy_body_names=legacy_body_names,
-        legacy_joint_names=legacy_joint_names,
         align_heading_to_frame=align_heading_to_frame,
-        max_motion_frames=max_motion_frames,
       )
       for p in motion_paths
     ]
@@ -662,67 +604,13 @@ def _resolve_motion_paths(cfg: MotionCommandCfg) -> tuple[str, ...]:
     d = Path(cfg.motion_directory).expanduser().resolve()
     if not d.is_dir():
       raise ValueError(f"motion_directory is not a directory: {d}")
-    # Motion datasets are commonly grouped into subdirectories by source,
-    # subject, or split. When a cap is active, walk each immediate group only
-    # as far as its quota; this avoids scanning a multi-hundred-thousand-file
-    # archive just to choose a bounded training subset.
-    if cfg.max_motion_clips > 0:
-      groups = sorted(x for x in d.iterdir() if x.is_dir())
-      root_files = sorted(x for x in d.iterdir() if x.is_file() and x.suffix == ".npz")
-      if root_files:
-        groups = [d, *groups]
-      if not groups:
-        groups = [d]
-      base_quota, remainder = divmod(cfg.max_motion_clips, len(groups))
-      files = []
-      for group_index, group in enumerate(groups):
-        quota = base_quota + (1 if group_index < remainder else 0)
-        if quota <= 0:
-          continue
-        if group == d:
-          candidates = root_files
-        else:
-          candidates = []
-          for root, dir_names, file_names in os.walk(group):
-            dir_names.sort()
-            file_names.sort()
-            candidates.extend(
-              Path(root) / name
-              for name in file_names
-              if name.endswith(".npz")
-            )
-            if len(candidates) >= quota:
-              break
-        files.extend(x for x in candidates[:quota] if x.is_file())
-    else:
-      files = sorted(x for x in d.rglob("*.npz") if x.is_file())
+    files = sorted(x for x in d.glob("*.npz") if x.is_file())
     if not files:
       raise ValueError(f"No .npz files under motion_directory: {d}")
     return tuple(str(f) for f in files)
   raise ValueError(
     "MotionCommandCfg requires non-empty ``motion_files``, ``motion_file``, or ``motion_directory``."
   )
-
-
-def _select_motion_paths(
-  paths: tuple[str, ...], max_motion_clips: int
-) -> tuple[str, ...]:
-  """Select a deterministic, directory-wide subset when a cap is requested.
-
-  A full motion archive can contain many tens of gigabytes. Loading every clip
-  into every distributed worker would replicate that archive on each GPU. The
-  evenly spaced selection keeps coverage across the sorted recursive archive;
-  setting ``max_motion_clips`` to ``0`` disables the cap.
-  """
-  if max_motion_clips <= 0 or len(paths) <= max_motion_clips:
-    return paths
-  if max_motion_clips == 1:
-    return (paths[0],)
-  last = len(paths) - 1
-  indices = {
-    (i * last) // (max_motion_clips - 1) for i in range(max_motion_clips)
-  }
-  return tuple(paths[i] for i in sorted(indices))
 
 
 class MotionCommand(CommandTerm):
@@ -742,15 +630,14 @@ class MotionCommand(CommandTerm):
     # corresponding robot joint index. Extra robot joints that are not in the motion
     # clip are left unmapped; a naive ``torch.arange`` would misalign columns.
     robot_joint_names = list(self.robot.joint_names)
-    motion_joint_names = self.cfg.joint_names
-    missing = [n for n in motion_joint_names if n not in robot_joint_names]
+    missing = [n for n in G1_REPLAY_JOINT_NAMES_27 if n not in robot_joint_names]
     if missing:
       raise ValueError(
         "Motion joint names missing from robot.joint_names: "
         f"{missing}. Robot has joints {robot_joint_names}."
       )
     self._motion_to_robot_joint_ids = torch.tensor(
-      [robot_joint_names.index(n) for n in motion_joint_names],
+      [robot_joint_names.index(n) for n in G1_REPLAY_JOINT_NAMES_27],
       dtype=torch.long,
       device=self.device,
     )
@@ -760,24 +647,14 @@ class MotionCommand(CommandTerm):
       device=self.device,
     )
 
-    paths = _select_motion_paths(
-      _resolve_motion_paths(cfg), cfg.max_motion_clips
-    )
-    if cfg.max_motion_clips > 0:
-      print(
-        f"[MotionCommand] Using {len(paths)} motion clips "
-        f"(max_motion_clips={cfg.max_motion_clips})."
-      )
+    paths = _resolve_motion_paths(cfg)
     self.motion = MultiMotionLoader(
       paths,
       self.body_indexes,
       device=self.device,
       target_body_names=tuple(self.cfg.body_names),
-      target_joint_names=motion_joint_names,
-      legacy_body_names=self.cfg.legacy_body_names,
-      legacy_joint_names=self.cfg.legacy_joint_names,
+      target_joint_names=G1_REPLAY_JOINT_NAMES_27,
       align_heading_to_frame=self.cfg.align_heading_to_frame,
-      max_motion_frames=self.cfg.max_motion_frames,
     )
     self.time_steps = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
     # Monotonic timeline for termination accounting (not clamped at clip end).
@@ -993,9 +870,7 @@ class MotionCommand(CommandTerm):
       self.body_indexes,
       device=self.device,
       target_body_names=tuple(self.cfg.body_names),
-      target_joint_names=self.cfg.joint_names,
-      legacy_body_names=self.cfg.legacy_body_names,
-      legacy_joint_names=self.cfg.legacy_joint_names,
+      target_joint_names=G1_REPLAY_JOINT_NAMES_27,
       align_heading_to_frame=self.cfg.align_heading_to_frame,
     )
     self.motion_ids = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
@@ -1665,9 +1540,6 @@ class MotionCommand(CommandTerm):
 
 @dataclass(kw_only=True)
 class MotionCommandCfg(CommandTermCfg):
-  joint_names: tuple[str, ...] = G1_REPLAY_JOINT_NAMES_27
-  """Motion joint column order; names are mapped to the runtime robot explicitly."""
-
   motion_files: tuple[str, ...] = ()
   """Explicit list of ``.npz`` clips (highest priority)."""
 
@@ -1676,18 +1548,6 @@ class MotionCommandCfg(CommandTermCfg):
 
   motion_file: str = ""
   """Single ``.npz`` path when ``motion_files`` and ``motion_directory`` are empty."""
-
-  legacy_body_names: tuple[str, ...] | None = None
-  """Optional source body order for nameless legacy archives."""
-
-  legacy_joint_names: tuple[str, ...] | None = None
-  """Optional source joint order for nameless legacy archives."""
-
-  max_motion_clips: int = 0
-  """Maximum clips loaded from a directory; ``0`` loads the complete archive."""
-
-  max_motion_frames: int = 0
-  """Maximum frames retained per clip; ``0`` keeps each clip intact."""
 
   anchor_body_name: str
   body_names: tuple[str, ...]
@@ -1764,3 +1624,4 @@ class MotionCommandCfg(CommandTermCfg):
 
   def build(self, env: ManagerBasedRlEnv) -> MotionCommand:
     return MotionCommand(self, env)
+

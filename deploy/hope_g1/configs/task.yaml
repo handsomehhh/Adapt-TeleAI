@@ -1,5 +1,0 @@
-# Local MuJoCo: all inference/motion inputs are migrated into this repository.
-# Run from the repository root. Original source paths are in migration_manifest.json.
-task: HOPEPingPongMultiMotionG1
-checkpoint: deploy/hope_g1/artifacts/hope_20261012_18000/model_18000.pt
-motion_dir: deploy/hope_g1/artifacts/hope_20261012_18000/motions

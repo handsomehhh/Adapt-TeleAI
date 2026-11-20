@@ -13,16 +13,8 @@ artifacts/
 render_robots.py
 benchmark_results/
 dataset_grasp/
+dataset/
 src/motion/results/
-
-# Local ping-pong training artifacts. Keep the small manifests and README files
-# in Git, but keep raw motion archives and trained checkpoints out of it.
-ckpts/a3_pingpong/*.pt
-ckpts/g1_pingpong/*.pt
-ckpts/g1_pingpong_tele_gmr/*.pt
-dataset/a3_pingpong/raw/
-dataset/g1_pingpong/raw/
-dataset/g1_pingpong_tele_gmr/raw/
 
 # Documentation outputs.
 **/_build/*
@@ -31,13 +23,11 @@ dataset/g1_pingpong_tele_gmr/raw/
 *clip**
 command.md
 host_readme.md
-<<<<<<< Updated upstream
 
-
-dataset/
-
-ckpts/g1*
-=======
-src/mjlab/asset_zoo/robots/unitree_g1_pingpong/marker_test/
-tests/
->>>>>>> Stashed changes
+# Independent G1 tracker runtime data and weights.
+dataset/g1_stage1/motions/
+ckpts/g1_stage1/
+deploy/recordings/
+dataset/g1_adapt_corrected/
+**/_build/
+**/generated/

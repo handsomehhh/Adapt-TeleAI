@@ -1,9 +1,0 @@
-# HOPE Avatar-Pro / Chingmu VRPN client template. Replace server first.
-/vrpn_mocap_client:
-  ros__parameters:
-    server: CHINGMU_SERVER_IP
-    port: 3883
-    frame_id: world
-    multi_sensor: true
-    update_freq: 100.0
-    refresh_freq: 1.0

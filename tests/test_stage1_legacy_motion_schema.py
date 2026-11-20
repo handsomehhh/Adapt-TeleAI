@@ -3,8 +3,7 @@
 import numpy as np
 import torch
 
-from mjlab.tasks.adapt_tennis.mdp.commands import MotionLoader
-
+from mjlab.tasks.g1_stage1.mdp.commands import MotionLoader
 
 LEGACY_BODIES = (
   "pelvis",

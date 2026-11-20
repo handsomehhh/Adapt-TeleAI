@@ -1,17 +1,34 @@
 {
   "asset": {
     "samples": 32,
+    "reference": "MuJoCo native URDF FK and geoms, fusestatic=false; original URDF full inertia tensors with all fixed-link masses retained",
     "dofs": 29,
     "articulated_bodies": 30,
-    "meshes": 41,
-    "geoms": 82,
-    "collision_geoms": 44,
-    "source_mass_kg": 33.689167549737824,
-    "compiled_mass_kg": 33.68916754973783,
-    "maximum_fk_position_error_m": 8.881784197001252e-16,
-    "maximum_fk_rotation_matrix_error": 8.625045122556685e-15,
-    "maximum_com_error_m": 3.0808688933348094e-15,
-    "maximum_inertia_error_kg_m2": 1.0685896612017132e-15,
+    "meshes": 40,
+    "geoms": 69,
+    "collision_geoms": 31,
+    "source_mass_kg": 33.69842032240641,
+    "compiled_mass_kg": 33.69842032240642,
+    "maximum_errors": {
+      "fk_position": 5.6066262743570405e-15,
+      "fk_rotation": 1.759703494030873e-14,
+      "com": 7.327471962526033e-15,
+      "inertia": 1.249000902703301e-16,
+      "geom_position": 9.547918011776346e-15,
+      "geom_rotation": 2.1392357496541337e-06,
+      "racket_position": 9.43689570931383e-15,
+      "racket_rotation": 1.7041923427996153e-14
+    },
+    "error_tolerances": {
+      "fk_position": 1e-09,
+      "fk_rotation": 1e-09,
+      "com": 1e-09,
+      "inertia": 1e-09,
+      "geom_position": 1e-09,
+      "geom_rotation": 5e-06,
+      "racket_position": 1e-09,
+      "racket_rotation": 1e-09
+    },
     "limits_exact": true,
     "self_collision_disabled": true
   },
@@ -20,28 +37,10 @@
     "nq": 36,
     "nv": 35,
     "nu": 29,
-    "native_servo_gains_armatures_effort_limits_exact": true,
     "action_dimension": 29,
-    "neutral_import_and_nominal_keyframe_ground_checks": {
-      "import_neutral": {
-        "root_xyz": [
-          0.0,
-          0.0,
-          0.82
-        ],
-        "ground_contacts": 0
-      },
-      "nominal_keyframe": {
-        "root_xyz": [
-          0.0,
-          0.0,
-          0.76
-        ],
-        "ground_contacts": 0
-      }
-    }
+    "servo_order_and_effort_limits_exact": true
   },
-  "source_urdf_sha256": "127f42c7fbb4a6df60e1ac3b76b64af0c05e3575f3bdda2a5210c9252342fe1e",
-  "mjcf_sha256": "baa48906fa32a0bc02c6d820e92d2ee6274a6bee02e9a365f4f7f41aaa593ab0",
-  "robot_module_sha256": "897ff8a47ca898b7a2a5f2bd04c4a58710c94f51e16446914481a933c6638de6"
+  "source_urdf_sha256": "ff69e37651da1f2f1ae302000e694433fca4f7ad056473dbf8f60dfabab56c7b",
+  "mjcf_sha256": "2591fc34c3711af68982e9b8ac27eedfaa2a57cfa628ab14c58e0771097e3af0",
+  "robot_module_sha256": "32aa59bed2b4305318b45a82720a1e5059b6a618414d9bf9bb2829dfc158e187"
 }

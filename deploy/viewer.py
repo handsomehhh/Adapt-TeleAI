@@ -1,553 +1,389 @@
-"""Presentation-only MuJoCo viewers shared by deployment simulations and replays.
-
-No policy, physics, sampling or evaluation logic belongs here. Browser controls
-are queued and dispatched by the simulation/replay thread, just like native keys.
-"""
+"""Viser controls and overlays; callbacks queue commands for the simulation thread."""
 
 import copy
-import math
 import queue
-import threading
 import time
-from dataclasses import dataclass
-from itertools import zip_longest
+from pathlib import Path
 
-import mujoco
 import numpy as np
+import viser
+from mjviser import ViserMujocoScene
+from viser import _messages
+
+from deploy.comparison import ReferenceRobot
+from deploy.control import MODES
+from deploy.playback import DisplayFrames
 
 
-@dataclass
-class ViewerSettings:
-  backend: str = "web"
-  host: str = "127.0.0.1"
-  port: int = 8080
-  wait: bool = True
-
-
-settings = ViewerSettings()
-
-
-def add_viewer_arguments(parser):
-  parser.add_argument(
-    "--viewer",
-    choices=("web", "native"),
-    default="web",
-    help="Visualization backend; simulation still needs --render",
-  )
-  parser.add_argument("--web-host", default="127.0.0.1")
-  parser.add_argument("--web-port", type=int, default=8080)
-  parser.add_argument(
-    "--web-no-wait",
-    action="store_true",
-    help="Start without waiting for the first browser connection",
-  )
-
-
-def configure_viewer(args):
-  if not 1 <= args.web_port <= 65535:
-    raise ValueError("web-port must be within 1..65535")
-  global settings
-  settings = ViewerSettings(
-    args.viewer, args.web_host, args.web_port, not args.web_no_wait
-  )
-
-
-def overlay_batches(scene):
-  """Convert existing mjvGeom overlays without recomputing their semantics.
-
-  mjvGeom sizes are normalized XYZ extents, unlike mjModel primitive sizes.
-  Connector arrows originate at pos; capsules are centered there.
-  """
-  batches = {}
-  for i in range(scene.ngeom):
-    geom = scene.geoms[i]
-    kind = int(geom.type)
-    if float(geom.rgba[3]) <= 0:
-      continue
-    names = {
-      int(mujoco.mjtGeom.mjGEOM_SPHERE): "sphere",
-      int(mujoco.mjtGeom.mjGEOM_ELLIPSOID): "sphere",
-      int(mujoco.mjtGeom.mjGEOM_BOX): "box",
-      int(mujoco.mjtGeom.mjGEOM_CYLINDER): "cylinder",
-      int(mujoco.mjtGeom.mjGEOM_CAPSULE): "capsule",
-      int(mujoco.mjtGeom.mjGEOM_ARROW): "arrow",
-    }
-    name = names.get(kind)
-    if name is None:
-      raise ValueError(f"Unsupported debug overlay geometry {kind}")
-    quat = np.empty(4)
-    mujoco.mju_mat2Quat(quat, geom.mat.ravel())
-    pos, scale, rgba = geom.pos.copy(), geom.size.copy(), geom.rgba.copy()
-
-    def append(shape, position, size, quat=quat, rgba=rgba):
-      batches.setdefault(shape, []).append((position, quat, size, rgba))
-
-    if name == "capsule":
-      append("cylinder", pos, scale)
-      offset = geom.mat[:, 2] * scale[2]
-      for point in (pos - offset, pos + offset):
-        append("sphere", point, np.full(3, scale[0]))
-    else:
-      append(name, pos, scale)
-  return {
-    name: tuple(np.array([item[j] for item in values]) for j in range(4))
-    for name, values in batches.items()
-  }
-
-
-class WebMujocoViewer:
-  """Subset of the passive viewer interface consumed by existing test runners."""
-
-  def __init__(
-    self, model, data, key_callback=None, *, host="127.0.0.1", port=8080, wait=True, **_
-  ):
-    import trimesh
-    import viser
-    from mjviser import ViserMujocoScene
-
-    self.data = data
-    self._mutex = threading.RLock()
-    self._actions = queue.SimpleQueue()
-    self._running = True
-    self._callback = key_callback
-    self._owner = getattr(key_callback, "__self__", None)
-    self._timeline = None
-    self._last_sync = -math.inf
-    self._texts = None
-    self._last_texts = None
-    self._camera_ready = False
-    self._handles = {}
-    self.user_scn = mujoco.MjvScene(model, maxgeom=10000)
-    self.cam = mujoco.MjvCamera()
-    mujoco.mjv_defaultCamera(self.cam)
-    self.cam.lookat[:] = model.stat.center
-    self.cam.distance = 4.5
-    self.cam.azimuth, self.cam.elevation = 125, -20
-    self.opt = mujoco.MjvOption()
-    self.server = viser.ViserServer(host=host, port=port, label="乒乓球测试平台")
-    try:
-      self.server.gui.configure_theme(control_width="large", show_share_button=False)
-      if hasattr(self.server.gui, "main_panel"):
-        self.server.gui.main_panel.dock_right()
-        self.server.gui.main_panel.set_width(520)
-      # mjviser changes visual defaults on construction. Keep them off the plant.
-      self.scene = ViserMujocoScene(self.server, copy.copy(model), num_envs=1)
-      self.scene.camera_tracking_enabled = False
-      self._meshes = {
-        "sphere": trimesh.creation.icosphere(subdivisions=2),
-        "box": trimesh.creation.box(extents=[2, 2, 2]),
-        "cylinder": trimesh.creation.cylinder(radius=1, height=2, sections=16),
-      }
-      shaft = trimesh.creation.cylinder(radius=1, height=0.8, sections=12)
-      shaft.apply_translation([0, 0, 0.4])
-      head = trimesh.creation.cone(radius=2.5, height=0.2, sections=12)
-      head.apply_translation([0, 0, 0.8])
-      self._meshes["arrow"] = trimesh.util.concatenate([shaft, head])
-      tabs = self.server.gui.add_tab_group()
-      with tabs.add_tab("控制"):
-        self.server.gui.add_markdown("播放与定位 · 支持直接输入和键盘快捷键")
-        self._build_controls()
-        self._build_hotkeys()
-        with self.server.gui.add_folder("视角与结束", expand_by_default=False):
-          self._button("重置视角", lambda: self._set_cameras())
-          self._button("结束查看 / 停止测试", self._stop)
-      with tabs.add_tab("状态与误差"):
-        self._status = self.server.gui.add_markdown("等待场景状态…")
-      with tabs.add_tab("场景显示"):
-        self._fov = self.server.gui.add_slider(
-          "视野角（°）", min=20, max=100, step=1, initial_value=45
-        )
-
-        @self._fov.on_update
-        def change_fov(event):
-          if event.client is not None:
-            value = float(self._fov.value)
-            self._actions.put(lambda: self._set_fov(value))
-
-        with self.server.gui.add_folder("几何分组", expand_by_default=False):
-          self.scene.create_groups_gui()
-        with self.server.gui.add_folder("坐标与接触显示", expand_by_default=False):
-          self.scene.create_overlay_gui()
-
-      @self.server.on_client_connect
-      def connected(client):
-        self._set_camera(client)
-        # Viser has no public script API. Use its own script message only for
-        # forwarding parent-page keys to the standard Viser command hotkeys.
-        import json
-        from pathlib import Path
-
-        from viser import _messages
-
-        stylesheet = Path(__file__).with_name("viewer.css").read_text()
-        source = (
-          "const style = document.createElement('style'); style.textContent = "
-          + json.dumps(stylesheet)
-          + "; document.head.appendChild(style); document.body.classList.add('pingpong-viewer');\n"
-          + Path(__file__)
-          .with_name("viewer_keyboard.js")
-          .read_text()
-          .replace("__REPLAY_MODE__", "true" if self._timeline is not None else "false")
-        )
-        client._websock_connection.queue_message(
-          _messages.RunJavascriptMessage(source=source)
-        )
-
-      self.scene.update_from_mjdata(data)
-      print(
-        f"[Web viewer] http://{host}:{self.server.get_port()}  "
-        "(remote: forward this port over SSH)",
-        flush=True,
-      )
-      if wait:
-        print(
-          "[Web viewer] Waiting for browser; no simulation steps yet. Ctrl-C cancels.",
-          flush=True,
-        )
-        while self._running and not self.server.get_clients():
-          self._drain_actions()
-          time.sleep(0.05)
-    except BaseException:
-      self.server.stop()
-      raise
-
-  def _button(self, label, action):
-    handle = self.server.gui.add_button(label)
-    handle.on_click(lambda _: self._actions.put(action))
-    return handle
-
-  def _key(self, code):
-    if self._callback is not None:
-      self._callback(code)
-
-  def _key_group(self, label, pairs):
-    codes = dict(pairs)
-    handle = self.server.gui.add_button_group(label, options=list(codes))
-
-    @handle.on_click
-    def clicked(event):
-      code = codes[event.target.value]
-      self._actions.put(lambda: self._key(code))
-
-  def _build_controls(self):
-    owner = self._owner
-    is_replay = (
-      owner is not None and hasattr(owner, "recording") and hasattr(owner, "position")
+class Viewer:
+  def __init__(self, session, host="127.0.0.1", port=8085):
+    self.session = session
+    self.commands = queue.SimpleQueue()
+    self.running, self.single_step, self.rate = True, False, 1.0
+    self.frames = DisplayFrames(session)
+    self.playback_stats = {"fps": 0.0, "realtime_factor": 0.0, "dropped_s": 0.0}
+    self.last_status_update = -float("inf")
+    self.server = viser.ViserServer(host=host, port=port, label="G1 AdaPT 部署验证")
+    self.scene = ViserMujocoScene(
+      self.server, copy.copy(session.world.model), num_envs=1
     )
-    self._timeline = owner if is_replay else None
-    self._speed = (
-      getattr(owner, "speed", None)
-      or getattr(owner, "playback", None)
-      or (owner if hasattr(owner, "set_rate") else None)
+    self.scene.camera_tracking_enabled = False
+    self.reference_robot = ReferenceRobot(self.server.scene, session.world)
+    self.actual_label = self.server.scene.add_label("/actual_label", "Tracker 实际执行")
+    self.server.scene.set_up_direction("+z")
+    gui = self.server.gui
+    gui.add_markdown(
+      "# G1 AdaPT 模块测试\nCPU MuJoCo · 冻结训练模型\n原色机器人为实际执行，绿色机器人为完整参考动作。"
+      "并排显示只平移参考图像，误差始终在原坐标中计算。"
     )
-    with self.server.gui.add_folder("播放", expand_by_default=True):
-      if owner is not None and hasattr(owner, "paused"):
-        self._play_state = self.server.gui.add_markdown("**状态：已暂停**")
-        self._play_button = self._button("继续播放 · Space", lambda: self._key(32))
-      if self._speed is not None:
-        self._rate_display = self.server.gui.add_markdown(
-          f"**当前倍速：{self._speed.rate:g}×**"
+    mode = gui.add_dropdown(
+      "测试模块",
+      options=("replay",) if session.mode == "replay" else MODES,
+      initial_value=session.mode,
+    )
+    mode.on_update(lambda event: self.commands.put(("mode", event.target.value)))
+    self.motion_picker, self.motion_time = None, None
+    self.motion_buttons = []
+    if session.mode != "replay":
+      with gui.add_folder("Tracker motion", expand_by_default=True):
+        selected = next(
+          name
+          for name, path in session.motion_catalog.items()
+          if path == session.motion
         )
-        speed = self._rate_input = self.server.gui.add_number(
-          "播放倍速（可直接输入）",
-          initial_value=float(self._speed.rate),
-          min=0.0625,
-          max=max(8.0, float(self._speed.rate)),
-          step=0.0625,
+        self.motion_picker = gui.add_dropdown(
+          "选择 motion", options=tuple(session.motion_catalog), initial_value=selected
         )
-        self._published_rate = float(self._speed.rate)
-
-        @speed.on_update
-        def change_speed(event):
-          if event.client is not None:
-            value = float(speed.value)
-            if math.isfinite(value) and 0.0625 <= value <= max(
-              8.0, self._published_rate
-            ):
-              self._actions.put(lambda: self._current_speed().set_rate(value))
-
-        speed_buttons = self.server.gui.add_button_group(
-          "快捷调速", options=["减半 ÷2", "正常 1×", "加倍 ×2"]
-        )
-
-        @speed_buttons.on_click
-        def adjust_speed(event):
-          code = {"减半 ÷2": 91, "正常 1×": 92, "加倍 ×2": 93}[event.target.value]
-          self._actions.put(lambda: self._key(code))
-
-    if is_replay:
-      with self.server.gui.add_folder("TTS 时序", expand_by_default=True):
-        self._tts_display = self.server.gui.add_markdown("等待执行 command…")
-      with self.server.gui.add_folder("按帧定位", expand_by_default=True):
-        self._frame_count = self.server.gui.add_number(
-          "每次跳转帧数（可直接输入）",
-          initial_value=1,
-          min=1,
-          max=max(1, len(owner.recording.times)),
-          step=1,
-        )
-        count_buttons = self.server.gui.add_button_group(
-          "调整帧数", options=["减少 −1", "增加 +1"]
-        )
-
-        @count_buttons.on_click
-        def adjust_count(event):
-          delta = -1 if event.target.value == "减少 −1" else 1
-          self._frame_count.value = max(
-            1, min(len(owner.recording.times), int(self._frame_count.value) + delta)
+        self.motion_picker.on_update(
+          lambda e: (
+            self.commands.put(("motion", e.target.value))
+            if e.client_id is not None
+            else None
           )
-
-        frame_buttons = self.server.gui.add_button_group(
-          "执行跳转", options=["后退", "前进"]
         )
-
-        @frame_buttons.on_click
-        def frame_step(event):
-          self._queue_frame_step(-1 if event.target.value == "后退" else 1)
-
-      with self.server.gui.add_folder("时间与阶段", expand_by_default=True):
-        self._key_group("按秒跳转", [("后退 1 秒", 263), ("前进 1 秒", 262)])
-        self._key_group(
-          "按阶段跳转", [("上一阶段 · P", ord("P")), ("下一阶段 · N", ord("N"))]
-        )
-        duration = owner.recording.duration
-        self._seek = self.server.gui.add_slider(
-          "回放时间（秒）",
-          min=0,
-          max=max(duration, 0.001),
+        for label, direction in (("上一个 motion", -1), ("下一个 motion", 1)):
+          button = gui.add_button(label)
+          button.on_click(
+            lambda _e, d=direction: self.commands.put(("adjacent_motion", d))
+          )
+          self.motion_buttons.append(button)
+        self.motion_time = gui.add_slider(
+          "motion 时间 (s)",
+          min=0.0,
+          max=max(0.001, session.controller.reference.duration),
           step=0.001,
-          initial_value=owner.position,
+          initial_value=0.0,
         )
-        self._published_seek = owner.position
-
-        @self._seek.on_update
-        def seek(event):
-          if event.client is not None:
-            value = float(self._seek.value)
-
-            def apply():
-              with owner.lock:
-                owner.position = value
-                owner.paused = True
-
-            self._actions.put(apply)
-
-      with self.server.gui.add_folder("更多操作", expand_by_default=False):
-        self._button("从头播放 · R", lambda: self._key(ord("R")))
-    elif owner is not None and hasattr(owner, "step_requested"):
-      for label, code in [
-        ("START / 定位", 257),
-        ("悬挂下放（L）", 76),
-        ("AMP（A）", 65),
-        ("乒乓策略 UP（W）", 87),
-        ("返回 AMP（S）", 83),
-        ("发一球（F）", 70),
-        ("连续发球（T）", 84),
-        ("单步（N）", 78),
-        ("重置（R）", 82),
-        ("停止动作（B）", 66),
-      ]:
-        self._button(label, lambda code=code: self._key(code))
-
-  def _queue_frame_step(self, direction):
-    count = max(1, int(self._frame_count.value))
-    self._actions.put(lambda: self._timeline.step_frames(direction * count))
-
-  def _current_speed(self):
-    # A simulation reset replaces PlaybackControl while keeping this viewer.
-    return (
-      getattr(self._owner, "speed", None)
-      or getattr(self._owner, "playback", None)
-      or self._speed
-    )
-
-  def _build_hotkeys(self):
-    keys = []
-    if self._speed is not None:
-      keys += [(key, ord(key), "播放速度") for key in "[]-=\\"]
-      keys += [("=", ord("+"), "加速", "shift")]
-    if self._owner is not None and hasattr(self._owner, "paused"):
-      keys += [("space", 32, "播放 / 暂停")]
-    if self._timeline is not None:
-      keys += [
-        ("R", 82, "重新播放"),
-        (",", 44, "上一帧"),
-        (".", 46, "下一帧"),
-        ("N", 78, "下一阶段"),
-        ("P", 80, "上一阶段"),
-        ("arrowleft", 263, "后退一秒"),
-        ("arrowright", 262, "前进一秒"),
-        ("home", 268, "回到开头"),
-        ("end", 269, "跳到结尾"),
-      ]
-    elif self._owner is not None and hasattr(self._owner, "step_requested"):
-      keys += [(key, ord(key), "仿真控制") for key in "LAW SFTNRBXQPH".replace(" ", "")]
-      keys += [("enter", 257, "START")]
-    self._hotkeys = []
-    for entry in keys:
-      key, code, label, *modifier = entry
-      command = self.server.gui.add_command(
-        label, hotkey=key, modifier=modifier[0] if modifier else None
-      )
-      command.on_trigger(
-        lambda _, code=code: self._actions.put(lambda: self._key(code))
-      )
-      self._hotkeys.append(command)
-
-  def _set_camera(self, client):
-    az, el = np.deg2rad([self.cam.azimuth, self.cam.elevation])
-    client.camera.up_direction = (0, 0, 1)
-    client.camera.fov = np.deg2rad(float(self._fov.value))
-    client.camera.position = self.cam.lookat + self.cam.distance * np.array(
-      [np.cos(el) * np.cos(az), np.cos(el) * np.sin(az), -np.sin(el)]
-    )
-    client.camera.look_at = self.cam.lookat
-
-  def _set_fov(self, degrees):
-    for client in self.server.get_clients().values():
-      client.camera.fov = np.deg2rad(degrees)
-
-  def _set_cameras(self):
-    for client in self.server.get_clients().values():
-      self._set_camera(client)
-
-  def _stop(self):
-    self._running = False
-    owner = self._owner
-    if owner is not None and hasattr(owner, "paused"):
-      owner.paused = False
-    self._key(ord("Q"))
-
-  def _drain_actions(self):
-    while not self._actions.empty():
-      self._actions.get_nowait()()
-
-  def lock(self):
-    return self._mutex
-
-  def set_texts(self, texts):
-    self._texts = texts
-
-  def is_running(self):
-    self._drain_actions()
-    return self._running
-
-  def sync(self):
-    self._drain_actions()
-    now = time.monotonic()
-    if now - self._last_sync < 1 / 30:
-      return
-    self._last_sync = now
-    with self._mutex, self.server.atomic():
-      if self._owner is not None and hasattr(self._owner, "paused"):
-        paused = self._owner.paused
-        self._play_state.content = (
-          "**状态：已暂停 ⏸**" if paused else "**状态：播放中 ▶**"
+        self.motion_time.on_update(
+          lambda e: (
+            self.commands.put(("motion_seek", float(e.target.value)))
+            if e.client_id is not None
+            else None
+          )
         )
-        self._play_button.label = "继续播放 · Space" if paused else "暂停播放 · Space"
-      if self._timeline is not None:
-        status = self._timeline.tts_status()
-        if status is None:
-          self._tts_display.content = "等待有效 command / 缺少 TTS 时间记录"
-        else:
-          remaining = status["remaining"]
-          end = (
-            f"倒计时 **{remaining:.3f} s**"
-            if remaining >= 0
-            else f"已超时 **{-remaining:.3f} s**"
-          )
-          text = (
-            f"开始（接收）：**{status['start']:.3f} s** · 已过 {status['elapsed']:.3f} s\n\n"
-            f"初始 TTS：**{status['initial']:.3f} s**\n\n"
-            f"结束（deadline）：**{status['deadline']:.3f} s** · {end}"
-          )
-          if "event_error" in status:
-            label = (
-              "估计击球" if status["event_kind"] == "estimated_hit" else "实测穿平面"
+        self.loop = gui.add_checkbox(
+          "循环 motion（每轮重置机器人）", initial_value=False
+        )
+        self.loop.on_update(lambda e: self.commands.put(("loop", e.target.value)))
+        self.motion_buttons.append(self.loop)
+        gui.add_markdown("切换或拖动时间会重置实际机器人并暂停；取消暂停继续执行。")
+    paused = gui.add_checkbox("暂停", initial_value=True)
+    paused.on_update(
+      lambda event: (
+        self.commands.put(("pause", event.target.value))
+        if event.client_id is not None
+        else None
+      )
+    )
+    self.pause_handle = paused
+    self.hotkeys = {}
+    for key, label, action in (
+      ("space", "播放 / 暂停", "toggle_pause"),
+      ("R", "重置机器人与参考", "reset"),
+    ):
+      command = gui.add_command(label, hotkey=key)
+      command.on_trigger(lambda _event, name=action: self.commands.put((name, None)))
+      self.hotkeys[key] = command
+    gui.add_markdown(
+      "快捷键：**Space 暂停 / 继续** · **R 从头重置并暂停**。先点击三维画面。"
+    )
+    for label, command in (
+      ("单步", "step"),
+      ("重置机器人与参考", "reset"),
+      ("发一球", "feed"),
+      ("保存记录", "save"),
+      ("停止", "stop"),
+    ):
+      button = gui.add_button(label)
+      button.on_click(lambda _event, name=command: self.commands.put((name, None)))
+    scenario = gui.add_dropdown(
+      "来球流程",
+      options=("replay",)
+      if session.mode == "replay"
+      else ("independent", "continuous"),
+      initial_value=session.scenario,
+    )
+    scenario.on_update(lambda e: self.commands.put(("scenario", e.target.value)))
+    rate = gui.add_slider(
+      "播放倍速（1× 为真实时间）", min=0.1, max=2.0, step=0.05, initial_value=1.0
+    )
+    rate.on_update(lambda e: self.commands.put(("rate", e.target.value)))
+    speed = gui.add_slider(
+      "动作速度 alpha（改变策略输入）",
+      min=0.5,
+      max=2.0,
+      step=0.05,
+      initial_value=session.speed,
+    )
+    speed.on_update(lambda e: self.commands.put(("speed", e.target.value)))
+    self.speed_handle = speed
+    self.ghost = gui.add_checkbox("显示参考骨架", initial_value=True)
+    self.show_reference = gui.add_checkbox("显示完整参考机器人", initial_value=True)
+    self.layout = gui.add_dropdown(
+      "对比布局", options=("并排", "重叠"), initial_value="并排"
+    )
+    self.opacity = gui.add_slider(
+      "参考机器人透明度", min=0.1, max=1.0, step=0.05, initial_value=0.65
+    )
+    with gui.add_folder("MVAE latent（仅手动生成模式）", expand_by_default=False):
+      for index in range(32):
+        handle = gui.add_slider(
+          f"z{index}", min=-3.0, max=3.0, step=0.1, initial_value=0.0
+        )
+        handle.on_update(
+          lambda e, i=index: self.commands.put(("latent", (i, e.target.value)))
+        )
+    self.status = gui.add_markdown("已加载，等待开始。")
+    self.message = gui.add_markdown("")
+    self.chart = gui.add_uplot(
+      (np.array([0.0]), np.array([0.0]), np.array([0.0])),
+      (
+        {"label": "控制步"},
+        {"label": "拍心误差 cm", "stroke": "#38bdf8"},
+        {"label": "关节 RMS rad", "stroke": "#34d399"},
+      ),
+      title="最近控制步的跟踪误差",
+      scales={"x": {"time": False}},
+      height=180,
+    )
+    self.chart_counter = 0
+    self.ball = self.server.scene.add_icosphere(
+      "/ball", radius=0.02, color=(255, 130, 20)
+    )
+    self.actual = self.server.scene.add_icosphere(
+      "/actual_racket", radius=0.018, color=(40, 140, 250)
+    )
+    self.reference = self.server.scene.add_icosphere(
+      "/reference_racket", radius=0.018, color=(30, 220, 100)
+    )
+    self.target = self.server.scene.add_icosphere(
+      "/landing_target", radius=0.035, color=(220, 60, 180)
+    )
+    self.target.position = (2.7, 0.0, 0.78)
+    self.path = self.server.scene.add_line_segments(
+      "/prediction",
+      points=np.zeros((29, 2, 3)),
+      colors=(230, 180, 30),
+      thickness=2,
+      thickness_units="screen",
+    )
+    self.normal = self.server.scene.add_line_segments(
+      "/paddle_normal",
+      points=np.zeros((1, 2, 3)),
+      colors=(30, 170, 250),
+      thickness=3,
+      thickness_units="screen",
+    )
+    self.scene.update_from_mjdata(session.world.data)
+    self.skeleton = self.server.scene.add_line_segments(
+      "/reference_skeleton",
+      points=np.zeros((29, 2, 3)),
+      colors=(40, 210, 100),
+      thickness=2,
+      thickness_units="screen",
+    )
+    self.timeline = None
+    if session.mode == "replay":
+      self.timeline = gui.add_slider(
+        "回放帧", min=0, max=max(1, len(session.records) - 1), step=1, initial_value=0
+      )
+      self.timeline.on_update(
+        lambda e: (
+          self.commands.put(("seek", int(e.target.value)))
+          if e.client_id is not None
+          else None
+        )
+      )
+    self.session.paused = True
+
+    @self.server.on_client_connect
+    def connected(client):
+      client.camera.position = (3.6, -4.2, 2.4)
+      client.camera.look_at = (0.7, 0.5, 0.85)
+      client.camera.up_direction = (0.0, 0.0, 1.0)
+      client._websock_connection.queue_message(
+        _messages.RunJavascriptMessage(
+          source=Path(__file__).with_name("keyboard.js").read_text()
+        )
+      )
+
+    self.update()
+
+  def drain(self, output):
+    self.single_step = False
+    while not self.commands.empty():
+      command, value = self.commands.get_nowait()
+      try:
+        if command == "mode":
+          self.session.set_mode(value)
+          self.session.paused = True
+          self.pause_handle.value = True
+        elif command == "pause":
+          self.session.paused = bool(value)
+          self.pause_handle.value = self.session.paused
+        elif command == "toggle_pause":
+          self.session.paused = not self.session.paused
+          self.pause_handle.value = self.session.paused
+        elif command == "reset":
+          self.session.reset()
+          self.session.paused = True
+          self.pause_handle.value = True
+        elif command in ("motion", "adjacent_motion", "motion_seek"):
+          if command == "motion_seek":
+            self.session.seek_motion(value)
+          else:
+            path = (
+              self.session.motion_catalog[value]
+              if command == "motion"
+              else self.session.adjacent_motion(value)
             )
-            delta = status["event_error"] * 1000
-            text += (
-              f"\n\n{label}：{status['event_time']:.3f} s · "
-              f"相对 deadline **{'滞后' if delta >= 0 else '提前'} {abs(delta):.1f} ms**"
-            )
-          self._tts_display.content = text
-      if self._speed is not None:
-        rate = self._current_speed().rate
-        self._rate_display.content = f"**当前倍速：{rate:g}×**"
-        # Preserve browser edits until their queued callback has been applied.
-        if self._rate_input.value == self._published_rate:
-          self._published_rate = rate
-          self._rate_input.value = rate
-        elif self._rate_input.value == rate:
-          self._published_rate = rate
-      if not self._camera_ready:
-        self._set_cameras()
-        self._camera_ready = True
-      self.scene.update_from_mjdata(self.data)
-      batches = overlay_batches(self.user_scn)
-      for name, handle in self._handles.items():
-        if name not in batches:
-          handle.visible = False
-      for name, (positions, rotations, scales, colors) in batches.items():
-        handle = self._handles.get(name)
-        if handle is not None and len(handle.batched_positions) != len(positions):
-          handle.remove()
-          handle = None
-        if handle is None:
-          mesh = self._meshes[name]
-          handle = self.server.scene.add_batched_meshes_simple(
-            "/evaluation/" + name,
-            mesh.vertices,
-            mesh.faces,
-            batched_positions=positions,
-            batched_wxyzs=rotations,
-            batched_scales=scales,
-            batched_colors=(colors[:, :3] * 255).astype(np.uint8),
-            batched_opacities=colors[:, 3],
-            cast_shadow=False,
-            receive_shadow=False,
-          )
-          self._handles[name] = handle
-        else:
-          handle.visible = True
-          handle.batched_positions, handle.batched_wxyzs = positions, rotations
-          handle.batched_scales = scales
-          handle.batched_colors = (colors[:, :3] * 255).astype(np.uint8)
-          handle.batched_opacities = colors[:, 3]
-      if self._texts != self._last_texts:
-        self._last_texts = self._texts
-        text = self._texts or (None, None, "", "")
-        lines = ["| 指标 | 当前值 |", "|---|---|"]
-        for label, value in zip_longest(
-          str(text[2] or "").splitlines(), str(text[3] or "").splitlines(), fillvalue=""
-        ):
-          lines.append(f"| {label.replace('|', '/')} | {value.replace('|', '/')} |")
-        self._status.content = "\n".join(lines)
-      if self._timeline is not None:
-        # A browser update reaches the GUI value before its worker callback is
-        # dispatched. Do not overwrite that pending seek with the old clock.
-        if self._seek.value == self._published_seek:
-          self._published_seek = self._timeline.position
-          self._seek.value = self._published_seek
-        elif self._seek.value == self._timeline.position:
-          self._published_seek = self._timeline.position
+            if path != self.session.motion:
+              self.session.set_motion(path)
+          self.session.paused = True
+          self.pause_handle.value = True
+        elif command == "loop":
+          self.session.tracker_loop = bool(value)
+        elif command == "feed":
+          self.session.feed()
+        elif command == "step":
+          self.single_step = True
+        elif command == "scenario":
+          self.session.scenario = value
+          self.session.ball.cfg.freeze_on_done = value != "continuous"
+        elif command == "speed":
+          self.session.speed = value
+        elif command == "rate":
+          self.rate = value
+        elif command == "latent":
+          self.session.latent[value[0]] = value[1]
+        elif command == "seek":
+          self.session.seek(value)
+        elif command == "save":
+          if self.session.mode == "replay":
+            self.session.save(output)
+          else:
+            self.session.save(output, completed=False)
+          self.message.content = f"已保存：`{output}`"
+        elif command == "stop":
+          self.running = False
+        self.message.content = "" if command != "save" else self.message.content
+      except (ValueError, FileNotFoundError) as error:
+        self.message.content = f"操作未执行：{error}"
+
+  def update(self, fraction=1.0):
+    s = self.session
+    self.frames.capture(s)
+    display = self.frames.sample(fraction)
+    if s.info.get("control_fault"):
+      self.message.content = (
+        "**策略数值失败，当前仅保持最后有效关节目标，继续记录物理状态。R 可重置。**\n\n"
+        + s.info["control_fault"]
+      )
+    self.speed_handle.disabled = s.mode not in ("tracker", "mvae", "mvae_tracker")
+    if self.motion_picker is not None:
+      enabled = s.mode == "tracker"
+      self.motion_picker.disabled = not enabled
+      for handle in self.motion_buttons:
+        handle.disabled = not enabled
+      assert self.motion_time is not None
+      self.motion_time.disabled = not enabled
+      self.motion_time.max = max(0.001, s.controller.reference.duration)
+      self.motion_time.value = s.controller.reference_time
+      self.motion_picker.value = next(
+        name for name, path in s.motion_catalog.items() if path == s.motion
+      )
+    self.pause_handle.value = s.paused
+    if getattr(s, "record_limit_reached", False):
+      self.message.content = "已达到记录帧数上限并暂停。请保存记录，重新启动一次测试。"
+      self.pause_handle.value = True
+    self.scene.update_from_mjdata(self.frames.data)
+    self.ball.position = display["ball"]
+    self.ball.visible = s.info.get("ball_active", s.active)
+    self.path.visible = bool(s.ball_obs[0, -2])
+    points = display["future"]
+    self.path.points = np.stack((points[:-1], points[1:]), 1)
+    if s.info:
+      r = s.info
+      offset = np.array([0.0, 1.4, 0.0]) if self.layout.value == "并排" else np.zeros(3)
+      self.reference_robot.update(
+        display["reference_qpos"], offset, self.show_reference.value, self.opacity.value
+      )
+      self.actual_label.position = display["qpos"][:3] + [0.0, 0, 0.9]
+      self.actual_label.text = "实际执行" if not r["kinematic"] else "运动学预览"
+      self.actual.position = display["racket"]
+      self.reference.position = display["reference_racket"] + offset
+      p = display["racket"]
+      self.normal.points = np.array([[p, p + 0.15 * display["normal"]]])
+      reference = s.controller.current
+      positions = display["positions"]
+      self.skeleton.points = np.array(
+        [
+          [positions[reference.fk.parents[i] - 1] + offset, positions[i] + offset]
+          for i in range(1, len(positions))
+        ]
+      )
+      self.skeleton.visible = self.ghost.value
+      self.reference.visible = self.show_reference.value or self.ghost.value
+      if self.timeline is not None:
+        self.timeline.value = s.index
+      now = time.monotonic()
+      if now - self.last_status_update < 0.1:
+        return
+      self.last_status_update = now
+      self.chart_counter += 1
+      if self.chart_counter % 2 == 0:
+        end = s.index + 1 if s.mode == "replay" else s.records.total
+        rows = (
+          s.records[max(0, end - 250) : end] if s.mode == "replay" else s.records[-250:]
+        )
+        self.chart.data = (
+          np.arange(end - len(rows), end, dtype=float),
+          np.array([row["racket_error_m"] * 100 for row in rows]),
+          np.array([row["joint_rms_rad"] for row in rows]),
+        )
+      motion_status = ""
+      if s.mode == "tracker":
+        assert self.motion_picker is not None
+        motion_status = (
+          f"\n\nMotion：{self.motion_picker.value}"
+          f"\n\n进度 {s.controller.reference_time:.3f} / "
+          f"{s.controller.reference.duration:.3f}s"
+          + (" · 播放完毕" if s.tracker_at_end else "")
+        )
+      timing_status = (
+        f"\n\n物理 {1 / s.world.dt:.0f} Hz · 控制 {1 / s.world.control_dt:.0f} Hz"
+        f"\n\n播放 {self.rate:.2f}× · 发送 {self.playback_stats['fps']:.0f} FPS"
+        f" · 实测仿真 / 墙钟 {self.playback_stats['realtime_factor']:.2f}×"
+      )
+      count = len(s.records) if s.mode == "replay" else s.records.total
+      lifecycle = (
+        "录像回放"
+        if s.mode == "replay"
+        else "连续：不自动重置或因摔倒暂停"
+        if s.scenario == "continuous"
+        else "独立单球：每球重置"
+      )
+      self.status.content = f"**模式：{s.mode} / 当前策略：{r['policy']}**{motion_status}{timing_status}\n\n{lifecycle}\n\n时间 {s.elapsed:.2f}s · alpha {r['alpha']:.2f}\n\n拍心误差 {r['racket_error_m'] * 100:.1f}cm · 关节 RMS {r['joint_rms_rad']:.3f}rad\n\n击球 {r['hit']} / 过网 {r['net_clear']} / 落台 {r['success']}\n\n摔倒 {r['fallen']} · 已记录 {count} 帧 / {len(s.trials)} 球\n\n{'运动学生成预览（不评判物理稳定性）' if r['kinematic'] else '原生 CPU MuJoCo 物理执行'}"
 
   def close(self):
-    self._running = False
     self.server.stop()
-
-  def __enter__(self):
-    return self
-
-  def __exit__(self, *_):
-    self.close()
-
-
-def launch_passive(model, data, **kwargs):
-  if settings.backend == "native":
-    from mujoco.viewer import launch_passive as native
-
-    return native(model, data, **kwargs)
-  return WebMujocoViewer(
-    model, data, host=settings.host, port=settings.port, wait=settings.wait, **kwargs
-  )
