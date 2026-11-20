@@ -13,7 +13,7 @@ import pytest
 from deploy.io.live_visualization import LiveVisualization
 from deploy.io.viewer_snapshot import boot_id, write_snapshot
 from deploy.tools.duel_viewer import (
-  DuelScene, ball_position, canonical_position, robot_state,
+  DuelScene, ball_position, canonical_position, robot_state, prediction_points,
 )
 from deploy.validation.live_visualization_checks import deployment, profile, robot_row
 
@@ -84,21 +84,37 @@ def test_two_robots_one_ball_and_table_and_independent_staleness(tmp_path):
   now = time.monotonic()
   recording(tmp_path, "P1", now)
   ball = tmp_path / "ball.json"
+  planner = tmp_path / 'planner.json'
+  path = dict(schema='dual_prediction_view_v1', boot_id=boot_id(), frame='canonical_P1',
+              valid=True, receiving_side='P1', time=now,
+              points=[[1., -.4, .3], [.5, -.4, .02], [-.2, -.4, .25]])
+  write_snapshot(planner, path)
   write_snapshot(ball, dict(schema="dual_ball_view_v1", boot_id=boot_id(),
                             frame="canonical_P1", time=now, position=[1., -.4, .3]))
   with socket.socket() as probe:
     probe.bind(('127.0.0.1', 0))
     port = probe.getsockname()[1]
-  scene = DuelScene(tmp_path, ball, port=port)
+  scene = DuelScene(tmp_path, ball, port=port, planner_snapshot=planner)
   try:
     scene.update(now)
     assert set(scene.robots) == {"P1"} and scene.ball.visible
     assert scene.robots['P1'].label.visible
+    assert scene.prediction.visible
+    np.testing.assert_allclose(scene.prediction.points[-1, -1], path['points'][-1])
     recording(tmp_path, "P2", now)
     scene.retry_at['P2'] = 0
     scene.update(now + .01)
     assert set(scene.robots) == {"P1", "P2"}
     p1, p2 = scene.robots['P1'], scene.robots['P2']
+    assert p1.ghost.label.visible and p2.ghost.label.visible
+    for geom, handle in p1.ghost.handles.items():
+      assert p1.model.geom_contype[geom] == p1.model.geom_conaffinity[geom] == 0
+      goal = np.asarray(robot_row(now)['goal_position'])
+      expected = p1.data.geom_xpos[geom] + goal - p1.data.site_xpos[p1.ghost.site]
+      np.testing.assert_allclose(handle.position, expected, atol=1e-6)
+      np.testing.assert_allclose(p2.ghost.handles[geom].position, canonical_position(expected, 'P2'), atol=1e-6)
+      np.testing.assert_allclose(SO3(p2.ghost.handles[geom].wxyz).as_matrix(),
+                                 np.diag([-1., -1., 1.]) @ SO3(handle.wxyz).as_matrix(), atol=1e-6)
     np.testing.assert_allclose(p1.data.qpos[p1.addresses], p2.data.qpos[p2.addresses])
     for geom, handle in p1.handles.items():
       np.testing.assert_allclose(p2.handles[geom].position,
@@ -109,9 +125,30 @@ def test_two_robots_one_ball_and_table_and_independent_staleness(tmp_path):
     write_snapshot(tmp_path / 'P2/policy/visualization/latest_state.json', packet('P2', now + .3))
     scene.update(now + .31)
     assert not p1.label.visible and p2.label.visible
+    assert not p1.ghost.label.visible and p2.ghost.label.visible
     assert not scene.ball.visible
+    assert not scene.prediction.visible
+    fresh = dict(path, time=now + .31)
+    write_snapshot(planner, fresh)
+    scene.update(now + .32)
+    assert scene.prediction.visible
+    write_snapshot(planner, dict(fresh, valid=False, points=[]))
+    scene.update(now + .33)
+    assert not scene.prediction.visible
+    scene.show_targets.value = False
+    scene.update(now + .34)
+    assert not p2.ghost.label.visible and p2.label.visible
   finally:
     scene.close()
+
+
+def test_prediction_rejects_old_boot_nonfinite_and_stale():
+  p = dict(schema='dual_prediction_view_v1', boot_id=boot_id(), frame='canonical_P1',
+           valid=True, receiving_side='P2', time=10., points=[[1., 0., .3], [2., 0., .5]])
+  assert prediction_points(p, 10.1, boot_id()) is not None
+  for bad in (dict(p, time=9.), dict(p, time=11.), dict(p, boot_id='old'),
+              dict(p, valid=False), dict(p, points=[[float('nan')]*3]*2)):
+    assert prediction_points(bad, 10.1, boot_id()) is None
 
 
 def test_worker_exports_measured_state_without_own_web_server(tmp_path):

@@ -26,6 +26,8 @@ python3 scripts/run.py actor --config config/site.yaml --mode motion_20261119 --
 python3 scripts/run.py viewer --config config/site.yaml
 ```
 
+统一画面还显示黄色的 planner 来球预测线，以及 P1 蓝色/P2 橙色的半透明球拍目标。预测直接来自历史 Stage 2 求解时保留的采样，未额外拟合；球拍目标来自各自控制器实际采用的 `goal_position`，不把数组中心候选当作实际选中目标。虚影仅表示位置，姿态沿用实测姿态。网页可分别开关，超过 0.2 秒的观测/预测隐藏。更新预测功能后重启终端 A 和 D；命令及网络配置不变。
+
 `--enable-motors` 授权输出控制指令。省略它时 actor 只读反馈。沿用每台机器人的 START → A → UP 接管、DOWN 返回站立、SELECT/B/X 停止操作；两台独立处理故障和停用。新模式始终记录统一 viewer 所需的实测状态，使用终端 D 显示，不使用 actor 的独立 `--live-view`。
 
 默认仍为原 hitter 模式。切回时停止 A/B/C，再从上述 host/actor 命令移除 `--mode motion_20261119`，或改为 `--mode hitter`。两个模式不能混用；启动器检查正在运行的固定角色，UDP 另外核对模式与 P1/P2。日志自动建立，进程之间不需要手工 runid。
