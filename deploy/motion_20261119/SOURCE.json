@@ -183,6 +183,18 @@
     "hope_g1/clip_table.py": {
       "source_sha256": "e36a8f57dde0073cd01b1b8e11902a2d388dd97c7c9fdcdfc0685931990cac2d",
       "vendored_sha256": "b54b8945440fcb372e35c9286a0ea252dcc272648776e970125f7b77abcfa73e"
+    },
+    "hope_g1/hope_planner_optimized_2/racket_target_planner.py": {
+      "source_sha256": "e1208883ec54553fd8c115507b43424510afea73f51dc2cf0655d023e3c9bab9",
+      "vendored_sha256": "e1208883ec54553fd8c115507b43424510afea73f51dc2cf0655d023e3c9bab9"
+    },
+    "hope_g1/hope_planner_optimized_2/ball_trajectory_predictor.py": {
+      "source_sha256": "67d98c5bbf47cb1323e291a0efc38c2d89a83e22c39a5e27b04dd8f7837f00da",
+      "vendored_sha256": "67d98c5bbf47cb1323e291a0efc38c2d89a83e22c39a5e27b04dd8f7837f00da"
+    },
+    "hope_g1/hope_planner_optimized_2/ball_state_estimator.py": {
+      "source_sha256": "65bd7faf2a4a38bb8da0970e8723dcb651025f532c89046f559ea90f9b04ec7b",
+      "vendored_sha256": "65bd7faf2a4a38bb8da0970e8723dcb651025f532c89046f559ea90f9b04ec7b"
     }
   },
   "runtime_hooks": [
