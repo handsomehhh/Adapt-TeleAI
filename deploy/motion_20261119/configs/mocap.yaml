@@ -1,0 +1,64 @@
+# RacketCommandArray ROS bridge; pair with rally_command_array.yaml.
+source:
+  ball_topic: /poses
+  ball_type: pose_array
+  ball_pose_index: 0
+  root_topic: /P1/pose
+  frame: world
+  ball_frame: world
+  root_frame: map
+planner_command_topic: /racket/commands
+planner_command_source_frame: world
+ball_topic: /ball/point
+root_topic: /P1/pose
+world_frame: hope_table
+transport: udp
+udp:
+  host: 127.0.0.1
+  port: 15050
+simulation_planner_link:
+  ball_udp:
+    host: 127.0.0.1
+    port: 15051
+  command_udp:
+    host: 127.0.0.1
+    port: 15052
+source_clock_offset: 0.0
+source_max_age: 0.15
+transform:
+  scale: 1.0
+  quaternion_wxyz:
+  - 1.0
+  - 0.0
+  - 0.0
+  - 0.0
+  translation:
+  - 0.0
+  - 0.0
+  - 0.0
+root_marker_to_pelvis:
+- 0.0
+- 0.0
+- 0.0
+root_marker_to_pelvis_quaternion_wxyz:
+- 1.0
+- 0.0
+- 0.0
+- 0.0
+root_stale_timeout: 0.1
+root_pose_filter:
+  alpha: 0.5
+  velocity_alpha: 0.3
+  velocity_max_mps: 2.0
+  jump_max_m: 0.15
+  jump_bypass_seconds: 0.2
+  reseed_after: 10
+estimator:
+  window: 31
+  minimum_samples: 6
+  bounce_height: 0.0
+  bounce_tolerance: 0.04
+  bounce_min_speed: 0.2
+  max_gap: 0.1
+  stale_timeout: 0.1
+planner_command_type: hope_msgs/msg/RacketCommandArray

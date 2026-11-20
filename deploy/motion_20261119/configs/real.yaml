@@ -1,0 +1,70 @@
+network_interface: eno1
+stop_policy: hope_67a1a72
+io_process: true
+io_poll_seconds: 0.001
+record_io_diagnostics: true
+record_command_writes: true
+latency_auto_summary: true
+record_lowstate_hz: 200
+domain_id: 0
+expected_mode_machine: 5
+connection_timeout: 10.0
+state_timeout: 0.1
+command_timeout: 0.1
+halt_kd: 2.0
+transition_seconds: 3.0
+recovery_seconds: 0.0
+readiness_mode: timed
+standing:
+  dwell_seconds: 1.0
+  timeout_seconds: 15.0
+  max_joint_velocity: 0.1
+  max_gyro: 0.1
+  max_tilt_degrees: 10.0
+  max_anchor_velocity: 0.05
+  max_height_error: 0.1
+max_tilt_degrees: 45.0
+imu_to_pelvis_quaternion_wxyz:
+- 1.0
+- 0.0
+- 0.0
+- 0.0
+root_orientation_source: imu_mocap_yaw
+max_control_overrun: 0.05
+guard:
+  oscillation:
+    enabled: false
+    window_seconds: 0.24
+    rms_speed: 0.8
+    sign_change_ratio: 0.75
+  enforce_target_limits: false
+  enforce_target_tracking: false
+  enforce_target_slew: false
+  max_tracking_error: 0.5
+  max_measured_velocity: 20.0
+  max_target_velocity: 15.0
+  measured_limit_margin: 0.05
+  max_measured_step: 0.6
+planner:
+  spatial_tolerance:
+  - 0.025
+  - 0.025
+  - 0.015
+  timing_tolerance: 0.08
+stable_policy:
+  enabled: true
+  asset_dir: ../artifacts/stable_amp
+  pd:
+    kp_scale: 1.0
+    kd_scale: 1.0
+  transition_seconds: 1.5
+  stable_transition_seconds: 0.4
+  settle_seconds: 0.5
+  max_target_velocity: 7.5
+  preposition_seconds: 1.5
+  preposition_hold_seconds: 0.5
+  preposition_max_pose_error: 0.15
+  preposition_timeout: 10.0
+policy_pd:
+  kp_scale: 1.0
+  kd_scale: 1.0

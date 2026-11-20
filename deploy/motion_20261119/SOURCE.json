@@ -1,0 +1,193 @@
+{
+  "source_run": "real_20261119_095258",
+  "base_commit": "04385c17d978e03802bf3e6578efbc22dc719563",
+  "recorded_diff_sha256": "b3371ebb2d24ba8c7f0ac76446f67d4424b9c9ac2733da8a29af3fd3f2d18f71",
+  "transformation": "deploy. imports and qualified names relocated to deploy.motion_20261119.reference.; runtime hooks documented separately",
+  "files": {
+    "tools/preflight.py": {
+      "source_sha256": "853ab3164b5b9dafcc2c874bf4c24d45e309e25e50dab99f14076f3a8d8b33fd",
+      "vendored_sha256": "d7012ea791e6c0b840db3d24fef723f04c095af6737ea39997dbdd77b3045df3"
+    },
+    "g1_pingpong/hope_safety.py": {
+      "source_sha256": "fa0aaaddb3f3b43a1af56b97a4fe97e810cac087b1f766be8260bba18fb1a8e1",
+      "vendored_sha256": "fa0aaaddb3f3b43a1af56b97a4fe97e810cac087b1f766be8260bba18fb1a8e1"
+    },
+    "io/mocap.py": {
+      "source_sha256": "bdb29835b6bfab514d3210cbd5ff2202b5729373e5a570d0e572c2daac36c7ea",
+      "vendored_sha256": "ed095f5c78bb5684f9cb9306779b49159b2eb63d3bea7d941615c8dc4b788bb1"
+    },
+    "hope_g1/hope_planner_adapter.py": {
+      "source_sha256": "777a0188c36e50647a4f4afb0875761937b1cecb4b2e333ef6805e1e55c7b2f5",
+      "vendored_sha256": "7c110a09f39bc4ffe4185576fa272772f0cedd40ec153df836a677ceea49fdd6"
+    },
+    "racket_command.py": {
+      "source_sha256": "590789dcc99d5aaba437c5242ddf56ed18934940cdf4ec6446cf029c0b186e5b",
+      "vendored_sha256": "590789dcc99d5aaba437c5242ddf56ed18934940cdf4ec6446cf029c0b186e5b"
+    },
+    "hope_g1/hope_planner_optimized_2/planner.py": {
+      "source_sha256": "adbcd2c5f847660bff4183688e6b4e9287cce813b9b3a7f20e44e7571863f408",
+      "vendored_sha256": "adbcd2c5f847660bff4183688e6b4e9287cce813b9b3a7f20e44e7571863f408"
+    },
+    "hope_g1/hope_planner_optimized_2/constants.py": {
+      "source_sha256": "030e026a7aee02ce63ce7d392f0a4b5c750ca57ad10b3eff6657418d5cdcd937",
+      "vendored_sha256": "030e026a7aee02ce63ce7d392f0a4b5c750ca57ad10b3eff6657418d5cdcd937"
+    },
+    "g1_pingpong/perception.py": {
+      "source_sha256": "a2adfb1417e030c6dcf956b909d2d069e2433cfb2b79a00911fc671e0772d270",
+      "vendored_sha256": "bd29a73c0639433b147c9b65a6085c95a838a3e1701e93c00b9e52a13560783e"
+    },
+    "io/pose_conditioning.py": {
+      "source_sha256": "1e3ca8c94daf86f34bb96447f7b60c6dc7f29f4daeab1097feb1f9384b56e03f",
+      "vendored_sha256": "1e3ca8c94daf86f34bb96447f7b60c6dc7f29f4daeab1097feb1f9384b56e03f"
+    },
+    "g1_pingpong/core.py": {
+      "source_sha256": "55492dd5d674aeef2b9c27c2a58d2e27b1a45dffd6142c131d8eb3f6d13300dd",
+      "vendored_sha256": "55492dd5d674aeef2b9c27c2a58d2e27b1a45dffd6142c131d8eb3f6d13300dd"
+    },
+    "planner_interface.py": {
+      "source_sha256": "42eed02de891bc7a810c19db07343bf9457770bb9f8d673704cd249b0a244a9a",
+      "vendored_sha256": "42eed02de891bc7a810c19db07343bf9457770bb9f8d673704cd249b0a244a9a"
+    },
+    "g1_pingpong/pd_gains.py": {
+      "source_sha256": "534d6df4d47cebbc98074443867ee2e8fde567823ddf587bf59e2d4bee590330",
+      "vendored_sha256": "534d6df4d47cebbc98074443867ee2e8fde567823ddf587bf59e2d4bee590330"
+    },
+    "g1_pingpong/configuration.py": {
+      "source_sha256": "858b65b098408de7cd2452c3a2dad931ac662670535c80fd5f21c2b03a0dfe82",
+      "vendored_sha256": "ea09a5f154571333b3211bd19214d14037d9d6c35f33aeda18b74b3b4ef10405"
+    },
+    "g1_pingpong/policy.py": {
+      "source_sha256": "e1bf8f4278e0ca23419b04842ccfb1ea270c69683a93c98f63dc8de1b46b1b2c",
+      "vendored_sha256": "27264b0eaf49a7871d0f79bc26480f2231b36fe32ace1fd4547bc7601a7c2f13"
+    },
+    "g1_pingpong/commands.py": {
+      "source_sha256": "28e6badae167d5d6f8494969d1f36e6bb7c1912ddf995a1fda9cfd7bbe76e2e5",
+      "vendored_sha256": "e94cc27d312696c7a415c4fe5886f82a5aa0b9ade13f7e47da124a01b0a4725b"
+    },
+    "backends/unitree.py": {
+      "source_sha256": "637d04f2c739a2967e1c79d1c7f0de817eca22a053eb5a145cd1cc666aad547c",
+      "vendored_sha256": "60a6a70f7dfbb1379060e07dfa4de0e9310a6aaa651bf57cd497a5e9a1f356a8"
+    },
+    "tools/analyze_latency.py": {
+      "source_sha256": "a9817197049a196ee22f0193a854062d1008f79df659e2599d4d27615fe48e78",
+      "vendored_sha256": "a9817197049a196ee22f0193a854062d1008f79df659e2599d4d27615fe48e78"
+    },
+    "io/transport.py": {
+      "source_sha256": "0dabf1ebe36222839cd915ad137fcb7168c02f97f6dee4fef3e4a4591b0a8f23",
+      "vendored_sha256": "0eff2793423dab917b25ce935059106c05bed5884bb22db652cb8e78f205863e"
+    },
+    "io/diagnostics.py": {
+      "source_sha256": "4c29bc7a39f0aaef66a6d3dc47641dcd61c8127f5ed2c8ac4d3ba0fe3cd18846",
+      "vendored_sha256": "4c29bc7a39f0aaef66a6d3dc47641dcd61c8127f5ed2c8ac4d3ba0fe3cd18846"
+    },
+    "g1_pingpong/stable.py": {
+      "source_sha256": "229945391e0d9d53308e6e80dd3f29802f16815c152cf82a551ee5ec6c7fd1eb",
+      "vendored_sha256": "bc21c323892dba1e8ab1fff842dc1d3fb624cff12e395eac3f7b3f792930286a"
+    },
+    "g1_pingpong/rally.py": {
+      "source_sha256": "fbf99988c1fef723034b096e6839d67b996d373e53dcf3d15fdefadd6dba2ae1",
+      "vendored_sha256": "557799446952cb4ffbcf80e56cdc2fbca17b0e3adcd607f501d1365677fcffe9"
+    },
+    "g1_pingpong/standing.py": {
+      "source_sha256": "be65ae8d86be17e007dad3dc547d53a2ceebe423f7f2730e030b382e2aac8c40",
+      "vendored_sha256": "6dbd72f20ea034982106fd63c47c995e4109f1bee79548c42b4798dbf5765571"
+    },
+    "g1_pingpong/motions.py": {
+      "source_sha256": "1ce9694e66cfe48d420af555f39762afcb309dd9276785245a86f616419a322c",
+      "vendored_sha256": "0a1b7253b2f6453bdd05dddc245bd4a284751ece43dc582504ccc1fd1e8d84b7"
+    },
+    "g1_pingpong/lifecycle.py": {
+      "source_sha256": "ff742927e4b724e5bad49858bb909a9b9956af57b4da4f671cab29f2389d0f9d",
+      "vendored_sha256": "ff742927e4b724e5bad49858bb909a9b9956af57b4da4f671cab29f2389d0f9d"
+    },
+    "g1_pingpong/oscillation.py": {
+      "source_sha256": "d67ec7d97b2add2a1714012cd76dc87c58ed477bd32bea9bd123a0f763f1895a",
+      "vendored_sha256": "d67ec7d97b2add2a1714012cd76dc87c58ed477bd32bea9bd123a0f763f1895a"
+    },
+    "backends/sdk.py": {
+      "source_sha256": "c18503e993b917033a9e15aabfb9cc788c3715315b59516a01b11fc19ffce4c9",
+      "vendored_sha256": "c18503e993b917033a9e15aabfb9cc788c3715315b59516a01b11fc19ffce4c9"
+    },
+    "backends/runtime.py": {
+      "source_sha256": "bafbfb51584c15443cd0b23fe0c79fd3bc85a3c8c631b69ec6020be8e837487e",
+      "vendored_sha256": "bafbfb51584c15443cd0b23fe0c79fd3bc85a3c8c631b69ec6020be8e837487e"
+    },
+    "backends/mujoco.py": {
+      "source_sha256": "1ec785db63df409e2f021900bdc469539540c6db4f7f754528b0acbcc6f30f05",
+      "vendored_sha256": "be3c6f2eaac3ae320b14d756f27d53253e6e2986d36b874a3b9e3e26a6d6e959"
+    },
+    "g1_pingpong/ball_physics.py": {
+      "source_sha256": "eeaa53bd1e29c9ac84b4746d48329c63ec27d0d9c9e94302b77c1eb9e29ed02a",
+      "vendored_sha256": "eeaa53bd1e29c9ac84b4746d48329c63ec27d0d9c9e94302b77c1eb9e29ed02a"
+    },
+    "hope_g1/controller.py": {
+      "source_sha256": "cdaac461ba090eff66a9f603955de74a49fc4050c4d7ef1c83d5bfc06ead6768",
+      "vendored_sha256": "eb91c461edf0f4e626e9fa71fbf67fbef50c51ce07d68dbe8e9021deb109ff68"
+    },
+    "hope_g1/motion_executor.py": {
+      "source_sha256": "2e3a8d7a4ebfbf68e242e2bd8cfc77135af4f2b66f022de57d5bd28b3298c13b",
+      "vendored_sha256": "c49b1950c712a9c0d88c7422c3c959b640d69b2a4bf9f13b06280319654a6ff3"
+    },
+    "hope_g1/base_target_transition.py": {
+      "source_sha256": "adfac9cce257a3c3d1fd395fb487d81997bece1c20611f2788b033e970ec3127",
+      "vendored_sha256": "adfac9cce257a3c3d1fd395fb487d81997bece1c20611f2788b033e970ec3127"
+    },
+    "hope_g1/base_target_compensator.py": {
+      "source_sha256": "131acaf2d5c7b90ec5a57cccdc5e714d19e29f8d93a0ec0132d884877f9d32c5",
+      "vendored_sha256": "7703a3d9968245959c5f30c305c3beb9dea1a291ae462af5870a4fc8e703ae51"
+    },
+    "hope_g1/motion_selectors.py": {
+      "source_sha256": "ed2590b3cbc5082e56cc935a633a81f4f7d5a8e2e845a7d56497a32a5351915f",
+      "vendored_sha256": "9e1e625906b8e274b39d7531d47c0dbba363bcfb1c8ffc0ad217827f804d9669"
+    },
+    "hope_g1/a3_planner.py": {
+      "source_sha256": "6bc55ce487f612d28b10687848a3f1b9dc49d6eae919479bf5d52d81130eb6ca",
+      "vendored_sha256": "e632ee9af0fb17edc05a7e224af50084ddb8a929b4614ac0b2f61ba8d6274ae1"
+    },
+    "hope_g1/a3_reference/racket_target_planner.py": {
+      "source_sha256": "be3aa066b40deccb62d2711a19ae00cc1d6a28be87d40953412019fdc520cc9f",
+      "vendored_sha256": "be3aa066b40deccb62d2711a19ae00cc1d6a28be87d40953412019fdc520cc9f"
+    },
+    "hope_g1/a3_reference/constants.py": {
+      "source_sha256": "b9d574c52a31c2c4339de34e486c817716863fab95ac6af9757a0f88560502b5",
+      "vendored_sha256": "b9d574c52a31c2c4339de34e486c817716863fab95ac6af9757a0f88560502b5"
+    },
+    "hope_g1/a3_reference/ball_trajectory_predictor.py": {
+      "source_sha256": "6960e897c400bd25183e83f7da3f3f31f73b58d5faa69e920cd684131025d06f",
+      "vendored_sha256": "6960e897c400bd25183e83f7da3f3f31f73b58d5faa69e920cd684131025d06f"
+    },
+    "hope_g1/executor.py": {
+      "source_sha256": "9bfc3749995578932ca6bfdc47cd6b82877c6c873e932eff0819083d08b6ac00",
+      "vendored_sha256": "cdc05654c2a2a1baa7c9bc2fdefa2e46937fded8fbdaa885c1136f4bf7af8914"
+    },
+    "hope_g1/configuration.py": {
+      "source_sha256": "e7876f14f03eecc913c93bf8ecfa85bdfe77b8def3dfdb6fcfe130b9287894cf",
+      "vendored_sha256": "3c6e95ed1621c4017e11fdf1c04e8fd31e167262892d1cd6041fb3f41e0f37ec"
+    },
+    "hope_g1/assets.py": {
+      "source_sha256": "24f7b7578a36f0a046903332328c4a14c9816547d82574ad44b365f830240e53",
+      "vendored_sha256": "0395386ae315bd9ebdf7e2c00e93c863bbe1ff7bb248e12470bff8ccd40f4498"
+    },
+    "hope_g1/world.py": {
+      "source_sha256": "4e193a9e76f8b3ba6668d2b1de21c9d81d191aa52a4ca4007e947780adaa8cab",
+      "vendored_sha256": "4e193a9e76f8b3ba6668d2b1de21c9d81d191aa52a4ca4007e947780adaa8cab"
+    },
+    "hope_g1/scene.py": {
+      "source_sha256": "d8c87239bf2656339ee15f4d2ddb789acbbe11cf3aa1f3432f9ab4bebd48b6ad",
+      "vendored_sha256": "d8c87239bf2656339ee15f4d2ddb789acbbe11cf3aa1f3432f9ab4bebd48b6ad"
+    },
+    "hope_g1/policy.py": {
+      "source_sha256": "016e60fb88513f7f87db4394005994d532803594394500dd0d965a3916487025",
+      "vendored_sha256": "016e60fb88513f7f87db4394005994d532803594394500dd0d965a3916487025"
+    },
+    "hope_g1/clip_table.py": {
+      "source_sha256": "e36a8f57dde0073cd01b1b8e11902a2d388dd97c7c9fdcdfc0685931990cac2d",
+      "vendored_sha256": "b54b8945440fcb372e35c9286a0ea252dcc272648776e970125f7b77abcfa73e"
+    }
+  },
+  "runtime_hooks": [
+    "optional visualization callback in record_row",
+    "optional mocap_factory injected into run_control_loop",
+    "existing dual SDK trace filename scoping only; unchanged domain/interface"
+  ]
+}

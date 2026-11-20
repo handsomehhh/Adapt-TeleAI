@@ -1,0 +1,46 @@
+{
+  "source_run": "real_20261119_095258",
+  "validated_at": "2026-11-20",
+  "mode": "motion_20261119",
+  "local_and_lxz_regression_tests": 84,
+  "additional_launcher_mode_guard_test": "passed on local and lxz (included in total)",
+  "recorded_policy": {
+    "samples": 70,
+    "local_max_abs_observation_error": 0.0,
+    "local_max_abs_action_error": 0.0,
+    "local_max_abs_joint_target_error": 0.0,
+    "fk": "anchor/racket pose matches logs within 1e-6",
+    "selection_and_live_update_events": 8
+  },
+  "planner": {
+    "raw_recorded_ball_frames": 252,
+    "golden_arrays_per_side": 26,
+    "sides": [
+      "P1",
+      "P2"
+    ],
+    "reference_math": "unaltered recorded source"
+  },
+  "new_ros_smoke": {
+    "domain": 74,
+    "localhost_only": true,
+    "shared_estimates_fanned_out": 482,
+    "command_arrays": {
+      "P1": 119,
+      "P2": 122,
+      "P1_independent": 117
+    },
+    "disabled_and_stale_tests": "passed"
+  },
+  "original_hitter_ros_smoke": {
+    "domain": 73,
+    "status": "passed"
+  },
+  "hardware_actions": false,
+  "network_changes": false,
+  "limitations": [
+    "No real-motor or physical rally validation performed",
+    "Timing and gating at direction switches are dual routing additions",
+    "Artifacts are synchronized separately from Git and SHA256 checked on startup"
+  ]
+}

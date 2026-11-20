@@ -1,0 +1,4 @@
+task: HOPEPingPongMultiMotionG1
+checkpoint: ../artifacts/newdata286_branch_a_20261112_204836/model_60000.pt
+motion_dir: ../artifacts/screened273_multiobjective_20261117_160259/motions_compact162
+motion_subset_from_dir: true

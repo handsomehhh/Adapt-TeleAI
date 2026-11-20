@@ -1,0 +1,119 @@
+hope_planner_command_array_table_frame:
+  ros__parameters:
+    # 桌角在 world 中的绝对 XY 坐标（m）；仅平移，桌面 z=0、朝向不变。
+    # 修改后重启。其余位置参数（落点、击球平面、阈值、发布范围）均为球桌坐标。
+    table_origin_x: 0.0
+    table_origin_y: 0.0
+    ball_rigid_body_name: "pingpong_ball"
+    # ball_pose_index: which slot in the /poses PoseArray is the ball.
+    # HOW TO GET: with the avatar_pro relay this is 0 (pose_array_order starts with
+    # "ball"). Confirm against your live stream: `ros2 topic echo /poses --once`
+    # and count the ball's index. TODO: confirm against your live /poses.
+    ball_pose_index: 0
+    x_hit: -0.2              # virtual hit plane X (m); ~0.0 = HOPE origin end of table
+    forward_num_commands: 15   # extra planes toward +X; excludes x_hit
+    forward_hit_interval: 0.02  # m; +X spacing # 机器人对面的方向
+    backward_num_commands: 20  # extra planes toward -X; excludes x_hit
+    backward_hit_interval: 0.02 # m; -X spacing # 飞向机器人的方向
+    # Total: forward_num_commands + 1 + backward_num_commands (x_hit included once).
+    target_land_x: 2.3 # 2.4 # 2.5 # 2.055   # opponent half-center X (fixed by table geometry)
+    target_land_y: -0.8 # -0.4 # -0.7625 # opponent half-center Y (fixed by table geometry)
+    delta_t_flight: 0.65 # 0.55 # 0.6    # desired return flight time (s); tune for your robot
+    # TODO(calibrate): drag + restitution# . Defaults are reasonable starting points
+    # from the HITTER paper. HOW TO GET: record >=15 ball trajectories with the
+    # mocap, export to CSV (t,x,y,z), then run
+    #   ros2 run hope_planner_command_array_table_frame hope_planner_command_array_table_frame_calibrate traj1.csv ... traj15.csv
+    # and paste the printed values here.
+
+
+    # TEST 1
+    # drag_k: 0.1537 # 0.8781         # Calibrated from salvaged traj01 split into 15 toss chunks.
+    # # restitution_h: 0.69 # 0.8527  # Calibrated from salvaged traj01 split into 15 toss chunks.
+    # # restitution_v: 1.01 # 0.8518  # Calibrated from salvaged traj01 split into 15 toss chunks.
+    # restitution_h: 0.7558 # 0.8527 0.7558 #   # Calibrated from salvaged traj01 split into 15 toss chunks.
+    # restitution_v: 0.9 # 1.01 # 0.8518 1.0176 #  # Calibrated from salvaged traj01 split into 15 toss chunks.
+
+
+    # TEST 2，codex根据10次实验的现象给出的建议调参数方向
+    # drag_k: 0.20
+    # restitution_h: 0.72
+    # restitution_v: 0.95
+
+
+    # 每次只改xz中的一个
+
+    #大粪
+    # drag_k: 0.1537
+    # restitution_h: 0.72
+    # restitution_v: 0.90
+  
+    # drag_k: 0.1537
+    # # restitution_h: 0.69 # 感觉这一个参数不过：1）太大了，tts正常，但是带着Y偏了；2）太早了，tts太大
+    # # restitution_v: 1.01
+    # restitution_h: 0.79 # 0.7558 # 0.69 # 感觉这一个参数不过：1）太大了，tts正常，但是带着Y偏了；2）太早了，tts太大
+    # restitution_v: 0.949 # 0.9 # 1.06
+
+# k   = 0.096355
+# C_h = 0.816019
+# C_v = 0.862769
+
+
+    drag_k: 0.096 # 0.096355
+    # restitution_h: 0.69 # 感觉这一个参数不过：1）太大了，tts正常，但是带着Y偏了；2）太早了，tts太大
+    # restitution_v: 1.01
+    restitution_h: 0.816019 # 0.7558 # 0.69 # 感觉这一个参数不过：1）太大了，tts正常，但是带着Y偏了；2）太早了，tts太大
+    restitution_v: 0.862769 # 0.9 # 1.06
+
+    # 反弹水平模型（2026-10-27，Take_006(转正)+plane2+plane3 共 286 条来球，按规划器口径拟合，
+    # MoCap_ball_traj/ball_task_fit.py）。CV 留出：
+    #   constant: 击球面 yz 中位 2.33cm  |dt| 8.8ms   （上面这组 0.096/0.816/0.863 同水平）
+    #   friction: 击球面 yz 中位 2.16cm  |dt| 5.9ms   （C_h 随入射角/速度变化，跨球员更稳）
+    # 切到 friction 时 drag_k / restitution_v 要一起换成：drag_k: 0.1053  restitution_v: 0.8729
+    bounce_model: "friction"     # "constant" | "friction"
+    bounce_friction_mu: 0.0852   # friction: v_h+ = max(rolling, 1 - mu (1+C_v)|vz|/|vh|) v_h
+    bounce_rolling_ratio: 0.6
+
+    restitution_racket: 0.7 # 0.88
+
+    # Stage 1 拟合时间轴。true：按相邻采样的水平位移数帧（步长约 k 倍中位步长计 k 帧），
+    # 时间 = 帧号 / mocap_hz，不受 VRPN/接收时间戳抖动影响，真实丢帧仍保留空档。
+    # false：恢复旧行为，直接用记录的时间戳拟合。修改后重启节点。
+    # 离线评测见 deploy_g1_pingpong/experiments/estimator_variants_20261116。
+    use_spatial_fit_clock: false # true
+    # 动捕帧率（Hz）。仅在 use_spatial_fit_clock=true 时参与计算；
+    # 必须与动捕实际帧率一致。若时间戳显示实际帧率明显更高（每帧间隔 < 0.7/mocap_hz，
+    # 例如实际 360 Hz 却配 180），估计器自动退回时间戳拟合；实际帧率更低则无法自动发现
+    # （与网络卡顿造成的时间戳拉长无法区分），需人工保证。
+    mocap_hz: 180.0
+    # Stage 2 incoming-ball trajectory prediction.  2 ms preservrpnves the
+    # benchmark's command count while roeno1ughly halving Stage 2 compute time.
+    dt_integrate: 0.002
+    # 桌外预测高度截断：false 按重力/空气阻力继续飞行，允许 z < 0；
+    # true 恢复旧行为，将桌外下降轨迹的 z 限制到球半径 0.02 m。修改后重启节点。
+    clamp_off_table_z: false
+    # Stage 3 回球求解（Newton 求出球速 + 过网检查）用的积分器：
+    #   rk4：经典 RK4，步长 stage3_rk4_dt。25 ms 时落点相对精确的空气阻力 ODE 误差 < 1 µm，
+    #        计算量约为 euler@1ms 的 1/6（实测 36 平面 Stage 3 平均 35 ms → 约 4 ms）。
+    #   euler：旧的 x += v dt + a dt²/2，步长 stage3_dt_integrate；1 ms 时自身落点误差
+    #        平均 0.6 mm、最大 1.5 mm；10 ms 时误差 6–15 mm（以前试 0.01 不行的原因）。
+    stage3_integrator: "rk4"
+    stage3_rk4_dt: 0.025
+    stage3_dt_integrate: 0.001 # 仅 stage3_integrator=euler 时使用
+    outgoing_velocity_tolerance_m: 0.0001 # 0.05 # 5cm的误差容忍 # 0.0001
+
+    # Apply this gate independently to every command, including the center.
+    # Publish only valid entries inside the box; suppress an empty array.
+    # Publish only when the predicted interception point lies
+    # in this inclusive table-local workspace. x is the virtual hit plane.
+    publish_intercept_x_min: -0.7
+    publish_intercept_x_max: 0.0
+    publish_intercept_y_min: -1.44
+    publish_intercept_y_max: -0.2
+    publish_intercept_z_min: -0.6 # 0.2
+    publish_intercept_z_max: 0.7 # 0.7
+
+    time_to_strike_invalid_x: 2.2 # 2.0 # 1.5 # 1.3
+
+    # Stage 1/2/3 运行位置：process = 独立规划进程（独立 GIL，/poses 回调与发布不被
+    # Stage 3 的 Python 循环阻塞）；thread = 同进程计算线程（旧方案，会争用 GIL）。
+    planning_executor: "process"
