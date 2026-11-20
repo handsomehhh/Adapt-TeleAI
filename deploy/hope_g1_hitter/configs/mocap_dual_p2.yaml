@@ -1,7 +1,7 @@
 # Dual G1 input: the host normalizes pelvis and estimates the ball once.
 # Run this complete strategy inside g1_p2.
 # Do not use the legacy mocap bridge: the duel bridge sends estimates.
-# mocap_duel maps producer-calibrated pose7 to P2 with the table-frame flip.
+# mocap_duel maps producer-calibrated pose5 to P2 with the table-frame flip.
 # The root offset stays identity because the host already applies it.
 source:
   ball_topic: /duel/ball_estimate
